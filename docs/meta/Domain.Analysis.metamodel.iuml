@@ -1,0 +1,61 @@
+@startuml Domain Entities Metamodel
+!unquoted procedure $common_class($name, $stereotype)
+class "$name" << $stereotype >>
+!endprocedure
+'
+!unquoted procedure $common_class($name, $alias, $stereotype)
+class "$name" as $alias << $stereotype >>
+!endprocedure
+'
+!unquoted procedure $service($name)
+$common_class($name, Domain Service)
+!endprocedure
+'
+!unquoted procedure $service($name, $alias)
+$common_class($name, $alias, Domain Service)
+!endprocedure
+'
+!unquoted procedure $factory($name)
+$common_class($name, Factory)
+!endprocedure
+'
+!unquoted procedure $factory($name, $alias)
+$common_class($name, $alias, Factory)
+!endprocedure
+'
+!unquoted procedure $entity($name)
+$common_class($name, Entity)
+!endprocedure
+'
+!unquoted procedure $entity($name, $alias)
+$common_class($name, $alias, Entity)
+!endprocedure
+'
+!unquoted procedure $aggregate_root($name)
+$common_class($name, Aggregate Root)
+!endprocedure
+'
+!unquoted procedure $aggregate_root($name, $alias)
+$common_class($name, $alias, Aggregate Root)
+!endprocedure
+'
+!unquoted procedure $value($name)
+class "$name"
+!endprocedure
+'
+!unquoted procedure $value($name, $alias)
+class "$name" as $alias
+!endprocedure
+'
+!unquoted procedure $aggregate($name)
+rectangle "$name Aggregate"
+!endprocedure
+'
+!unquoted procedure $enum($name)
+$common_class($name, Enum)
+!endprocedure
+'
+!unquoted procedure $enum($name, $alias)
+$common_class($name, $alias, Enum)
+!endprocedure
+@enduml
