@@ -1,5 +1,5 @@
 @startuml Chat Domain
-!include docs/meta/Domain.Analysis.metamodel.iuml
+!include meta/Domain.Analysis.metamodel.iuml
 
 $aggregate(Chat) {
     $aggregate_root(Chat) {
