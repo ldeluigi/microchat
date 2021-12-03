@@ -25,7 +25,7 @@
 @enduml
 ```
 #### Constraints
-A *User* can interact with a chat only if it is a participant.
-A *User* can only delete messages in a chat if it's the original sender.
+- A *User* can interact with a chat only if it is a participant.
+- A *User* can only delete messages in a chat if it's the original sender.
 
-*Chat* can't be deleted.
+- *Chat* can't be deleted.
