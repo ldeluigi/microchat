@@ -12,7 +12,7 @@
 
 ```plantuml
 @startuml Context Map
-!include ContextMap.puml
+!include docs/ContextMap.puml
 @enduml
 ```
 
@@ -21,7 +21,7 @@
 ### Chat context
 ```plantuml
 @startuml Chat Domain Map
-!include Chat.Domain.puml
+!include docs/Chat/Chat.Domain.puml
 @enduml
 ```
 #### Constraints

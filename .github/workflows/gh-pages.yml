@@ -16,7 +16,7 @@ jobs:
       - name: Run action
         uses: ldeluigi/markdown-docs@v0
         with:
-          src: .
+          src: docs/
           dst: ./gh-pages
           icon: chat-plus
           primary-color: white
