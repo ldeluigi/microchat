@@ -1,5 +1,5 @@
 @startuml Domain
-!include docs/meta/ContextMap.metamodel.iuml
+!include meta/ContextMap.metamodel.iuml
 
 $subdomain "Chat" {
     $context "Chat" as chat
