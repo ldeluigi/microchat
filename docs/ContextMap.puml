@@ -1,0 +1,11 @@
+@startuml Domain
+!include docs/meta/ContextMap.metamodel.iuml
+
+$subdomain "Chat" {
+    $context "Chat" as chat
+    $context "User" as user
+
+    $conformist(chat, user)
+}
+
+@enduml

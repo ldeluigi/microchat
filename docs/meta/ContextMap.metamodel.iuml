@@ -1,0 +1,40 @@
+@startuml Context Map Metamodel
+!$subdomain = "rectangle"
+'
+!$context = "component"
+'
+!$anticorruption_layer = "storage"
+'
+!unquoted procedure $customer_supplier($customer, $supplier)
+$supplier "U" -(0-- "D" $customer : Customer Supplier
+!endprocedure
+'
+!unquoted procedure $bidirectional_customer_supplier($customer, $supplier)
+$supplier -(0-- $customer : Customer Supplier
+!endprocedure
+'
+!unquoted procedure $conformist($conformist, $supplier, $interface="false")
+!if ($interface != "false")
+    $conformist "D" --( $supplier
+!else
+    $conformist "D" -(0- "U" $supplier : Conformist
+!endif
+!endprocedure
+'
+!unquoted procedure $common_interface($supplier, $interface_name, $id)
+interface "$interface_name" as $id
+$id - "U" $supplier
+!endprocedure
+'
+!function $optional_brackets($content)
+!if ($content == "")
+    !return ""
+!else
+    !return "(" + $content + ")"
+!endif
+!endfunction
+'
+!unquoted procedure $shared_kernel($left, $right, $kernel_description = "")
+$left -(0)- $right : Shared Kernel\n$optional_brackets($kernel_description)
+!endprocedure
+@enduml
