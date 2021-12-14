@@ -24,6 +24,14 @@
 !include Chat/Chat.Domain.puml
 @enduml
 ```
+
+### User context
+```plantuml
+@startuml User Domain Map
+!include User/User.Domain.puml
+@enduml
+```
+
 #### Constraints
 - A *User* can interact with a chat only if it is a participant.
 - A *User* can only delete messages in a chat if it's the original sender.

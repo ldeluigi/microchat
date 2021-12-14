@@ -5,10 +5,13 @@ $aggregate(Chat) {
     $aggregate_root(Chat) {
         + id: Guid
         + creationTime: DateTime
-        + participants: List[User]
+        + participants: List[Guid]
         + sendMessage(Message)
         + deleteMessage(Guid)
         + editMessage(Guid, newText: String)
+        + meanDailyMessagges(): Real
+        + meanWeeklyMessagges(): Real
+        + totalChatMessagges(): Int
     }
 
     $entity(Message) {
@@ -20,6 +23,7 @@ $aggregate(Chat) {
     }
 
     Message "0..*" ---* "1" Chat
+
 }
 
 $aggregate(User) {
