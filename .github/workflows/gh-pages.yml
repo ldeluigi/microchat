@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths: 
-      - docs/
+      - docs/**
       - .github/workflows/gh-pages.yml
 jobs:
   update-gh-pages:
