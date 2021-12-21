@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+    paths: 
+      - docs/
 jobs:
   update-gh-pages:
     name: Generate and upload new GitHub Pages
