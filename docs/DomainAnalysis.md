@@ -34,6 +34,7 @@
 
 #### Constraints
 - A *User* can interact with a chat only if it is a participant.
+- A *User* can send messages within a chat only if it is a participant.
 - A *User* can only delete messages in a chat if it's the original sender.
 
 - *Chat* can't be deleted.
