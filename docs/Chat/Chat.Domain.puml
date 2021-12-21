@@ -6,25 +6,17 @@ $aggregate(Chat) {
         + id: Guid
         + creationTime: DateTime
         + participants: List[Guid]
-        + messages: List[Message]
-        + sendMessage(Message)
-        + deleteMessage(Guid)
-        + editMessage(Guid, newText: String)
-        + meanDailyMessagges(): Real
-        + meanWeeklyMessagges(): Real
-        + totalChatMessagges(): Int
     }
+}
 
-    $entity(Message) {
+$aggregate(Message) {
+    $aggregate_root(Message) {
         + id: Guid
         + text: String
         + sendTime: DateTime
         + lastEditTime: Option[DateTime]
         + sender: Guid
     }
-
-    Message "0..*" ---o "1" Chat
-
 }
 
 $aggregate(User) {
@@ -33,6 +25,14 @@ $aggregate(User) {
     }
 }
 
+$service(ChatService) {
+    + createChat(participants: List[Guid]): Chat
+    + sendMessage(chatId: Guid, text: String, sender: Guid): Message
+    + editMessage(messageId: Guid, text: String, sender: Guid): Message
+    + deleteMessage(messageId: Guid, sender: Guid): Message
+}
+
+Message "0..*" ---* "1" Chat
 User "1" <.left. "0..*" Message : sender
 User "1..2" <.. "0..*" Chat: participant
 @enduml
