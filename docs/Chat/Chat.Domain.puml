@@ -6,6 +6,7 @@ $aggregate(Chat) {
         + id: Guid
         + creationTime: DateTime
         + participants: List[Guid]
+        + messages: List[Message]
         + sendMessage(Message)
         + deleteMessage(Guid)
         + editMessage(Guid, newText: String)
@@ -22,7 +23,7 @@ $aggregate(Chat) {
         + sender: Guid
     }
 
-    Message "0..*" ---* "1" Chat
+    Message "0..*" ---o "1" Chat
 
 }
 
