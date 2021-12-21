@@ -2,7 +2,7 @@
 !include meta/Domain.Analysis.metamodel.iuml
 
 $aggregate(User) {
-    $aggegate_root(User) {
+    $aggregate_root(User) {
         + id: Guid
         + name: String
         + email: String
