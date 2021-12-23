@@ -16,6 +16,7 @@ $aggregate(Message) {
         + sendTime: DateTime
         + lastEditTime: Option[DateTime]
         + sender: Guid
+        + editText(newText: String): void 
     }
 }
 
@@ -30,6 +31,7 @@ $service(ChatService) {
     + sendMessage(chatId: Guid, text: String, sender: Guid): Message
     + editMessage(messageId: Guid, text: String, sender: Guid): Message
     + deleteMessage(messageId: Guid, sender: Guid): Message
+    + getMessages(chatId: Guid, pageIndex: Number, PageDimension: Number)
 }
 
 Message "0..*" ---* "1" Chat
