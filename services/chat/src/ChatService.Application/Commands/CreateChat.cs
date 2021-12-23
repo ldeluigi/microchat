@@ -6,7 +6,7 @@ using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Domain.Time;
 using Microchat.ChatService.Application.Queries;
-using Microchat.ChatService.Domain.ChatAggregate;
+using Microchat.ChatService.Domain.Aggregates.ChatAggregate;
 
 namespace Microchat.ChatService.Application.Commands
 {
