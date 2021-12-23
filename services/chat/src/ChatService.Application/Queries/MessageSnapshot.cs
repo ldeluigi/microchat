@@ -6,8 +6,9 @@ namespace Microchat.ChatService.Application.Queries
 {
     public record MessageSnapshot(
         Guid Id,
+        Guid ChatId,
         string Text,
+        Guid Sender,
         Timestamp RequestTimestamp,
-        Option<DateTime> LastEditTime,
-        Guid Sender);
+        Option<Timestamp> LastEditTime);
 }
