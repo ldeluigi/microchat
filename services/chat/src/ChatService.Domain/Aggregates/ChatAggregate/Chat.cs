@@ -3,7 +3,7 @@ using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
 using System;
 using System.Collections.Generic;
 
-namespace Microchat.ChatService.Domain.ChatAggregate
+namespace Microchat.ChatService.Domain.Aggregates.ChatAggregate
 {
     /// <summary>
     /// The place where is possible to send message.

@@ -1,6 +1,6 @@
 ﻿using EasyDesk.CleanArchitecture.Domain.Metamodel.Repositories;
 
-namespace Microchat.ChatService.Domain.ChatAggregate
+namespace Microchat.ChatService.Domain.Aggregates.ChatAggregate
 {
     /// <summary>
     /// Repository for Chat.
