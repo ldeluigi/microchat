@@ -3,7 +3,7 @@ using EasyDesk.CleanArchitecture.Domain.Metamodel;
 using EasyDesk.Tools.Options;
 using static EasyDesk.Tools.Options.OptionImports;
 
-namespace Microchat.Domain.Aggregates.Message
+namespace Microchat.ChatService.Domain.Aggregates.MessageAggregate
 {
     /// <summary>
     /// The message sent in the chat.
@@ -21,7 +21,7 @@ namespace Microchat.Domain.Aggregates.Message
             Id = id;
             Text = text;
             SendTime = DateTime.Now;
-            LastEditTimeTime = None;
+            LastEditTime = None;
             Sender = sender;
         }
 
@@ -43,7 +43,7 @@ namespace Microchat.Domain.Aggregates.Message
         /// <summary>
         /// Last time when the message have been modified.
         /// </summary>
-        public Option<DateTime> LastEditTimeTime { get; private set; }
+        public Option<DateTime> LastEditTime { get; private set; }
 
         /// <summary>
         /// The sender of the message.
@@ -56,7 +56,7 @@ namespace Microchat.Domain.Aggregates.Message
         /// <param name="newText">The new content of this message.</param>
         public void EditText(string newText)
         {
-            LastEditTimeTime = Some(DateTime.Now);
+            LastEditTime = Some(DateTime.Now);
             Text = newText;
         }
     }
