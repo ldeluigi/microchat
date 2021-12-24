@@ -12,6 +12,7 @@ $aggregate(Chat) {
 $aggregate(Message) {
     $aggregate_root(Message) {
         + id: Guid
+        + chatId: Guid
         + text: String
         + sendTime: DateTime
         + lastEditTime: Option[DateTime]
@@ -28,9 +29,9 @@ $aggregate(User) {
 
 $service(ChatService) {
     + createChat(participants: List[Guid]): Chat
-    + sendMessage(chatId: Guid, text: String, sender: Guid): Message
-    + editMessage(messageId: Guid, text: String, sender: Guid): Message
-    + deleteMessage(messageId: Guid, sender: Guid): Message
+    + sendMessage(chatId: Guid, text: String, userId: Guid): Message
+    + editMessage(messageId: Guid, text: String, userId: Guid): Message
+    + deleteMessage(messageId: Guid, userId: Guid): Message
     + getMessages(chatId: Guid, pageIndex: Number, PageDimension: Number)
 }
 
