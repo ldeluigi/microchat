@@ -1,15 +1,15 @@
 ﻿using EasyDesk.CleanArchitecture.Domain.Metamodel.Repositories;
 using System;
 
-namespace Microchat.ChatService.Domain.Aggregates.MessageAggregate
+namespace Microchat.UserService.Domain.Aggregates.UserAggregate
 {
     /// <summary>
     /// Repository for Message.
     /// </summary>
-    public interface IMessageRepository :
-        IGetByIdRepository<Message, Guid>,
-        ISaveRepository<Message>,
-        IRemoveRepository<Message>
+    public interface IUserRepository :
+        IGetByIdRepository<User, Guid>,
+        ISaveRepository<User>,
+        IRemoveRepository<User>
     {
     }
 }
