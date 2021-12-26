@@ -1,7 +1,7 @@
 using System;
 using EasyDesk.CleanArchitecture.Domain.Metamodel;
 
-namespace Microchat.Domain.Aggregates.Message
+namespace Microchat.ChatService.Domain.Aggregates.UserAggregate
 {
     /// <summary>
     /// User entity.

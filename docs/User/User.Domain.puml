@@ -14,4 +14,13 @@ $aggregate(User) {
         + editName(String)
     }
 }
+
+$service(ChatService) {
+    + createUser(name: String, email: String, password: String): User
+    + editUser(userId: Guid, email: String): User
+    + editPassword(userId: Guid, password: String): User
+    + editName(userId: Guid, name: String): User
+    + getUsers(chatId: Guid, pageIndex: Number, PageDimension: Number)
+}
+
 @enduml
