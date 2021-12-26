@@ -102,25 +102,7 @@
               </ul>
             </div>
           </div>
-          <div class="card-body msg_card_body">
-            <div class="d-flex mb-4" *ngFor= "let message of messages" id="{{ getId(message)}}">
-              <ng-container *ngIf="imgFirst(message)"
-                [ngTemplateOutlet]="img" 
-                [ngTemplateOutletContext]="{src:getSrcImg(message)}">
-              </ng-container>
-              <div class="msg_cotainer">
-                <span class="msg_user">{{message.sender}}</span>
-                {{message.text}}
-                <span class="msg_time">8:40 AM, Today
-                  <i *ngIf="message.edited" class="fas fa-edit"></i>
-                </span>
-              </div>
-              <ng-container *ngIf="!imgFirst(message)"
-                [ngTemplateOutlet]="img" 
-                [ngTemplateOutletContext]="{src:getSrcImg(message)}">
-              </ng-container>
-            </div>
-          </div>
+          <app-chat class="app-chat"></app-chat>
           <div class="card-footer">
             <div class="input-group">
               <div class="input-group-append">
@@ -134,7 +116,7 @@
               </div>
             </div>
           </div>
-        </div>
+         </div>
       </div>
     </div>
   </div>
