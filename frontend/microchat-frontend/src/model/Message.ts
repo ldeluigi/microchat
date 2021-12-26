@@ -1,8 +1,7 @@
 export interface Message {
   id: string,
   text: string,
-  sendTime?: Date,
-  lastEditTime?: Date,
+  sendTime: Date,
+  edited: boolean,
   sender: string,
-  editText(newText: string): void 
 }
