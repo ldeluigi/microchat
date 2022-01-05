@@ -7,14 +7,18 @@ import { AppComponent } from './app.component';
 import { ChatComponent } from './chat/chat.component';
 import { ContactComponent } from './contact/contact.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { StatsComponent } from './stats/stats.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
     AppComponent,
     ChatComponent,
-    ContactComponent
+    ContactComponent,
+    StatsComponent
   ],
   imports: [
+    BrowserAnimationsModule,
     BrowserModule,
     FormsModule,
     MatDialogModule,

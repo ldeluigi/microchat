@@ -3,6 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import * as $ from 'jquery';
 import { Chat } from 'src/model/Chat';
 import { Stats } from 'src/model/Stats';
+import { StatsComponent } from './stats/stats.component';
 
 @Component({
   selector: 'app-root',
@@ -21,7 +22,7 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.chatList.push({id:"1"});
+    this.chatList.push({id:"1", user: {id: "4218-4124-6315-2412", name: "ThommyN1"}});
     this.chatList.push({id:"2"});
     this.chatList.push({id:"3"});
     this.chatList.push({id:"4"});
@@ -56,11 +57,11 @@ export class AppComponent implements OnInit {
   showStats(active: Chat) {
     // TODO: get stats from chat
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.autoFocus = true;
-    const stats: Stats = { totalMessages: 0, avgWeekMsg: 0, avgDaysMsg: 0 }
+    //dialogConfig.autoFocus = true;
+    const stats: Stats = { totalMessages: 1, avgWeekMsg: 2, avgDaysMsg: 3 }
 
     dialogConfig.data = stats
     console.log(active)
-    //this.dialog.open(StatsComponent, dialogConfig)
+    this.dialog.open(StatsComponent, dialogConfig)
   }
 }
