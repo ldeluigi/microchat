@@ -1,10 +1,17 @@
+$mobile: 768px;
+
 .chat{
   margin-top: auto;
   margin-bottom: auto;
 }
 .card{
-  margin-top: 2vh;
-  height: 96vh;
+  @media (min-width : $mobile) {
+    height: 96vh;
+    margin-top: 2vh;
+  }
+  @media (max-width : $mobile) {
+    margin-top: 0.5vh;
+  }
   border-radius: 15px !important;
   background-color: rgba(0,0,0,0.4) !important;
 }
