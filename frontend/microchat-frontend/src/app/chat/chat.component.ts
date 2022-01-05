@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Chat } from 'src/model/Chat';
 import { Message } from 'src/model/Message';
 
 @Component({
@@ -7,8 +8,8 @@ import { Message } from 'src/model/Message';
   styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit {
+  @Input() chat!: Chat;
   messages: Message[] = []; // messages
-  //@ViewChild('TextArea') newMessage!: TextArea
 
   ngOnInit() {
     this.messages.push({id: "id",text:"Buon Natale", sendTime: new Date(2021,11,25,12),edited:true,sender:"Simo"});
@@ -34,9 +35,5 @@ export class ChatComponent implements OnInit {
 
   getSrcImg(message: Message) {
     return "https://therichpost.com/wp-content/uploads/2020/06/avatar2.png";
-  }
-
-  sendMessage() {
-    console.log($("#newMessage")[0]);
   }
 }

@@ -11,6 +11,7 @@ describe('AppComponent', () => {
       declarations: [
         AppComponent
       ],
+      providers: []
     }).compileComponents();
   });
 

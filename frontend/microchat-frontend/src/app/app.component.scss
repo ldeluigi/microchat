@@ -57,6 +57,7 @@
   border:0 !important;
   color: white !important;
   cursor: pointer;
+  height: 60px !important;
 }
 .search_btn{
   border-radius: 0 15px 15px 0 !important;
@@ -64,6 +65,7 @@
   border:0 !important;
   color: white !important;
   cursor: pointer;
+  height: 45px !important;
 }
 .contacts{
   list-style: none;
@@ -76,42 +78,6 @@
 }
 .active{
   background-color: rgba(0,0,0,0.3);
-}
-.user_img{
-  height: 70px;
-  width: 70px;
-  border:1.5px solid #f5f6fa;
-}
-.img_cont{
-  position: relative;
-  height: 70px;
-  width: 70px;
-}
-.online_icon{
-  position: absolute;
-  height: 15px;
-  width:15px;
-  background-color: #4cd137;
-  border-radius: 50%;
-  bottom: 0.2em;
-  right: 0.4em;
-  border:1.5px solid white;
-}
-.offline{
-  background-color: #c23616 !important;
-}
-.user_info{
-  margin-top: auto;
-  margin-bottom: auto;
-  margin-left: 15px;
-}
-.user_info span{
-  font-size: 20px;
-  color: white;
-}
-.user_info p{
-  font-size: 10px;
-  color: rgba(255,255,255,0.6);
 }
 .video_cam{
   margin-left: 50px;
