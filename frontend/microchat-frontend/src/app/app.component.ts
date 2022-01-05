@@ -11,10 +11,11 @@ import { StatsComponent } from './stats/stats.component';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'microchat-frontend';
   chatList: Chat[] = [];
   active!: Chat;
   isWriting: boolean = false
+  lastTimeWriting: number = Date.now();
+  isWritingTime: number = 2000; //ms
   newMessage!: Event;
 
   constructor(
@@ -47,17 +48,33 @@ export class AppComponent implements OnInit {
   }
 
   onChange() {
-    if (this.isWriting) {
-
+    this.lastTimeWriting = Date.now();
+    window.clearTimeout();
+    this.startTimeout();
+    if (!this.isWriting) {
+      this.isWriting = true;
+      console.log("TODO: sta scrivendo");
+      // TODO: invia sto scrivendo
     }
-    this.isWriting = true;
-    console.log("aa")
+  }
+
+  startTimeout() {
+    window.setTimeout(() => {
+      if (this.isWriting) {
+        if (Date.now() - this.lastTimeWriting > this.isWritingTime) {
+          console.log("TODO: non sta scrivendo");
+          this.isWriting = false;
+        } else {
+          this.startTimeout();
+        }
+      }
+    }, this.isWritingTime)
   }
 
   showStats(active: Chat) {
     // TODO: get stats from chat
+    console.log("TODO: get stats from chat");
     const dialogConfig = new MatDialogConfig();
-    //dialogConfig.autoFocus = true;
     const stats: Stats = { totalMessages: 1, avgWeekMsg: 2, avgDaysMsg: 3 }
 
     dialogConfig.data = stats

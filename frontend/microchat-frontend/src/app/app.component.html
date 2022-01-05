@@ -27,7 +27,7 @@
           <app-chat class="app-chat" [chat]="active"></app-chat>
           <div class="card-footer">
             <div class="input-group">
-              <textarea id="newMessage" name="msg" class="form-control type_msg" placeholder="Type your message..." [(ngModel)]="newMessage" (change)="onChange()"></textarea>
+              <textarea id="newMessage" name="msg" class="form-control type_msg" placeholder="Type your message..." [ngModel]="newMessage" (ngModelChange)="onChange()"></textarea>
               <div class="input-group-append">
                 <span class="input-group-text send_btn" (click)=sendMessage()>
                   <i class="fas fa-location-arrow"></i>
