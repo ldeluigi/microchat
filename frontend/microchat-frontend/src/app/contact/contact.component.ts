@@ -15,4 +15,8 @@ export class ContactComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  title(): string {
+    return this.chat.user ? this.chat.user.name + " - " + this.chat.user.id : this.chat.id
+  }
+
 }

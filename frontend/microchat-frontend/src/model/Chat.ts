@@ -1,3 +1,9 @@
+interface User {
+  id: string,
+  name: string
+}
+
 export interface Chat {
-  id: string
+  id: string,
+  user?: User
 }
