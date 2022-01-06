@@ -11,30 +11,45 @@ import { StatsComponent } from './stats/stats.component';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+  activeList: Chat[] = [];
   chatList: Chat[] = [];
   active!: Chat;
   isWriting: boolean = false
   lastTimeWriting: number = Date.now();
-  isWritingTime: number = 2000; //ms
-  newMessage!: Event;
+  newMessage!: string;
+  search!: string;
 
   constructor(
     public dialog: MatDialog
   ) {}
 
   ngOnInit() {
+    $('#action_menu_btn').on("click", function(){
+      $('.action_menu').toggle();
+    });
+
+    //getChatList
     this.chatList.push({id:"1", user: {id: "4218-4124-6315-2412", name: "ThommyN1"}});
     this.chatList.push({id:"2"});
     this.chatList.push({id:"3"});
     this.chatList.push({id:"4"});
-    $('#action_menu_btn').on("click", function(){
-      $('.action_menu').toggle();
-    });
-    this.active = this.chatList[0];
+    this.initActiveList();
   }
 
-  sendMessage() {
-    console.log(this.newMessage);
+  initActiveList(): void {
+    this.search = "";
+    this.setActiveListToChatList(() => {});
+  }
+
+  setActiveListToChatList(orElse: () => void): void {
+    if (!this.search) {
+      this.activeList = this.chatList;
+      // if active doesn't exists 
+      this.active = this.active ? this.active : this.activeList[0];
+
+    } else {
+      orElse();
+    }
   }
 
   getClass(chat: Chat) {
@@ -42,9 +57,10 @@ export class AppComponent implements OnInit {
   }
 
   setActive(chat: Chat) {
-    if (this.chatList.find(c => chat.id == c.id)) {
+    if (this.activeList.find(c => chat.id == c.id)) {
       this.active = chat;
     }
+    this.initActiveList();
   }
 
   onChange() {
@@ -54,31 +70,40 @@ export class AppComponent implements OnInit {
     if (!this.isWriting) {
       this.isWriting = true;
       console.log("TODO: sta scrivendo");
-      // TODO: invia sto scrivendo
     }
   }
 
+  sendMessage() {
+    console.log("TODO: send " + this.newMessage);
+  }
+  
+  findChat() {
+    console.log("TODO: richiesta chats")
+    let foundChatList: Chat[] = []
+    foundChatList.push({id:"5", user: {id: "4218-4124-6315-2412", name: "Deloo"}});
+    foundChatList.push({id:"6", user: {id: "4218-4124-6315-2413", name: "Gimmy"}});
+    foundChatList.push({id:"7"});
+    foundChatList.push({id:"9", user: {id: "4218-4124-6315-2417", name: "Magno"}});
+    this.setActiveListToChatList(() => {this.activeList = foundChatList});
+  }
+
   startTimeout() {
+    let isWritingTime: number = 2000; //ms
     window.setTimeout(() => {
       if (this.isWriting) {
-        if (Date.now() - this.lastTimeWriting > this.isWritingTime) {
+        if (Date.now() - this.lastTimeWriting > isWritingTime) {
           console.log("TODO: non sta scrivendo");
           this.isWriting = false;
         } else {
           this.startTimeout();
         }
       }
-    }, this.isWritingTime)
+    }, isWritingTime)
   }
 
   showStats(active: Chat) {
-    // TODO: get stats from chat
-    console.log("TODO: get stats from chat");
-    const dialogConfig = new MatDialogConfig();
+    console.log("TODO: get stats from chat :"+ active.id);
     const stats: Stats = { totalMessages: 1, avgWeekMsg: 2, avgDaysMsg: 3 }
-
-    dialogConfig.data = stats
-    console.log(active)
-    this.dialog.open(StatsComponent, dialogConfig)
+    this.dialog.open(StatsComponent, {data : stats})
   }
 }

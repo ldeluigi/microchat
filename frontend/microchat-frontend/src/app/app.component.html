@@ -3,15 +3,15 @@
       <div class="col-md-4 col-xl-3 chat"><div class="card mb-sm-3 mb-md-0 contacts_card">
         <div class="card-header">
           <div class="input-group">
-            <input type="text" placeholder="Search..." name="" class="form-control search">
+            <input type="text" placeholder="Search..." name="" class="form-control search" [(ngModel)]="search" (ngModelChange)="findChat()">
             <div class="input-group-prepend">
-              <span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
+              <span class="input-group-text search_btn" (click)="findChat()" ><i class="fas fa-search"></i></span>
             </div>
           </div>
         </div>
         <div class="card-body contacts_body">
           <ul class="contacts">
-          <li class="{{getClass(chat)}}" *ngFor="let chat of chatList">
+          <li class="{{getClass(chat)}}" *ngFor="let chat of activeList">
             <app-contact [chat]="chat" (click)=setActive(chat)></app-contact>
           </li>
         </ul>
@@ -27,7 +27,7 @@
           <app-chat class="app-chat" [chat]="active"></app-chat>
           <div class="card-footer">
             <div class="input-group">
-              <textarea id="newMessage" name="msg" class="form-control type_msg" placeholder="Type your message..." [ngModel]="newMessage" (ngModelChange)="onChange()"></textarea>
+              <textarea id="newMessage" name="msg" class="form-control type_msg" placeholder="Type your message..." [(ngModel)]="newMessage" (ngModelChange)="onChange()"></textarea>
               <div class="input-group-append">
                 <span class="input-group-text send_btn" (click)=sendMessage()>
                   <i class="fas fa-location-arrow"></i>
