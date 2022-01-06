@@ -8,7 +8,7 @@ import { Chat } from 'src/model/Chat';
 })
 export class ContactComponent implements OnInit {
 
-  @Input() chat!: Chat
+  @Input() chat: Chat | undefined
 
   constructor() { }
 
@@ -16,7 +16,13 @@ export class ContactComponent implements OnInit {
   }
 
   title(): string {
-    return this.chat.user ? this.chat.user.name + " - " + this.chat.user.id : this.chat.id
+    return this.chat ? 
+            this.chat.user ? this.chat.user.name + " - " + this.chat.user.id : this.chat.id
+            : "Waiting for chat"
+  }
+
+  contactInfo(): string {
+    return this.chat && this.chat.user ? this.chat.user.name + " is online" : "";
   }
 
 }
