@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import * as $ from 'jquery';
 import { ChatComponent } from './chat.component';
 
 describe('ChatComponent', () => {
@@ -8,6 +9,9 @@ describe('ChatComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [ 
+        BrowserAnimationsModule
+      ],
       declarations: [ ChatComponent ]
     })
     .compileComponents();

@@ -16,9 +16,6 @@ export class ChatComponent implements OnInit {
     this.messages.push({id: "id",text:"Grazie, anche a te e famiglia!", sendTime: new Date(2021,11,25,12,1), edited:false,sender:"Thommy"});
     this.messages.push({id: "id",text:":)", sendTime: new Date(2021,11,25,12,2), edited:false,sender:"Simo"});
     this.messages.push({id: "id",text:"Dai ricominciamo a lavorare al proj", sendTime: new Date(2021,11,26,12), edited:true,sender:"Thommy"});
-    $('#action_menu_btn').on("click", function(){
-      $('.action_menu').toggle();
-    });
   }
 
   getId(message: Message) {
