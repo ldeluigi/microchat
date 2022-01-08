@@ -37,4 +37,4 @@ jobs:
         run: npm run-script build
       - name: Test
         working-directory: frontend/microchat-frontend
-        run: npm run-script test-prod
+        run: npm run-script test
