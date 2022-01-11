@@ -1,0 +1,40 @@
+@import "../../../styles/colors.scss";
+
+:host {
+  display: flex;
+  justify-content: center;
+  margin-top: 10%;
+}
+
+.mat-card {
+  width: 55%;
+  max-width: 350px;
+}
+
+form {
+  width: 80%;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+mat-card-title,
+mat-card-content {
+  padding: 2%;
+  display: flex;
+  justify-content: center;
+}
+
+.error {
+  text-align: center;
+  padding: 3%;
+  color: $default-text-color;
+  background-color: $default-error-color;
+}
+
+.button {
+  display: flex;
+  justify-content: flex-end;
+  margin: 3%;
+}

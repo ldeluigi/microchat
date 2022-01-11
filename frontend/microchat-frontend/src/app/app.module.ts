@@ -4,10 +4,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ChatComponent } from './chat/chat.component';
-import { ContactComponent } from './contact/contact.component';
+import { ChatComponent } from './routes/chat/chat.component';
+import { ContactComponent } from './routes/contact/contact.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { StatsComponent } from './stats/stats.component';
+import { StatsComponent } from './routes/stats/stats.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({

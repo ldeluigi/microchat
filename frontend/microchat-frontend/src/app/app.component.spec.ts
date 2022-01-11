@@ -2,8 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
-import { ChatComponent } from './chat/chat.component';
-import { ContactComponent } from './contact/contact.component';
+import { ChatComponent } from './routes/chat/chat.component';
+import { ContactComponent } from './routes/contact/contact.component';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
