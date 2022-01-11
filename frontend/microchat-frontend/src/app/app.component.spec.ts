@@ -1,21 +1,15 @@
 import { TestBed } from '@angular/core/testing';
-import { MatDialogModule } from '@angular/material/dialog';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
-import { ChatComponent } from './routes/chat/chat.component';
-import { ContactComponent } from './routes/contact/contact.component';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        MatDialogModule,
         RouterTestingModule
       ],
       declarations: [
-        AppComponent,
-        ChatComponent,
-        ContactComponent
+        AppComponent
       ],
       providers: []
     }).compileComponents();

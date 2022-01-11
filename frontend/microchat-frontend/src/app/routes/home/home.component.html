@@ -1,0 +1,47 @@
+<div class="container-fluid h-50">
+  <div class="row justify-content-center h-100">
+    <div class="col-md-4 col-xl-3 chat"><div class="card mb-sm-3 mb-md-0 contacts_card">
+      <div class="card-header">
+        <div class="input-group">
+          <input type="text" placeholder="Search..." name="" class="form-control search" [(ngModel)]="search" (ngModelChange)="findChat()">
+          <div class="input-group-prepend">
+            <span class="input-group-text search_btn" (click)="findChat()" ><i class="fas fa-search"></i></span>
+          </div>
+        </div>
+      </div>
+      <div class="card-body contacts_body">
+        <ul class="contacts">
+        <li class="{{getClass(chat)}}" *ngFor="let chat of activeList">
+          <app-contact [chat]="chat" (click)=setActive(chat)></app-contact>
+        </li>
+      </ul>
+      </div>
+      <div class="card-footer"></div>
+    </div></div>
+    <div class="col-md-8 col-xl-6 chat">
+      <div class="card">
+        <div class="card-header msg_head">
+          <app-contact [chat]="active"></app-contact>
+          <span id="action_menu_btn" (click)=showStats(active)><i class="far fa-chart-bar"></i></span>
+        </div>
+        <app-chat class="app-chat" [chat]="active"></app-chat>
+        <div class="card-footer">
+          <div class="input-group">
+            <textarea id="newMessage" name="msg" class="form-control type_msg" placeholder="Type your message..." [(ngModel)]="newMessage" (ngModelChange)="onChange()"></textarea>
+            <div class="input-group-append">
+              <span class="input-group-text send_btn" (click)=sendMessage()>
+                <i class="fas fa-location-arrow"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+       </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #img let-src='src'>
+<div class="img_cont_msg">
+  <img src="{{src}}" class="rounded-circle user_img_msg">
+</div>
+</ng-template>
