@@ -18,22 +18,33 @@
 
 ## Domain Analysis
 
-### Chat context
+### Chat domain
 ```plantuml
 @startuml Chat Domain Map
 !include Chat/Chat.Domain.puml
 @enduml
 ```
 
-### User context
+#### Private Chat subdomain
+```plantuml
+@startuml PivateChat Subdomain Map
+!include Chat/PrivateChat.Subdomain.puml
+@enduml
+```
+
+#### Chat constraints
+
+- *Chat* can't be deleted.
+- *PrivateChat* can have only two partecipants, a owner and a partecipant.
+
+### User domain
 ```plantuml
 @startuml User Domain Map
 !include User/User.Domain.puml
 @enduml
 ```
 
-#### Constraints
+#### User Constraints
 - A *User* can interact with a chat only if it is a participant.
 - A *User* can send messages within a chat only if it is a participant.
 - A *User* can only delete messages in a chat if it's the original sender.
-- *Chat* can't be deleted.
