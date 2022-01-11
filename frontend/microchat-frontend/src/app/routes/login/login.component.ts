@@ -2,8 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { first } from 'rxjs/operators';
-import { AccountService } from '../../../services/account.service';
-import { LogService } from '../../../services/log.service';
+import { AccountService } from 'src/app/services/account.service';
+import { LogService } from 'src/app/services/log.service';
 
 @Component({
   selector: 'app-login',
@@ -31,12 +31,12 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     // get return url from route parameters or default to '/'
-    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
-  registration(): void {
-    this.router.navigate(['/account/register'], { queryParams: { returnUrl: `${this.returnUrl}`, username: `${this.f.username.value}` }});
-  }
+  /*registration(): void {
+    this.router.navigate(['/register'], { queryParams: { returnUrl: `${this.returnUrl}`, username: `${this.f['username'].value}` }});
+  }*/
 
   // convenience getter for easy access to form fields
   // tslint:disable-next-line: typedef
@@ -49,10 +49,10 @@ export class LoginComponent implements OnInit {
     // stop here if form is invalid
     if (this.form.invalid) {
       const errors: string[] = [];
-      if (this.f.username.invalid) {
+      if (this.f['username'].invalid) {
         errors.push('username');
       }
-      if (this.f.password.invalid) {
+      if (this.f['password'].invalid) {
         errors.push('password');
       }
       if (errors.length > 0) {
@@ -62,16 +62,16 @@ export class LoginComponent implements OnInit {
     }
 
     this.accountService
-      .login(this.f.username.value, this.f.password.value)
+      .login(this.f['username'].value, this.f['password'].value)
       .pipe(first())
-      .subscribe(
-        (data) => {
+      .subscribe({
+        next: (data) => {
           this.router.navigate([this.returnUrl]);
         },
-        (error) => {
+        error: (error) => {
           // console.log(error);
           this.logService.errorSnackBar('Wrong Username or Password');
         },
-      );
+      });
   }
 }
