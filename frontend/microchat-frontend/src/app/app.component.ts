@@ -3,7 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import * as $ from 'jquery';
 import { Chat } from 'src/model/Chat';
 import { Stats } from 'src/model/Stats';
-import { StatsComponent } from './stats/stats.component';
+import { StatsComponent } from './routes/stats/stats.component';
 
 @Component({
   selector: 'app-root',
@@ -46,7 +46,6 @@ export class AppComponent implements OnInit {
       this.activeList = this.chatList;
       // if active doesn't exists 
       this.active = this.active ? this.active : this.activeList[0];
-
     } else {
       orElse();
     }
@@ -59,6 +58,9 @@ export class AppComponent implements OnInit {
   setActive(chat: Chat) {
     if (this.activeList.find(c => chat.id == c.id)) {
       this.active = chat;
+    } else if (this.search) { //searched but not already existing
+      console.log("TODO: create with " + chat.user);
+      //this.chatService.createChat(chat.user).subscribe(newChat => this.active = newChat); // chat.user list or not?
     }
     this.initActiveList();
   }
@@ -74,6 +76,7 @@ export class AppComponent implements OnInit {
   }
 
   sendMessage() {
+    //this.chatService.sendMessage(this.active.id, this.newMessage, this.accountservice.user)
     console.log("TODO: send " + this.newMessage);
   }
   
