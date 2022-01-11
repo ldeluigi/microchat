@@ -1,41 +1,10 @@
 @startuml Chat Domain
 !include meta/Domain.Analysis.metamodel.iuml
 
-$aggregate(Chat) {
-    $aggregate_root(Chat) {
-        + id: Guid
-        + creationTime: DateTime
-        + participants: List[Guid]
-    }
+$entity(Chat) {
+    + id: Guid
+    + creationTime: DateTime
+    + owner: Guid
 }
 
-$aggregate(Message) {
-    $aggregate_root(Message) {
-        + id: Guid
-        + chatId: Guid
-        + text: String
-        + sendTime: DateTime
-        + lastEditTime: Option[DateTime]
-        + sender: Guid
-        + editText(newText: String): void 
-    }
-}
-
-$aggregate(User) {
-    $entity(User) {
-        + id: Guid
-    }
-}
-
-$service(ChatService) {
-    + createChat(participants: List[Guid]): Chat
-    + sendMessage(chatId: Guid, text: String, userId: Guid): Message
-    + editMessage(messageId: Guid, text: String, userId: Guid): Message
-    + deleteMessage(messageId: Guid, userId: Guid): Message
-    + getMessages(chatId: Guid, pageIndex: Number, PageDimension: Number)
-}
-
-Message "0..*" ---* "1" Chat
-User "1" <.left. "0..*" Message : sender
-User "1..2" <.. "0..*" Chat: participant
 @enduml
