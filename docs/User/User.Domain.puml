@@ -5,22 +5,19 @@ $aggregate(User) {
     $aggregate_root(User) {
         + id: Guid
         + name: String
+        + surname: String
+        + username: Username
         + email: String
-        + password: String
         + creationTime: DateTime
         + lastLoginTime: Option[DateTime]
-        + editEmail(String)
-        + editPassword(String)
-        + editName(String)
+        + updateEmail(String)
+        + updateUsername(Username)
     }
-}
 
-$service(ChatService) {
-    + createUser(name: String, email: String, password: String): User
-    + editUser(userId: Guid, email: String): User
-    + editPassword(userId: Guid, password: String): User
-    + editName(userId: Guid, name: String): User
-    + getUsers(chatId: Guid, pageIndex: Number, PageDimension: Number)
+    $value(Username) {
+        + name: String
+    }
+    
+    Username -o User
 }
-
 @enduml
