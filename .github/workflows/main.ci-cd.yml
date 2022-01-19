@@ -16,7 +16,7 @@ env:
 
 
 jobs:
-  build:
+  backend:
     name: Build Microservices
     runs-on: ubuntu-20.04
     env:
@@ -71,10 +71,19 @@ jobs:
         with:
           name: ${{ matrix.human-friendly-name }}_${{ env.artifact-name }}
           path: ${{ env.output-dir }}
+  
+
+  frontend:
+    name: Build Frontend
+    uses: ${{ github.repository }}/.github/workflows/frontend.ci.yml@${{ github.ref_name }}
+    with:
+      path: frontend/microchat-frontend
+
+
   release:
     name: GitHub Release
     runs-on: ubuntu-20.04
-    needs: [build]
+    needs: [backend, frontend]
     if: needs.build.outputs.should-release == 'true'
     outputs:
       released: ${{ steps.release-notification.outputs.released }}
