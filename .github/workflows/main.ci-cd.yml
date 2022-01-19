@@ -75,7 +75,7 @@ jobs:
 
   frontend:
     name: Build Frontend
-    uses: ${{ github.repository }}/.github/workflows/frontend.ci.yml@${{ github.ref_name }}
+    uses: ldeluigi/microchat/.github/workflows/frontend.ci.yml@master
     with:
       path: frontend/microchat-frontend
 
