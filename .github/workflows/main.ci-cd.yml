@@ -46,7 +46,7 @@ jobs:
     uses: ldeluigi/microchat/.github/workflows/backend.ci.yml@master
     with:
       app-publish-dir: ${{ needs.configure.outputs.app-publish-dir }}
-      sql-script-name: ${{ nneeds.configure.outputs.sql-script-name }}
+      sql-script-name: ${{ needs.configure.outputs.sql-script-name }}
   
 
   frontend:
