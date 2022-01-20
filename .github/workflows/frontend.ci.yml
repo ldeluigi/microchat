@@ -4,15 +4,12 @@
 name: Angular CI
 
 on:
-  push:
-    branches:
-      - "**"
-    paths:
-      - "frontend/microchat-frontend/**"
-      - ".github/workflows/frontend*.yml"
-  pull_request:
-    branches:
-      - "**"
+  workflow_call:
+    inputs:
+      path:
+        required: false
+        default: .
+        type: string
 
 jobs:
   build:

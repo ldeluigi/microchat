@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EasyDesk.CleanArchitecture.Infrastructure" Version="0.28.0" />
+    <PackageReference Include="EasyDesk.CleanArchitecture.Dal.EfCore" Version="0.28.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AuthService.Application\AuthService.Application.csproj" />
+    <ProjectReference Include="..\AuthService.Domain\AuthService.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Authentication\" />
+    <Folder Include="DataAccess\Migrations\" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <RootFolder>..\..\..</RootFolder>
+  </PropertyGroup>
+
+</Project>

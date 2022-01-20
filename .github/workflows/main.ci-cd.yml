@@ -1,0 +1,234 @@
+name: Microservices Continuous Integration
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "**"
+    tags:
+      - "*"
+
+env:
+  dotnet-version: 6.x
+  sql-script-name: update-database.sql
+  app-publish-dir: app
+  artifact-name: build-artifacts
+
+
+jobs:
+  backend:
+    name: Build Microservices
+    runs-on: ubuntu-20.04
+    env:
+      output-dir: out
+    outputs:
+      version: ${{ steps.semver.outputs.version }}
+      should-release: ${{ steps.semver.outputs.should-release }}
+      is-prerelease: ${{ steps.semver.outputs.is-github-prerelease }}
+    defaults:
+      run:
+        working-directory: ${{ matrix.working-directory }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - main-project-name: src/AuthService.Web
+            working-directory: services/auth
+            unit-test-project-name: test/AuthService.UnitTests
+            human-friendly-name: auth service
+    steps:
+      - id: semver
+        name: Checkout
+        uses: EasyDesk/action-semver-checkout@v1
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.dotnet-version }}
+      - name: Build
+        uses: EasyDesk/action-dotnet-build@v1
+        with:
+          warnings-as-errors: true
+          #build-configuration: Release
+          path: ${{ matrix.working-directory }}
+      - name: Run Unit Tests
+        uses: EasyDesk/action-dotnet-test@v1
+        with:
+          path: ${{ matrix.working-directory }}/${{ matrix.unit-test-project-name }}
+          #build-configuration: Release
+      - name: Generate database script
+        uses: EasyDesk/action-generate-migrations-script@v1
+        with:
+          project-dir: ${{ matrix.working-directory }}/${{ matrix.main-project-name }}
+          output-file: ${{ env.output-dir }}/${{ env.sql-script-name }}
+          #build-configuration: Release
+      - name: Publish
+        uses: EasyDesk/action-dotnet-publish@v1
+        with:
+          path: ${{ matrix.working-directory }}/${{ matrix.main-project-name }}
+          output-dir: ${{ env.output-dir }}/${{ env.app-publish-dir }}
+          #build-configuration: Release
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.human-friendly-name }}_${{ env.artifact-name }}
+          path: ${{ env.output-dir }}
+  
+
+  frontend:
+    name: Build Frontend
+    uses: ldeluigi/microchat/.github/workflows/frontend.ci.yml@master
+    with:
+      path: frontend/microchat-frontend
+
+
+  release:
+    name: GitHub Release
+    runs-on: ubuntu-20.04
+    needs: [backend, frontend]
+    if: needs.build.outputs.should-release == 'true'
+    outputs:
+      released: ${{ steps.release-notification.outputs.released }}
+    env:
+      release-prefix: Microchat
+    concurrency: release
+    steps:
+      - uses: actions/download-artifact@v2
+      - name: Zip build assets
+        shell: bash
+        env:
+          ZIP_OUTPUT_NAME: ${{ env.release-prefix }}_${{ needs.build.outputs.version }}
+        run: |
+          cat > script.sh <<'EOF' && chmod +x script.sh
+          #!/bin/bash
+          NAME=${1#./}
+          echo "Current artifact: $NAME"
+          cd "$1"
+          [ -f '${{ env.sql-script-name }}' ] && mv '${{ env.sql-script-name }}' "${NAME// /-}_"'${{ env.sql-script-name }}'
+          zip -r "${ZIP_OUTPUT_NAME//\//_}_${NAME// /-}.zip" '${{ env.app-publish-dir }}'/*
+          EOF
+          find . -maxdepth 1 -type d \( ! -name . \) -exec ./script.sh '{}' \;
+      - name: Release
+        uses: EasyDesk/action-semver-release@v1
+        with:
+          version: ${{ needs.build.outputs.version }}
+          prerelease: ${{ needs.build.outputs.is-prerelease }}
+          prefix: ${{ env.release-prefix }} ${{ matrix.human-friendly-name }}
+          files: |
+            */*.sql
+            */*.zip
+      - name: Notify release
+        id: release-notification
+        shell: bash
+        run: |
+          echo '::set-output name=released::true'
+
+# jobs:
+#   build:
+#     name: Build Microservice
+#     runs-on: ubuntu-20.04
+#     env:
+#       MAIN_PROJECT: src/AuthService.Web
+#       UNIT_TESTS_PROJECT: test/AuthService.UnitTests
+#       OUTPUT_DIR: out
+#       DOTNET_VERSION: 5.x
+#     outputs:
+#       version: ${{ steps.semver.outputs.version }}
+#       should-release: ${{ steps.semver.outputs.should-release }}
+#       is-prerelease: ${{ steps.semver.outputs.is-github-prerelease }}
+#       should-deploy: ${{ env.AZURE_APP_SERVICE_NAME != '' }}
+#     steps:
+#       - id: semver
+#         name: Checkout
+#         uses: EasyDesk/action-semver-checkout@v1
+#       - name: Build
+#         uses: EasyDesk/job-microservice-build@v1
+#         with:
+#           dotnet-version: ${{ env.DOTNET_VERSION }}
+#           main-project: ${{ env.MAIN_PROJECT }}
+#           unit-tests-project: ${{ env.UNIT_TESTS_PROJECT }}
+#           output-dir: ${{ env.OUTPUT_DIR }}/app
+#           sql-file-name: ${{ env.OUTPUT_DIR }}/update-database.sql
+#           warnings-as-errors: false
+#       - uses: actions/upload-artifact@v2
+#         with:
+#           name: build-artifacts
+#           path: ${{ env.OUTPUT_DIR }}
+#   deploy-to-test:
+#     name: Deploy to test environment
+#     runs-on: windows-2019
+#     needs: [build]
+#     concurrency: deploy-test
+#     if: needs.build.outputs.should-deploy == 'true'
+#     steps:
+#       - uses: actions/download-artifact@v2
+#         with:
+#           name: build-artifacts
+#       - name: Deploy to Azure
+#         uses: EasyDesk/job-azure-publish-webapp@v1
+#         with:
+#           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+#           app-name: ${{ env.AZURE_APP_SERVICE_NAME }}
+#           publish-dir: app
+#           slot-name: test
+#           migrations-script: update-database.sql
+#           db-server-name: ${{ secrets.TEST_DB_SERVER }}
+#           db-connection-string: ${{ secrets.TEST_CONNECTION_STRING }}
+#   release:
+#     name: GitHub Release
+#     runs-on: ubuntu-20.04
+#     needs: [build]
+#     if: needs.build.outputs.should-release == 'true'
+#     concurrency: release
+#     steps:
+#       - uses: actions/download-artifact@v2
+#         with:
+#           name: build-artifacts
+#       - name: Zip build assets
+#         run: zip -r assets app/*
+#       - name: Release
+#         uses: EasyDesk/action-semver-release@v1
+#         with:
+#           version: ${{ needs.build.outputs.version }}
+#           prerelease: ${{ needs.build.outputs.is-prerelease }}
+#           files: |
+#             update-database.sql
+#             assets.zip
+#   deploy-to-ua:
+#     name: Deploy to User Acceptance environment
+#     runs-on: windows-2019
+#     needs: [build, release]
+#     concurrency: deploy-ua
+#     if: needs.build.outputs.should-deploy == 'true'
+#     steps:
+#       - uses: actions/download-artifact@v2
+#         with:
+#           name: build-artifacts
+#       - name: Deploy to Azure
+#         uses: EasyDesk/job-azure-publish-webapp@v1
+#         with:
+#           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+#           app-name: ${{ env.AZURE_APP_SERVICE_NAME }}
+#           publish-dir: app
+#           slot-name: ua
+#           migrations-script: update-database.sql
+#           db-server-name: ${{ secrets.UA_DB_SERVER }}
+#           db-connection-string: ${{ secrets.UA_CONNECTION_STRING }}
+#   deploy-to-production:
+#     name: Deploy to Producion environment
+#     runs-on: windows-2019
+#     needs: [build, deploy-to-ua]
+#     concurrency: deploy-production
+#     if: needs.build.outputs.should-deploy == 'true'
+#     steps:
+#       - uses: actions/download-artifact@v2
+#         with:
+#           name: build-artifacts
+#       - name: Deploy to Azure
+#         uses: EasyDesk/job-azure-publish-webapp@v1
+#         with:
+#           azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
+#           app-name: ${{ env.AZURE_APP_SERVICE_NAME }}
+#           publish-dir: app
+#           slot-name: production
+#           migrations-script: update-database.sql
+#           db-server-name: ${{ secrets.PRODUCTION_DB_SERVER }}
+#           db-connection-string: ${{ secrets.PRODUCTION_CONNECTION_STRING }}
