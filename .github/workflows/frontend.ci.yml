@@ -9,7 +9,7 @@ on:
       - "**"
     paths:
       - ".github/workflows/*"
-      - "frontend/microchat-frontend/*"
+      - "frontend/microchat-frontend/**"
   workflow_call:
     inputs:
       app-publish-dir:
@@ -20,7 +20,7 @@ env:
   path: frontend/microchat-frontend
   human-friendly-name: static_site
   artifact-name: build-artifacts
-  output-dir: ./dist
+  output-dir: dist
 
 jobs:
   build:
@@ -46,7 +46,12 @@ jobs:
       - name: Test
         working-directory: ${{ env.path }}
         run: npm run-script test-prod
+      - name: Refactor Folder
+        if: github.event_name == 'workflow_call'
+        working-directory: ${{ env.path }}
+        run: mv ${{ env.output-dir }} ${{ inputs.app-publish-dir }}
+        shell: bash
       - uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.human-friendly-name }}
-          path: ${{ env.output-dir }}
+          name: ${{ env.human-friendly-name }}
+          path: ${{ env.path }}/${{ inputs.app-publish-dir || env.output-dir }}
