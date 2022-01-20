@@ -9,7 +9,7 @@ on:
       - "**"
     paths:
       - ".github/workflows/*"
-      - "frontend/microchat-frontend"
+      - "frontend/microchat-frontend/*"
   workflow_call:
     inputs:
       app-publish-dir:
