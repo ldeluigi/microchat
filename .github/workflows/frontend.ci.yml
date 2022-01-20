@@ -17,6 +17,7 @@ on:
         type: string
 
 env:
+  project-name: microchat-frontend
   path: frontend/microchat-frontend
   human-friendly-name: microchat_frontend_static_site
   artifact-name: build-artifacts
@@ -50,7 +51,7 @@ jobs:
       - name: Refactor Folder
         if: inputs.app-publish-dir != ''
         working-directory: ${{ env.path }}
-        run: mv ${{ env.output-dir }} ${{ env.output-dir }}/${{ inputs.app-publish-dir }}
+        run: mv ${{ env.output-dir }}/${{ env.project-name }} ${{ env.output-dir }}/${{ inputs.app-publish-dir }}
         shell: bash
       - uses: actions/upload-artifact@v2
         if: matrix.node-version == env.release-node-version
