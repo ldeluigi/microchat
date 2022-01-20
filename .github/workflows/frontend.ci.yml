@@ -48,12 +48,12 @@ jobs:
         working-directory: ${{ env.path }}
         run: npm run-script test-prod
       - name: Refactor Folder
-        if: github.event_name == 'workflow_call'
+        if: inputs.app-publish-dir != ''
         working-directory: ${{ env.path }}
         run: mv ${{ env.output-dir }} ${{ inputs.app-publish-dir }}
         shell: bash
       - uses: actions/upload-artifact@v2
-        if: ${{ matrix.node-version }} == ${{ env.release-node-version }}
+        if: matrix.node-version == env.release-node-version
         with:
           name: ${{ env.human-friendly-name }}
           path: ${{ env.path }}/${{ inputs.app-publish-dir || env.output-dir }}
