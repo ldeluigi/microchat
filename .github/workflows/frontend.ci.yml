@@ -21,6 +21,7 @@ env:
   human-friendly-name: static_site
   artifact-name: build-artifacts
   output-dir: dist
+  release-node-version: 16.x
 
 jobs:
   build:
@@ -52,6 +53,7 @@ jobs:
         run: mv ${{ env.output-dir }} ${{ inputs.app-publish-dir }}
         shell: bash
       - uses: actions/upload-artifact@v2
+        if: ${{ matrix.node-version }} == ${{ env.release-node-version }}
         with:
           name: ${{ env.human-friendly-name }}
           path: ${{ env.path }}/${{ inputs.app-publish-dir || env.output-dir }}
