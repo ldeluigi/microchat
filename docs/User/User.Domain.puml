@@ -4,20 +4,22 @@
 $aggregate(User) {
     $aggregate_root(User) {
         + id: Guid
-        + name: String
-        + surname: String
-        + username: Username
-        + email: String
-        + creationTime: DateTime
-        + lastLoginTime: Option[DateTime]
-        + updateEmail(String)
-        + updateUsername(Username)
+        + name: Name
+        + surname: Name
+        + email: Email
+        + updateName(Name)
+        + updateSurname(Name)
     }
 
-    $value(Username) {
-        + name: String
+    $value(Name) {
+        + value: String
+    }
+
+    $value(Email) {
+        + value: String
     }
     
-    Username -o User
+    Name -o User
+    Email -o User
 }
 @enduml
