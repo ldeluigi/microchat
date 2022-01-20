@@ -1,90 +1,55 @@
-name: Microservices Continuous Integration
+name: Microchat CI/CD
 
 on:
-  workflow_dispatch:
+  schedule:
+    - "0 8 * * *"
   push:
-    branches:
-      - "**"
     tags:
       - "*"
+    branches:
+      - "**"
+    paths:
+      - ".github/workflows/*"
+  workflow_dispatch:
 
 env:
-  dotnet-version: 6.x
   sql-script-name: update-database.sql
   app-publish-dir: app
-  artifact-name: build-artifacts
 
 
 jobs:
-  backend:
-    name: Build Microservices
+  version:
+    name: Compute Semantic Version
     runs-on: ubuntu-20.04
-    env:
-      output-dir: out
     outputs:
       version: ${{ steps.semver.outputs.version }}
       should-release: ${{ steps.semver.outputs.should-release }}
       is-prerelease: ${{ steps.semver.outputs.is-github-prerelease }}
-    defaults:
-      run:
-        working-directory: ${{ matrix.working-directory }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - main-project-name: src/AuthService.Web
-            working-directory: services/auth
-            unit-test-project-name: test/AuthService.UnitTests
-            human-friendly-name: auth service
     steps:
       - id: semver
         name: Checkout
         uses: EasyDesk/action-semver-checkout@v1
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: ${{ env.dotnet-version }}
-      - name: Build
-        uses: EasyDesk/action-dotnet-build@v1
-        with:
-          warnings-as-errors: true
-          #build-configuration: Release
-          path: ${{ matrix.working-directory }}
-      - name: Run Unit Tests
-        uses: EasyDesk/action-dotnet-test@v1
-        with:
-          path: ${{ matrix.working-directory }}/${{ matrix.unit-test-project-name }}
-          #build-configuration: Release
-      - name: Generate database script
-        uses: EasyDesk/action-generate-migrations-script@v1
-        with:
-          project-dir: ${{ matrix.working-directory }}/${{ matrix.main-project-name }}
-          output-file: ${{ env.output-dir }}/${{ env.sql-script-name }}
-          #build-configuration: Release
-      - name: Publish
-        uses: EasyDesk/action-dotnet-publish@v1
-        with:
-          path: ${{ matrix.working-directory }}/${{ matrix.main-project-name }}
-          output-dir: ${{ env.output-dir }}/${{ env.app-publish-dir }}
-          #build-configuration: Release
-      - uses: actions/upload-artifact@v2
-        with:
-          name: ${{ matrix.human-friendly-name }}_${{ env.artifact-name }}
-          path: ${{ env.output-dir }}
+
+  backend:
+    name: Build Microservices
+    uses: ldeluigi/microchat/.github/workflows/backend.ci.yml@master
+    with:
+      app-publish-dir: ${{ env.app-publish-dir }}
+      sql-script-name: ${{ env.sql-script-name }}
   
 
   frontend:
     name: Build Frontend
     uses: ldeluigi/microchat/.github/workflows/frontend.ci.yml@master
     with:
-      path: frontend/microchat-frontend
+      app-publish-dir: ${{ env.app-publish-dir }}
 
 
   release:
     name: GitHub Release
     runs-on: ubuntu-20.04
-    needs: [backend, frontend]
-    if: needs.build.outputs.should-release == 'true'
+    needs: [version, backend, frontend]
+    if: needs.version.outputs.should-release == 'true'
     outputs:
       released: ${{ steps.release-notification.outputs.released }}
     env:
@@ -95,7 +60,7 @@ jobs:
       - name: Zip build assets
         shell: bash
         env:
-          ZIP_OUTPUT_NAME: ${{ env.release-prefix }}_${{ needs.build.outputs.version }}
+          ZIP_OUTPUT_NAME: ${{ env.release-prefix }}_${{ needs.version.outputs.version }}
         run: |
           cat > script.sh <<'EOF' && chmod +x script.sh
           #!/bin/bash
@@ -109,9 +74,9 @@ jobs:
       - name: Release
         uses: EasyDesk/action-semver-release@v1
         with:
-          version: ${{ needs.build.outputs.version }}
-          prerelease: ${{ needs.build.outputs.is-prerelease }}
-          prefix: ${{ env.release-prefix }} ${{ matrix.human-friendly-name }}
+          version: ${{ needs.version.outputs.version }}
+          prerelease: ${{ needs.version.outputs.is-prerelease }}
+          prefix: ${{ env.release-prefix }}
           files: |
             */*.sql
             */*.zip

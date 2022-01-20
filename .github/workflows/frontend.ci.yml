@@ -4,12 +4,21 @@
 name: Angular CI
 
 on:
+  push:
+    branches:
+      - "**"
+    paths:
+      - ".github/workflows/*"
+      - "frontend/microchat-frontend"
   workflow_call:
     inputs:
-      path:
+      app-publish-dir:
         required: false
-        default: .
+        default: app
         type: string
+
+env:
+  path: frontend/microchat-frontend
 
 jobs:
   build:

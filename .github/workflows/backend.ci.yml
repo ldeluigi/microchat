@@ -1,0 +1,75 @@
+name: Microservices Continuous Integration
+
+on:
+  push:
+    branches:
+      - "**"
+    paths:
+      - ".github/workflows/*"
+      - "services/**"
+  workflow_call:
+    inputs:
+      app-publish-dir:
+        type: string
+        required: false
+        default: app
+      sql-script-name:
+        type: string
+        required: false
+        default: update-database.sql
+
+env:
+  dotnet-version: 6.x
+  artifact-name: build-artifacts
+  output-dir: out
+
+jobs:
+  build:
+    name: Build Microservices
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: ${{ matrix.working-directory }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - main-project-name: src/AuthService.Web
+            working-directory: services/auth
+            unit-test-project-name: test/AuthService.UnitTests
+            human-friendly-name: AuthService
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.dotnet-version }}
+      - name: Build
+        uses: EasyDesk/action-dotnet-build@v1
+        with:
+          warnings-as-errors: true
+          #build-configuration: Release
+          path: ${{ matrix.working-directory }}
+      - name: Run Unit Tests
+        uses: EasyDesk/action-dotnet-test@v1
+        with:
+          path: ${{ matrix.working-directory }}/${{ matrix.unit-test-project-name }}
+          #build-configuration: Release
+      - name: Generate database script
+        uses: EasyDesk/action-generate-migrations-script@v1
+        with:
+          project-dir: ${{ matrix.working-directory }}/${{ matrix.main-project-name }}
+          output-file: ${{ env.output-dir }}/${{ inputs.sql-script-name }}
+          #build-configuration: Release
+      - name: Publish
+        uses: EasyDesk/action-dotnet-publish@v1
+        with:
+          path: ${{ matrix.working-directory }}/${{ matrix.main-project-name }}
+          output-dir: ${{ env.output-dir }}/${{ inputs.app-publish-dir }}
+          #build-configuration: Release
+      - uses: actions/upload-artifact@v2
+        if: github.event_name == 'workflow_call'
+        with:
+          name: ${{ matrix.human-friendly-name }}_${{ env.artifact-name }}
+          path: ${{ env.output-dir }}
