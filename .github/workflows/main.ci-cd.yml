@@ -24,6 +24,9 @@ jobs:
     outputs:
       app-publish-dir: ${{ env.app-publish-dir }}
       sql-script-name: ${{ env.sql-script-name }}
+    steps:
+      - run: echo "GitHub Workflows is bad!"
+        shell: bash
 
   version:
     name: Compute Semantic Version
