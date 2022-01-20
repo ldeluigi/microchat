@@ -25,7 +25,7 @@ env:
 
 defaults:
   run:
-    working-directory: ${{ env.path }}
+    working-directory: frontend/microchat-frontend
 
 jobs:
   build:
