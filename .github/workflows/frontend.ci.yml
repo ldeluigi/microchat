@@ -18,7 +18,7 @@ on:
 
 env:
   path: frontend/microchat-frontend
-  human-friendly-name: static_site
+  human-friendly-name: microchat_frontend_static_site
   artifact-name: build-artifacts
   output-dir: dist
   release-node-version: 16.x
@@ -56,4 +56,4 @@ jobs:
         if: matrix.node-version == env.release-node-version
         with:
           name: ${{ env.human-friendly-name }}
-          path: ${{ env.path }}/${{ inputs.app-publish-dir || env.output-dir }}
+          path: ${{ env.path }}
