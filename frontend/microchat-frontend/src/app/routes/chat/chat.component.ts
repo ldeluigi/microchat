@@ -1,6 +1,4 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { SignalRService } from 'src/app/services/signal-r.service';
 import { Chat } from 'src/model/Chat';
 import { Message } from 'src/model/Message';
 
@@ -9,28 +7,24 @@ import { Message } from 'src/model/Message';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss']
 })
-export class ChatComponent implements OnInit, OnDestroy {
+export class ChatComponent implements OnInit {
   @Input() chat!: Chat;
   messages: Message[] = []; // messages
-  signalRSubscription!: Subscription;
 
-  constructor(private signalrService: SignalRService) {}
+  constructor() {}
 
   ngOnInit() {
-    this.signalrService.connect(this.chat.id);
-    this.signalRSubscription = this.signalrService.getMessage().subscribe(
-      (message) => {
-        this.messages.push(message);
-    });
+    this.getOldMessages()
+    this.getOldMessages()
+    this.getOldMessages()
+    this.getOldMessages()
+  }
+
+  getOldMessages() {
     this.messages.push({id: "id",text:"Buon Natale", sendTime: new Date(2021,11,25,12),edited:true,sender:"Simo"});
     this.messages.push({id: "id",text:"Grazie, anche a te e famiglia!", sendTime: new Date(2021,11,25,12,1), edited:false,sender:"Thommy"});
     this.messages.push({id: "id",text:":)", sendTime: new Date(2021,11,25,12,2), edited:false,sender:"Simo"});
     this.messages.push({id: "id",text:"Dai ricominciamo a lavorare al proj", sendTime: new Date(2021,11,26,12), edited:true,sender:"Thommy"});
-  }
-
-  ngOnDestroy(): void {
-    this.signalrService.disconnect();
-    this.signalRSubscription.unsubscribe();
   }
 
   getId(message: Message) {
