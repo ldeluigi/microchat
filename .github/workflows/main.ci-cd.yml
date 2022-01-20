@@ -45,8 +45,8 @@ jobs:
     needs: [configure] # Ugly workaround for https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idwithinput_id
     uses: ldeluigi/microchat/.github/workflows/backend.ci.yml@master
     with:
-      app-publish-dir: ${{ needs.configure.app-publish-dir }}
-      sql-script-name: ${{ needs.configure.sql-script-name }}
+      app-publish-dir: ${{ needs.configure.outputs.app-publish-dir }}
+      sql-script-name: ${{ nneeds.configure.outputs.sql-script-name }}
   
 
   frontend:
@@ -54,7 +54,7 @@ jobs:
     needs: [configure] # Ugly workaround for https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idwithinput_id
     uses: ldeluigi/microchat/.github/workflows/frontend.ci.yml@master
     with:
-      app-publish-dir: ${{ needs.configure.app-publish-dir }}
+      app-publish-dir: ${{ needs.configure.outputs.app-publish-dir }}
 
 
   release:

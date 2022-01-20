@@ -13,8 +13,7 @@ on:
   workflow_call:
     inputs:
       app-publish-dir:
-        required: false
-        default: app
+        required: true
         type: string
 
 env:
