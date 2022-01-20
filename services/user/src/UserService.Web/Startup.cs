@@ -1,30 +1,46 @@
+using UserService.Application;
+using UserService.Infrastructure;
+using EasyDesk.CleanArchitecture.Application.Data.DependencyInjection;
+using EasyDesk.CleanArchitecture.Application.Events.DependencyInjection;
 using EasyDesk.CleanArchitecture.Web;
+using EasyDesk.CleanArchitecture.Web.Startup;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using System;
 
-namespace UserService.Web
+namespace UserService.Web;
+
+/// <summary>
+/// The boostrapper of the application.
+/// </summary>
+public class Startup : BaseStartup
 {
     /// <summary>
-    /// The boostrapper of the application.
+    /// Creates a new instance of the <see cref="Startup"/> class.
     /// </summary>
-    public class Startup : BaseStartup
+    /// <param name="configuration">The configuration of the application.</param>
+    /// <param name="environment">The environment in which the application runs.</param>
+    public Startup(IConfiguration configuration, IWebHostEnvironment environment) : base(configuration, environment)
     {
-        /// <summary>
-        /// Creates a new instance of the <see cref="Startup"/> class.
-        /// </summary>
-        /// <param name="configuration">The configuration of the application.</param>
-        /// <param name="environment">The environment in which the application runs.</param>
-        public Startup(IConfiguration configuration, IWebHostEnvironment environment) : base(configuration, environment)
-        {
-        }
-
-        /// <inheritdoc/>
-        protected override bool UseAuthentication => false;
-
-        /// <inheritdoc/>
-        protected override bool UseAuthorization => false;
-
-        /// <inheritdoc/>
-        protected override bool UseSwagger => true;
     }
+
+    protected override Type ApplicationAssemblyMarker => typeof(ApplicationMarker);
+
+    protected override Type InfrastructureAssemblyMarker => typeof(InfrastructureMarker);
+
+    protected override Type WebAssemblyMarker => typeof(Startup);
+
+    protected override string ServiceName => "UserService";
+
+    protected override IDataAccessImplementation DataAccessImplementation => throw new NotImplementedException();
+
+    protected override bool UsesPublisher => false;
+
+    protected override bool UsesConsumer => false;
+
+    protected override IEventBusImplementation EventBusImplementation => throw new NotImplementedException();
+
+    protected override bool IsMultitenant => false;
+
+    protected override bool UsesSwagger => false;
 }

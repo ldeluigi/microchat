@@ -1,15 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EasyDesk.CleanArchitecture.Domain" Version="0.21.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Aggregates\" />
+    <PackageReference Include="EasyDesk.CleanArchitecture.Domain" Version="0.28.0" />
   </ItemGroup>
 
   <PropertyGroup>
