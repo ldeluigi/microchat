@@ -1,8 +1,9 @@
 name: Microchat CI/CD
 
 on:
+  workflow_dispatch:
   schedule:
-    - "0 8 * * *"
+    - cron: "0 8 * * *"
   push:
     tags:
       - "*"
@@ -10,7 +11,7 @@ on:
       - "**"
     paths:
       - ".github/workflows/*"
-  workflow_dispatch:
+
 
 env:
   sql-script-name: update-database.sql
