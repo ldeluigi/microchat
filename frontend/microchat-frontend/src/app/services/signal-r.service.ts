@@ -3,6 +3,7 @@ import { Observable, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Message } from 'src/model/Message';
 import * as signalR from "@aspnet/signalr";
+import { AccountService } from './account.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,13 +12,15 @@ import * as signalR from "@aspnet/signalr";
   private message$: Subject<Message>;
   private connection: signalR.HubConnection | undefined;
    
-  constructor() {
+  constructor(
+    private accountService: AccountService
+  ) {
     this.message$ = new Subject<Message>();
   }
 
-  public connect(url: string) {
+  public connect() {
     this.connection = new signalR.HubConnectionBuilder()
-        .withUrl(environment.hubUrl + url)
+        .withUrl(environment.hubUrl + this.accountService.userValue)
         .build();
     this.connection.start().catch(err => console.log(err));
     this.connection.on('SendMessage', (message) => {
