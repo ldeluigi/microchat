@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as $ from 'jquery';
+import { Subscription } from 'rxjs';
+import { SignalRService } from 'src/app/services/signal-r.service';
 import { Chat } from 'src/model/Chat';
 import { Stats } from 'src/model/Stats';
 import { StatsComponent } from '../stats/stats.component';
@@ -10,7 +12,7 @@ import { StatsComponent } from '../stats/stats.component';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   activeList: Chat[] = [];
   chatList: Chat[] = [];
   active!: Chat;
@@ -18,12 +20,20 @@ export class HomeComponent implements OnInit {
   lastTimeWriting: number = Date.now();
   newMessage!: string;
   search!: string;
+  signalRSubscription!: Subscription;
+
 
   constructor(
+    private signalrService: SignalRService,
     public dialog: MatDialog
   ) {}
 
   ngOnInit() {
+    this.signalrService.connect();
+    this.signalRSubscription = this.signalrService.getMessage().subscribe(
+      (message) => {
+        //this.messages.push(message);
+    });
     $('#action_menu_btn').on("click", function(){
       $('.action_menu').toggle();
     });
@@ -34,6 +44,11 @@ export class HomeComponent implements OnInit {
     this.chatList.push({id:"3"});
     this.chatList.push({id:"4"});
     this.initActiveList();
+  }
+      
+  ngOnDestroy(): void {
+    this.signalrService.disconnect();
+    this.signalRSubscription.unsubscribe();
   }
 
   initActiveList(): void {
