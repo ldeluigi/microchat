@@ -14,11 +14,17 @@ on:
 
 
 env:
-  sql-script-name: update-database.sql
   app-publish-dir: app
+  sql-script-name: update-database.sql
 
 
 jobs:
+  configure:
+    runs-on: ubuntu-latest
+    outputs:
+      app-publish-dir: ${{ env.app-publish-dir }}
+      sql-script-name: ${{ env.sql-script-name }}
+
   version:
     name: Compute Semantic Version
     runs-on: ubuntu-20.04
@@ -33,17 +39,19 @@ jobs:
 
   backend:
     name: Build Microservices
+    needs: [configure] # Ugly workaround for https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idwithinput_id
     uses: ldeluigi/microchat/.github/workflows/backend.ci.yml@master
     with:
-      app-publish-dir: ${{ env.app-publish-dir }}
-      sql-script-name: ${{ env.sql-script-name }}
+      app-publish-dir: ${{ needs.configure.app-publish-dir }}
+      sql-script-name: ${{ needs.configure.sql-script-name }}
   
 
   frontend:
     name: Build Frontend
+    needs: [configure] # Ugly workaround for https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idwithinput_id
     uses: ldeluigi/microchat/.github/workflows/frontend.ci.yml@master
     with:
-      app-publish-dir: ${{ env.app-publish-dir }}
+      app-publish-dir: ${{ needs.configure.app-publish-dir }}
 
 
   release:
