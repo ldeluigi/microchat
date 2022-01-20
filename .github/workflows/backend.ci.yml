@@ -67,7 +67,7 @@ jobs:
           output-dir: ${{ env.output-dir }}/${{ inputs.app-publish-dir || 'app' }}
           #build-configuration: Release
       - uses: actions/upload-artifact@v2
-        if: github.event_name == 'workflow_call'
+        if: inputs.app-publish-dir != ''
         with:
           name: ${{ matrix.human-friendly-name }}_${{ env.artifact-name }}
           path: ${{ env.output-dir }}
