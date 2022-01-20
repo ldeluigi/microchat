@@ -50,10 +50,10 @@ jobs:
       - name: Refactor Folder
         if: inputs.app-publish-dir != ''
         working-directory: ${{ env.path }}
-        run: mv ${{ env.output-dir }} ${{ inputs.app-publish-dir }}
+        run: mv ${{ env.output-dir }} ${{ env.output-dir }}/${{ inputs.app-publish-dir }}
         shell: bash
       - uses: actions/upload-artifact@v2
         if: matrix.node-version == env.release-node-version
         with:
           name: ${{ env.human-friendly-name }}
-          path: ${{ env.path }}
+          path: ${{ env.path }}/${{ env.output-dir }}
