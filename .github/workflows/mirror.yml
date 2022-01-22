@@ -1,0 +1,19 @@
+name: Mirror Repository
+
+on:
+  push:
+    branches:
+      - "**"
+
+jobs:
+  gitlab:
+    runs-on: ubuntu-latest
+    environment: gitlab-mirror
+    steps:
+      - uses: EasyDesk/action-semver-checkout@v1
+      - uses: yesolutions/mirror-action@master
+        with:
+          REMOTE: ssh://git@gitlab.com:${{ secrets.GITLAB_REPOSITORY }}
+          GIT_SSH_PRIVATE_KEY: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
+          GIT_SSH_KNOWN_HOSTS: ${{ secrets.GIT_SSH_KNOWN_HOSTS }}
+          PUSH_ALL_REFS: true

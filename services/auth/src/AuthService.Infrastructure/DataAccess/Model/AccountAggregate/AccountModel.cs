@@ -1,9 +1,12 @@
-﻿using EasyDesk.CleanArchitecture.Application.Data;
+﻿using AuthService.Application.Queries.Accounts;
+using EasyDesk.CleanArchitecture.Application.Data;
+using EasyDesk.CleanArchitecture.Application.Mapping;
 using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace AuthService.Infrastructure.DataAccess.Model.AccountAggregate;
 
@@ -78,6 +81,17 @@ public class AccountModel
                 .WithOne(x => x.Account)
                 .HasForeignKey(x => x.AccountId)
                 .OnDelete(DeleteBehavior.Cascade);
+        }
+    }
+
+    public class MappingToAccountOutput : DirectMapping<AccountModel, AccountOutput>
+    {
+        public MappingToAccountOutput()
+            : base(a => new AccountOutput(
+                a.Id,
+                a.Email,
+                a.Username))
+        {
         }
     }
 }

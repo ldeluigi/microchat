@@ -1,10 +1,12 @@
 using AuthService.Application;
 using AuthService.Infrastructure;
 using AuthService.Infrastructure.DataAccess;
+using AuthService.Web.DependencyInjection;
 using EasyDesk.CleanArchitecture.Application.Data.DependencyInjection;
 using EasyDesk.CleanArchitecture.Application.Events.DependencyInjection;
 using EasyDesk.CleanArchitecture.Dal.EfCore.DependencyInjection;
 using EasyDesk.CleanArchitecture.Infrastructure.Events.ServiceBus;
+using EasyDesk.CleanArchitecture.Web.Authentication.Jwt;
 using EasyDesk.CleanArchitecture.Web.Startup;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -42,6 +44,13 @@ public class Startup : BaseStartup
     protected override bool IsMultitenant => false;
 
     protected override bool UsesSwagger => true;
+
+    protected override void SetupAuthentication(AuthenticationOptions options) =>
+        options.AddScheme(new JwtBearerScheme(options =>
+        options
+        .UseJwtSettingsFromConfiguration(
+            Configuration,
+            AuthenticationInstaller.JwtScopeName)));
 
     protected override IDataAccessImplementation DataAccessImplementation =>
         new EfCoreDataAccess<AuthContext>(Configuration, applyMigrations: Environment.IsDevelopment());

@@ -1,0 +1,72 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Angular CI
+
+on:
+  push:
+    branches:
+      - "**"
+    paths:
+      - ".github/workflows/*"
+      - "frontend/microchat-frontend/**"
+  workflow_call:
+    inputs:
+      app-publish-dir:
+        required: true
+        type: string
+
+env:
+  path: frontend/microchat-frontend
+  human-friendly-name: microchat_frontend_static_site
+  artifact-name: build-artifacts
+  output-dir: dist
+  release-node-version: 16.x
+
+jobs:
+  build:
+    name: Build & Test Angular Frontend
+    runs-on: ubuntu-20.04
+
+    strategy:
+      matrix:
+        node-version: [16.x,14.x]
+    
+    defaults:
+      run:
+        working-directory: ${{ env.path }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run-script build
+      - name: Test
+        run: npm run-script test-prod
+  release:
+    name: Release Angular Frontend
+    needs: [build]
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: ${{ env.path }}
+    if: inputs.app-publish-dir != ''
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ env.release-node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.release-node-version }}
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run-script build -- --output-path '${{ env.output-dir }}/${{ inputs.app-publish-dir }}'
+      - uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.human-friendly-name }}
+          path: ${{ env.path }}/${{ env.output-dir }}

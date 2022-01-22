@@ -14,23 +14,17 @@ namespace AuthService.Web.DependencyInjection
 {
     public class AuthenticationInstaller : IServiceInstaller
     {
+        public static readonly string JwtScopeName = "Global";
+
         public void InstallServices(IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
         {
-            services.AddSingleton(configuration.RequireValue<TokensSettings>("TokensSettings"));
             services
+                .AddSingleton(configuration.RequireValue<TokensSettings>("TokensSettings"))
+                .AddSingleton(configuration.ReadJwtSettings(JwtScopeName))
                 .AddScoped<IHashingService, HashingService>()
                 .AddScoped<ISaltGenerator, RandomSaltGenerator>()
                 .AddScoped<IHashCalculator, Pbkdf2Hashing>()
                 .AddScoped(CreateAccessTokenService);
-
-            ////services.AddAuthorization(options =>
-            ////{
-            ////    options.DefaultPolicy = new AuthorizationPolicyBuilder()
-            ////        .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-            ////        .AddAuthenticationSchemes(ApiKeyDefaults.Scheme)
-            ////        .RequireAuthenticatedUser()
-            ////        .Build();
-            ////});
         }
 
         private IAccessTokenService CreateAccessTokenService(IServiceProvider provider)

@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 
 namespace AuthService.Web.Controllers.V_1_0.Accounts;
 
-[Authorize]
 public class AccountController : AbstractMediatrController
 {
     [HttpPost(AccountsRoutes.RegisterAccount)]
