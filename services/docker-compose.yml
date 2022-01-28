@@ -1,6 +1,38 @@
-version: 3
+version: '3.9'
 
-mssql: &mssql
+volumes:
+  authdb_volume:
+  userdb_volume:
+  chatdb_volume:
+  rabbitmq_volume:
+  redis_volume:
+
+x-service-driver-config: &service-driver
+  driver: bridge
+
+networks:
+  auth-net:
+    <<: *service-driver
+  user-net:
+    <<: *service-driver
+  chat-net:
+    <<: *service-driver
+  global:
+    driver: bridge
+
+x-auth-net: &auth-net
+  auth-net
+
+x-user-net: &user-net
+  user-net
+
+x-chat-net: &chat-net
+  chat-net
+
+x-service-net: &service-net
+  global
+
+x-mssql-config: &mssql
   image: mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04
   environment:
     MSSQL_PID: Developer
@@ -8,33 +40,48 @@ mssql: &mssql
     SA_PASSWORD: ${PASSWORD:?password not set}
 
 services:
+  #auth:
+    #build: "./auth/src/AuthService.Web/"
+    #networks:
+      #- *auth-net
+      #- *service-net
   authdb:
     <<: *mssql
     ports:
       - 8005:1433
     volumes:
-      - authdb_volume:/var/opt/mssql
+      - "authdb_volume:/var/opt/mssql"
+    networks:
+      - *auth-net
   userdb:
     <<: *mssql
     ports:
       - 8006:1433
     volumes:
-      - userdb_volume:/var/opt/mssql
+      - "userdb_volume:/var/opt/mssql"
+    networks:
+      - *user-net
   chatdb:
     <<: *mssql
     ports:
       - 8007:1433
     volumes:
-      - chatdb_volume:/var/opt/mssql
+      - "chatdb_volume:/var/opt/mssql"
+    networks:
+      - *chat-net
   rabbitmq: 
-    image: rabbitmq:3.9
+    image: rabbitmq:3.9 #rabbitmq:3.9-management
+    #environment:
+    #  - RABBITMQ_DEFAULT_USER=user
+    #  - RABBITMQ_DEFAULT_PASS=password
     ports:
-      -
+      - 9000:5672
+      - 9001:15672
     volumes:
-      - 
+      - "rabbitmq_volume:/var/lib/rabbitmq"
   redis:
     image: redis:6.2
     ports:
-      -
+      - 9002:6379
     volumes:
-      -
+      - "redis_volume:/data"
