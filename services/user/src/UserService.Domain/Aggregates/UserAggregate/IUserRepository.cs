@@ -1,7 +1,10 @@
 ﻿using EasyDesk.CleanArchitecture.Domain.Metamodel.Repositories;
+using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
 using System;
+using System.Threading.Tasks;
+using UserService.Domain.Aggregates.UserAggregate;
 
-namespace Microchat.UserService.Domain.Aggregates.UserAggregate;
+namespace UserService.Domain.Aggregates.UserAggregate;
 
 /// <summary>
 /// Repository for Message.
@@ -11,4 +14,5 @@ public interface IUserRepository :
     ISaveRepository<User>,
     IRemoveRepository<User>
 {
+    Task<Result<User>> GetByEmail(Email email);
 }

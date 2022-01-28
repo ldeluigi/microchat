@@ -2,7 +2,6 @@
 using EasyDesk.CleanArchitecture.Domain.Metamodel.Values;
 using System;
 using System.Net.Mail;
-using System.Text.RegularExpressions;
 
 namespace UserService.Domain.Aggregates.UserAggregate;
 

@@ -14,7 +14,7 @@ public record Name : ValueWrapper<string, Name>
 {
     private const string Pattern = @"^[A-Za-z]+( [A-Za-z]+)*";
     private const int MinimumLength = 4;
-    private const int MaximumLength = 25;
+    private const int MaximumLength = 100;
 
     private Name(string name) : base(name)
     {

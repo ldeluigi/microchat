@@ -1,8 +1,7 @@
 ﻿using System;
 using EasyDesk.CleanArchitecture.Domain.Metamodel;
-using UserService.Domain.Aggregates.UserAggregate;
 
-namespace Microchat.UserService.Domain.Aggregates.UserAggregate;
+namespace UserService.Domain.Aggregates.UserAggregate;
 
 /// <summary>
 /// User class.
@@ -27,11 +26,12 @@ public class User : AggregateRoot
     /// <summary>
     /// A factory method for create a new User.
     /// </summary>
+    /// <param name="id">The id of this user.</param>
     /// <param name="name">The name of this user.</param>
     /// <param name="surname">The surname of this user.</param>
     /// <param name="email">The email of this user.</param>
     /// <returns>The user with this parameters.</returns>
-    public static User Create(Name name, Name surname, Email email) => new(Guid.NewGuid(), name, surname, email);
+    public static User Create(Guid id, Name name, Name surname, Email email) => new(id, name, surname, email);
 
     public static User Create(Guid id)
     {
@@ -60,4 +60,10 @@ public class User : AggregateRoot
     /// The user's email.
     /// </summary>
     public Email Email { get; private set; }
+
+    public void UpdateEmail(Email email) => Email = email;
+
+    public void UpdateName(Name name) => Name = name;
+
+    public void UpdateSurname(Name surname) => Surname = surname;
 }

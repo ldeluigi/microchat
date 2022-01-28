@@ -1,12 +1,11 @@
-using UserService.Application;
-using UserService.Infrastructure;
 using EasyDesk.CleanArchitecture.Application.Data.DependencyInjection;
 using EasyDesk.CleanArchitecture.Application.Events.DependencyInjection;
-using EasyDesk.CleanArchitecture.Web;
 using EasyDesk.CleanArchitecture.Web.Startup;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using System;
+using UserService.Application;
+using UserService.Infrastructure;
 
 namespace UserService.Web;
 

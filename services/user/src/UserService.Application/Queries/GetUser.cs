@@ -12,5 +12,5 @@ public static class GetUser
     /// Find a User by his identifier.
     /// </summary>
     /// <param name="UserId">The user's identifier.</param>
-    public record Query(Guid UserId) : QueryBase<UserSnapshot>;
+    public record Query(Guid UserId) : QueryBase<UserOutput>;
 }

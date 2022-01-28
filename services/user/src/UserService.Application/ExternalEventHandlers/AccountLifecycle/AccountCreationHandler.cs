@@ -2,9 +2,9 @@
 using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.Tools;
-using Microchat.UserService.Domain.Aggregates.UserAggregate;
 using System;
 using System.Threading.Tasks;
+using UserService.Domain.Aggregates.UserAggregate;
 
 namespace UserService.Application.ExternalEventHandlers.AccountLifecycle;
 
@@ -28,7 +28,6 @@ public class AccountCreationHandler : ExternalEventHandlerBase<AccountCreated>
 
     protected override Task<Response<Nothing>> Handle(AccountCreated ev)
     {
-        // TODO: create with id
         var user = User.Create(ev.Id);
         _userRepository.Save(user);
         return OkAsync;
