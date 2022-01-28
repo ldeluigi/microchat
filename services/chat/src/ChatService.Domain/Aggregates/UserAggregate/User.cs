@@ -1,7 +1,7 @@
 using System;
 using EasyDesk.CleanArchitecture.Domain.Metamodel;
 
-namespace Microchat.ChatService.Domain.Aggregates.UserAggregate
+namespace ChatService.Domain.Aggregates.UserAggregate
 {
     /// <summary>
     /// User entity.
@@ -12,10 +12,7 @@ namespace Microchat.ChatService.Domain.Aggregates.UserAggregate
         /// Creation of an User.
         /// </summary>
         /// <param name="id">Identificator of the User.</param>
-        public User(Guid id)
-        {
-            Id = id;
-        }
+        public User(Guid id) => Id = id;
 
         /// <summary>
         /// Identificator of this User.

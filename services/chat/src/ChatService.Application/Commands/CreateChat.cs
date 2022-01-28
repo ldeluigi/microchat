@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ChatService.Application.Queries;
+using ChatService.Domain.Aggregates.ChatAggregate;
 using EasyDesk.CleanArchitecture.Application.Data;
 using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Domain.Time;
-using Microchat.ChatService.Application.Queries;
-using Microchat.ChatService.Domain.Aggregates.ChatAggregate;
 
-namespace Microchat.ChatService.Application.Commands
+namespace ChatService.Application.Commands
 {
     /// <summary>
     /// Request of create chat.
@@ -19,14 +19,14 @@ namespace Microchat.ChatService.Application.Commands
         /// The command data for the <see cref="CreateChat"/> command.
         /// </summary>
         /// <param name="Partecipants">The identifiers list of chat's partecipants.</param>
-        public record Command(IEnumerable<Guid> Partecipants) : CommandBase<ChatSnapshot>;
+        public record Command(IEnumerable<Guid> Partecipants) : CommandBase<PrivateChatOutput>;
 
         /// <summary>
         /// The handler for the <see cref="CreateChat"/> command.
         /// </summary>
-        public class Handler : UnitOfWorkHandler<Command, ChatSnapshot>
+        public class Handler : UnitOfWorkHandler<Command, PrivateChatOutput>
         {
-            private readonly IChatRepository _chatRepository;
+            private readonly IPrivateChatRepository _chatRepository;
             private readonly ITimestampProvider _timestampProvider;
 
             /// <summary>
@@ -36,7 +36,7 @@ namespace Microchat.ChatService.Application.Commands
             /// <param name="timestampProvider">The timestamp provider.</param>
             /// <param name="unitOfWork">The unit of work.</param>
             public Handler(
-                IChatRepository chatRepository,
+                IPrivateChatRepository chatRepository,
                 ITimestampProvider timestampProvider,
                 IUnitOfWork unitOfWork) : base(unitOfWork)
             {
@@ -45,14 +45,9 @@ namespace Microchat.ChatService.Application.Commands
             }
 
             /// <inheritdoc/>
-            protected override Task<Response<ChatSnapshot>> HandleRequest(Command request)
+            protected override Task<Response<PrivateChatOutput>> HandleRequest(Command request)
             {
-                var chat = Chat.Create(request.Partecipants, _timestampProvider.Now);
-                _chatRepository.Save(chat);
-                return Task.FromResult<Response<ChatSnapshot>>(new ChatSnapshot(
-                    chat.Id,
-                    chat.Partecipants,
-                    chat.CreationTime));
+                throw new NotImplementedException();
             }
         }
     }
