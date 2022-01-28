@@ -1,6 +1,7 @@
 using EasyDesk.CleanArchitecture.Web;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using UserService.Web;
 
 namespace ChatService.Web
 {

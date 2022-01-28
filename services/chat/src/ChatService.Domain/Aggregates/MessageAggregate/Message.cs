@@ -4,7 +4,7 @@ using EasyDesk.Tools.Options;
 using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
 using static EasyDesk.Tools.Options.OptionImports;
 
-namespace Microchat.ChatService.Domain.Aggregates.MessageAggregate
+namespace ChatService.Domain.Aggregates.UserAggregate
 {
     /// <summary>
     /// The message sent in the chat.

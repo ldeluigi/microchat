@@ -2,7 +2,7 @@
 using EasyDesk.CleanArchitecture.Application.Pages;
 using System;
 
-namespace Microchat.ChatService.Application.Queries
+namespace ChatService.Application.Queries
 {
     /// <summary>
     /// Query that retrieve some messages using pagination.
@@ -11,6 +11,6 @@ namespace Microchat.ChatService.Application.Queries
     {
         public record Query(
             Guid ChatId,
-            Pagination Pagination) : PaginatedQueryBase<MessageSnapshot>(Pagination);
+            Pagination Pagination) : PaginatedQueryBase<MessageOutput>(Pagination);
     }
 }

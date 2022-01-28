@@ -1,48 +1,39 @@
 ﻿using EasyDesk.CleanArchitecture.Domain.Metamodel;
 using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
 using System;
-using System.Collections.Generic;
 
-namespace Microchat.ChatService.Domain.Aggregates.ChatAggregate
+namespace ChatService.Domain.Aggregates.ChatAggregate
 {
     /// <summary>
     /// The place where is possible to send message.
     /// </summary>
-    public class Chat : AggregateRoot
+    public class PrivateChat : AggregateRoot, IChat
     {
         /// <summary>
         /// Chat constructor.
         /// </summary>
         /// <param name="id">Identificator of the Chat.</param>
-        /// <param name="partecipants">The entities that can send messages in this chat.</param>
+        /// <param name="owner">The entities that create this chat.</param>
+        /// <param name="partecipant">The entities that can send messages in this chat.</param>
         /// <param name="creationTime">The time when this chat is created.</param>
-        public Chat(Guid id, IEnumerable<Guid> partecipants, Timestamp creationTime)
+        public PrivateChat(Guid id, Guid owner, Guid partecipant, Timestamp creationTime)
         {
             Id = id;
-            Partecipants = partecipants;
+            Owner = owner;
+            Partecipant = partecipant;
             CreationTime = creationTime;
         }
 
         /// <summary>
         /// Initialize a new Chat.
         /// </summary>
-        /// <param name="partecipants">The partecipants of this chat.</param>
+        /// <param name="id">The id of this chat.</param>
+        /// <param name="owner">The owner of this chat.</param>
+        /// <param name="partecipant">The partecipant of this chat.</param>
         /// <param name="creationTime">The time when chat is created.</param>
         /// <returns>The chat.</returns>
-        public static Chat Create(IEnumerable<Guid> partecipants, Timestamp creationTime)
-        {
-            if (partecipants is null)
-            {
-                throw new ArgumentNullException(nameof(partecipants));
-            }
-
-            if (creationTime is null)
-            {
-                throw new ArgumentNullException(nameof(creationTime));
-            }
-
-            return new(Guid.NewGuid(), partecipants, creationTime);
-        }
+        public static PrivateChat Create(Guid id, Guid owner, Guid partecipant, Timestamp creationTime) =>
+            new(id, owner, partecipant, creationTime);
 
         /// <summary>
         /// The unique identifier of this chat.
@@ -50,9 +41,14 @@ namespace Microchat.ChatService.Domain.Aggregates.ChatAggregate
         public Guid Id { get; }
 
         /// <summary>
-        /// The list of user that partecipate to this chat.
+        /// The unique identifier of the owner of this chat.
         /// </summary>
-        public IEnumerable<Guid> Partecipants { get; }
+        public Guid Owner { get; }
+
+        /// <summary>
+        /// The unique identifier of the partecipant of this chat.
+        /// </summary>
+        public Guid Partecipant { get; }
 
         /// <summary>
         /// The dateTime when this chat is created.
