@@ -24,7 +24,7 @@
           <app-contact [chat]="active"></app-contact>
           <span id="action_menu_btn" (click)=showStats(active)><i class="far fa-chart-bar"></i></span>
         </div>
-        <app-chat class="app-chat" [chat]="active"></app-chat>
+        <app-chat class="app-chat" [chat]="active" [message]=newIncomingMessage #chatSelector></app-chat>
         <div class="card-footer">
           <div class="input-group">
             <textarea id="newMessage" name="msg" class="form-control type_msg" placeholder="Type your message..." [(ngModel)]="newMessage" (ngModelChange)="onChange()"></textarea>

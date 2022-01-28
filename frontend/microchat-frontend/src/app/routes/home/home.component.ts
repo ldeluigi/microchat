@@ -1,10 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as $ from 'jquery';
 import { Subscription } from 'rxjs';
 import { SignalRService } from 'src/app/services/signal-r.service';
 import { Chat } from 'src/model/Chat';
+import { Message } from 'src/model/Message';
 import { Stats } from 'src/model/Stats';
+import { ChatComponent } from '../chat/chat.component';
 import { StatsComponent } from '../stats/stats.component';
 
 @Component({
@@ -21,6 +23,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   newMessage!: string;
   search!: string;
   signalRSubscription!: Subscription;
+  newIncomingMessage: Message | undefined;
+  @ViewChild('chatSelector') appChat!: ElementRef;
 
 
   constructor(
@@ -28,21 +32,31 @@ export class HomeComponent implements OnInit, OnDestroy {
     public dialog: MatDialog
   ) {}
 
+  /*ngAfterViewInit(): void {
+    console.log(this.appChat);
+    this.appChat.nativeElement.scrolltop = this.appChat.nativeElement.scrollHeight;
+  }*/
+
   ngOnInit() {
     this.signalrService.connect();
     this.signalRSubscription = this.signalrService.getMessage().subscribe(
       (message) => {
-        //this.messages.push(message);
+        if (message.chatId == this.active.id) {
+          this.newIncomingMessage = message;
+        } else {
+          var chat = this.chatList.find(chat => chat.id === message.chatId);
+          if (chat) {
+            chat.hasNewMessages++;
+          }
+        }
     });
-    $('#action_menu_btn').on("click", function(){
-      $('.action_menu').toggle();
-    });
+    //$('#action_menu_btn').on("click", function(){ $('.action_menu').toggle(); });
 
     //getChatList
-    this.chatList.push({id:"1", user: {id: "4218-4124-6315-2412", name: "ThommyN1"}});
-    this.chatList.push({id:"2"});
-    this.chatList.push({id:"3"});
-    this.chatList.push({id:"4"});
+    this.chatList.push({id:"1", hasNewMessages:8, user: {id: "4218-4124-6315-2412", name: "ThommyN1"}});
+    this.chatList.push({id:"2", hasNewMessages:5});
+    this.chatList.push({id:"3", hasNewMessages:0});
+    this.chatList.push({id:"4", hasNewMessages:2});
     this.initActiveList();
   }
       
@@ -93,15 +107,16 @@ export class HomeComponent implements OnInit, OnDestroy {
   sendMessage() {
     //this.chatService.sendMessage(this.active.id, this.newMessage, this.accountservice.user)
     console.log("TODO: send " + this.newMessage);
+    this.signalrService.sendMessage(this.active.id, this.newMessage)
   }
   
   findChat() {
     console.log("TODO: richiesta chats")
     let foundChatList: Chat[] = []
-    foundChatList.push({id:"5", user: {id: "4218-4124-6315-2412", name: "Deloo"}});
-    foundChatList.push({id:"6", user: {id: "4218-4124-6315-2413", name: "Gimmy"}});
-    foundChatList.push({id:"7"});
-    foundChatList.push({id:"9", user: {id: "4218-4124-6315-2417", name: "Magno"}});
+    foundChatList.push({id:"5", hasNewMessages:8, user: {id: "4218-4124-6315-2412", name: "Deloo"}});
+    foundChatList.push({id:"6", hasNewMessages:6, user: {id: "4218-4124-6315-2413", name: "Gimmy"}});
+    foundChatList.push({id:"7", hasNewMessages:0});
+    foundChatList.push({id:"9", hasNewMessages:0, user: {id: "4218-4124-6315-2417", name: "Magno"}});
     this.setActiveListToChatList(() => {this.activeList = foundChatList});
   }
 

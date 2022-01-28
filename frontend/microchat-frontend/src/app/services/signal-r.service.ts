@@ -20,7 +20,8 @@ import { AccountService } from './account.service';
 
   public connect() {
     this.connection = new signalR.HubConnectionBuilder()
-        .withUrl(environment.hubUrl + this.accountService.userValue)
+        .withUrl(environment.hubUrl)
+        .configureLogging(signalR.LogLevel.Trace)
         .build();
     this.connection.start().catch(err => console.log(err));
     this.connection.on('SendMessage', (message) => {
@@ -30,6 +31,10 @@ import { AccountService } from './account.service';
 
   public getMessage(): Observable<Message> {
     return this.message$.asObservable();
+  }
+
+  public sendMessage(chat: string, message: string): void {
+    this.connection?.invoke("ReceiveMessage", chat, message)
   }
   
   public disconnect() {

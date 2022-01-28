@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { Chat } from 'src/model/Chat';
 import { Message } from 'src/model/Message';
 
@@ -7,24 +7,33 @@ import { Message } from 'src/model/Message';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss']
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnChanges {
   @Input() chat!: Chat;
+  @Input() message!: Message | undefined;
   messages: Message[] = []; // messages
 
   constructor() {}
 
-  ngOnInit() {
-    this.getOldMessages()
-    this.getOldMessages()
-    this.getOldMessages()
-    this.getOldMessages()
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['chat']) {
+      console.log("TODO: changed Chat");
+      this.messages = [];
+      this.getOldMessages();
+      this.getOldMessages();
+      this.getOldMessages();
+      this.getOldMessages();
+    } 
+    if (changes['message'] && changes['message'].currentValue) {
+      console.log("TODO: new Message");
+    }
   }
 
   getOldMessages() {
-    this.messages.push({id: "id",text:"Buon Natale", sendTime: new Date(2021,11,25,12),edited:true,sender:"Simo"});
-    this.messages.push({id: "id",text:"Grazie, anche a te e famiglia!", sendTime: new Date(2021,11,25,12,1), edited:false,sender:"Thommy"});
-    this.messages.push({id: "id",text:":)", sendTime: new Date(2021,11,25,12,2), edited:false,sender:"Simo"});
-    this.messages.push({id: "id",text:"Dai ricominciamo a lavorare al proj", sendTime: new Date(2021,11,26,12), edited:true,sender:"Thommy"});
+    this.messages.push({id: "id", chatId: this.chat.id, text:"Buon Natale", sendTime: new Date(2021,11,25,12),edited:true,sender:"Simo"});
+    this.messages.push({id: "id", chatId: this.chat.id, text:"Grazie, anche a te e famiglia!", sendTime: new Date(2021,11,25,12,1), edited:false,sender:"Thommy"});
+    this.messages.push({id: "id", chatId: this.chat.id, text:":)", sendTime: new Date(2021,11,25,12,2), edited:false,sender:"Simo"});
+    this.messages.push({id: "id", chatId: this.chat.id, text:"Dai ricominciamo a lavorare al proj", sendTime: new Date(2021,11,26,12), edited:true,sender:"Thommy"});
   }
 
   getId(message: Message) {
