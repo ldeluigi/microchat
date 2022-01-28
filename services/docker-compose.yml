@@ -7,30 +7,23 @@ volumes:
   rabbitmq_volume:
   redis_volume:
 
-x-service-driver-config: &service-driver
+x-db-driver-config: &db-driver
   driver: bridge
 
 networks:
   auth-net:
-    <<: *service-driver
+    <<: *db-driver
   user-net:
-    <<: *service-driver
+    <<: *db-driver
   chat-net:
-    <<: *service-driver
+    <<: *db-driver
   global:
     driver: bridge
 
-x-auth-net: &auth-net
-  auth-net
-
-x-user-net: &user-net
-  user-net
-
-x-chat-net: &chat-net
-  chat-net
-
-x-service-net: &service-net
-  global
+x-auth-net: &auth-net auth-net
+x-user-net: &user-net user-net
+x-chat-net: &chat-net chat-net
+x-service-net: &service-net global
 
 x-mssql-config: &mssql
   image: mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04
@@ -53,6 +46,11 @@ services:
       - "authdb_volume:/var/opt/mssql"
     networks:
       - *auth-net
+  #user:
+    #build: "./user/src/UserService.Web/"
+    #networks:
+      #- *user-net
+      #- *service-net
   userdb:
     <<: *mssql
     ports:
@@ -61,10 +59,15 @@ services:
       - "userdb_volume:/var/opt/mssql"
     networks:
       - *user-net
+  #chat:
+    #build: "./chat/src/ChatService.Web/"
+    #networks:
+      #- *chat-net
+      #- *service-net
   chatdb:
     <<: *mssql
     ports:
-      - 8007:1433
+      - "8007-8012:1433" #workaround for replicas still not working
     volumes:
       - "chatdb_volume:/var/opt/mssql"
     networks:
