@@ -33,12 +33,13 @@ namespace ChatService.Domain.Aggregates.UserAggregate
         /// <summary>
         /// Create a new message.
         /// </summary>
+        /// <param name="id">The unique identifier of the message.</param>
         /// <param name="chatId">The unique identifier of the message's chat.</param>
         /// <param name="text">The text of this message.</param>
         /// <param name="sender">The sender of this message.</param>
         /// <param name="sendTime">The time when this message is sent.</param>
         /// <returns>A new message.</returns>
-        public static Message Create(Guid chatId, string text, Guid sender, Timestamp sendTime)
+        public static Message Create(Guid id, Guid chatId, string text, Guid sender, Timestamp sendTime)
         {
             if (text is null)
             {
@@ -49,7 +50,7 @@ namespace ChatService.Domain.Aggregates.UserAggregate
             {
                 throw new ArgumentNullException(nameof(sendTime));
             }
-            return new(Guid.NewGuid(), chatId, text, sender, sendTime, None);
+            return new(id, chatId, text, sender, sendTime, None);
         }
 
         /// <summary>

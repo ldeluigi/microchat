@@ -8,14 +8,14 @@ namespace ChatService.Application.Queries
         Guid Id,
         Guid ChatId,
         string Text,
-        Timestamp SendTime,
-        Guid Sender)
+        Guid Sender,
+        Timestamp SendTime)
     {
         public MessageOutput From(MessageOutput messageOutput) => new(
             Id: messageOutput.Id,
             ChatId: messageOutput.ChatId,
             Text: messageOutput.Text,
-            SendTime: messageOutput.SendTime,
-            Sender: messageOutput.Sender);
+            Sender: messageOutput.Sender,
+            SendTime: messageOutput.SendTime);
     }
 }
