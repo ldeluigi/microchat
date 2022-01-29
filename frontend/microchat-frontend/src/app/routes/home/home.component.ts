@@ -61,8 +61,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
       
   ngOnDestroy(): void {
-    this.signalrService.disconnect();
-    this.signalRSubscription.unsubscribe();
+    if (this.signalRSubscription) {
+      this.signalRSubscription.unsubscribe();
+    }
+    if (this.signalrService) {
+      this.signalrService.disconnect();
+    }
   }
 
   initActiveList(): void {

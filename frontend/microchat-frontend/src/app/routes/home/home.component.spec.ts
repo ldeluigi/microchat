@@ -3,7 +3,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterTestingModule } from '@angular/router/testing';
+import { Observable } from 'rxjs';
 import { SignalRService } from 'src/app/services/signal-r.service';
+import { Message } from 'src/model/Message';
 import { ChatComponent } from '../chat/chat.component';
 import { ContactComponent } from '../contact/contact.component';
 
@@ -12,8 +14,11 @@ import { HomeComponent } from './home.component';
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
+  let mockSignalR;
 
   beforeEach(async () => {
+    mockSignalR = jasmine.createSpyObj(['connect', 'getMessage', 'disconnect']);
+    mockSignalR.getMessage.and.returnValue(new Observable<Message>());
     await TestBed.configureTestingModule({
       imports: [
         MatDialogModule,
@@ -27,7 +32,7 @@ describe('HomeComponent', () => {
         ChatComponent,
         ContactComponent
       ],
-      providers: [SignalRService]
+      providers: [{provide: SignalRService, useValue: mockSignalR}]
     })
     .compileComponents();
   });
@@ -41,4 +46,6 @@ describe('HomeComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  afterEach(() => fixture.destroy());
 });
