@@ -22,7 +22,6 @@ public class UserLifecycleService
         _registrationMethod = userRegistrationMethod;
     }
 
-    // TODO migliorabile
     public async Task<Result<User>> Register(Guid id, Name name, Name surname, Email email)
     {
         return await Task.FromResult(ResultImports.Ok)

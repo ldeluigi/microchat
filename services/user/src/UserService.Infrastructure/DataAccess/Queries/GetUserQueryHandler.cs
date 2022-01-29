@@ -8,24 +8,23 @@ using EasyDesk.CleanArchitecture.Domain.Utils;
 using Microchat.UserService.Application.Queries;
 using System.Linq;
 using System.Threading.Tasks;
-using UserService.Infrastructure.DataAccess;
 
 namespace UserService.Infrastructure.DataAccess.Queries;
 
 public class GetUserQueryHandler : RequestHandlerBase<GetUser.Query, UserOutput>
 {
-    private readonly UserContext _authContext;
+    private readonly UserContext _userContext;
     private readonly IMapper _mapper;
 
     public GetUserQueryHandler(UserContext authContext, IMapper mapper)
     {
-        _authContext = authContext;
+        _userContext = authContext;
         _mapper = mapper;
     }
 
     protected override async Task<Response<UserOutput>> Handle(GetUser.Query request)
     {
-        return await _authContext
+        return await _userContext
             .Users
             .Where(u => u.Id == request.UserId)
             .ProjectTo<UserOutput>(_mapper.ConfigurationProvider)

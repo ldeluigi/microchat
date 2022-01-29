@@ -1,5 +1,6 @@
 ﻿using EasyDesk.CleanArchitecture.Dal.EfCore.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using UserService.Infrastructure.DataAccess.UserAggregate;
 
 namespace UserService.Infrastructure.DataAccess;
