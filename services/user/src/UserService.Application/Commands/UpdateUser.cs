@@ -3,7 +3,6 @@ using EasyDesk.CleanArchitecture.Application.ErrorManagement;
 using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
-using EasyDesk.Tools;
 using EasyDesk.Tools.Options;
 using Microchat.UserService.Application.Queries;
 using System;
