@@ -1,7 +1,7 @@
 using System;
 using EasyDesk.CleanArchitecture.Domain.Metamodel;
 
-namespace ChatService.Domain.Aggregates.UserAggregate
+namespace ChatService.Domain.Aggregates.MessageAggregate
 {
     /// <summary>
     /// User entity.

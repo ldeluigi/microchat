@@ -29,5 +29,4 @@ namespace ChatService.Infrastructure.DataAccess.Repositories
         protected override IQueryable<PrivateChatModel> Includes(IQueryable<PrivateChatModel> initialQuery) =>
             initialQuery;
     }
-
 }

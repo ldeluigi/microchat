@@ -1,10 +1,5 @@
 ﻿using ChatService.Domain.Aggregates.ChatAggregate;
 using ChatService.Infrastructure.DataAccess.Model.ChatAggregate;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ChatService.Infrastructure.DataAccess.ModelConverter
 {

@@ -1,9 +1,9 @@
-﻿using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
+﻿using ChatService.Domain.Aggregates.MessageAggregate;
+using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
 using System;
 
 namespace ChatService.Application.Queries
 {
-    // TODO Option<Timestamp> LastEditTime va gestito diversamente
     public record MessageOutput(
         Guid Id,
         Guid ChatId,
@@ -11,11 +11,11 @@ namespace ChatService.Application.Queries
         Guid Sender,
         Timestamp SendTime)
     {
-        public MessageOutput From(MessageOutput messageOutput) => new(
-            Id: messageOutput.Id,
-            ChatId: messageOutput.ChatId,
-            Text: messageOutput.Text,
-            Sender: messageOutput.Sender,
-            SendTime: messageOutput.SendTime);
+        public static MessageOutput From(Message message) => new(
+            Id: message.Id,
+            ChatId: message.ChatId,
+            Text: message.Text,
+            Sender: message.Sender,
+            SendTime: message.SendTime);
     }
 }

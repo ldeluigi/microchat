@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChatService.Application.Queries;
-using ChatService.Domain.Aggregates.ChatAggregate;
 using ChatService.Domain.ChatService;
 using EasyDesk.CleanArchitecture.Application.Data;
 using EasyDesk.CleanArchitecture.Application.ErrorManagement;
@@ -16,7 +14,7 @@ namespace ChatService.Application.Commands
     /// <summary>
     /// Request of create chat.
     /// </summary>
-    public static class RegisterPrivateChat
+    public class RegisterPrivateChat
     {
         /// <summary>
         /// The command data for the <see cref="RegisterPrivateChat"/> command.
