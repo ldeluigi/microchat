@@ -27,18 +27,21 @@ public class PrivateChatController : AbstractMediatrController
     }
 
     [HttpGet(PrivateChatRoutes.GetPrivateChat)]
-    public async Task<IActionResult> GetPrivateChat([FromRoute] Guid userId)
+    public async Task<IActionResult> GetPrivateChat([FromRoute] Guid chatId)
     {
-        var query = new GetPrivateChat.Query(userId);
+        var query = new GetPrivateChat.Query(chatId);
         return await Query(query)
             .MappingContent(Mapper.Map<PrivateChatDTO>)
             .ReturnOk();
     }
 
-    [HttpGet(PrivateChatRoutes.GetPrivateChats)]
-    public async Task<IActionResult> GetPrivateChats([FromQuery] string pattern, [FromQuery] PaginationDto pagination)
+    [HttpGet(PrivateChatRoutes.GetUsersChats)]
+    public async Task<IActionResult> GetPrivateChats(
+        [FromQuery] Guid userId,
+        [FromQuery] string pattern,
+        [FromQuery] PaginationDto pagination)
     {
-        var query = new GetPrivateChats.Query(pattern, Mapper.Map<Pagination>(pagination));
+        var query = new GetPrivateChats.Query(userId, pattern, Mapper.Map<Pagination>(pagination));
         return await Query(query)
             .Paging(Mapper.Map<PrivateChatDTO>)
             .ReturnOk();

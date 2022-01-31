@@ -25,9 +25,9 @@ namespace ChatService.Domain.Aggregates.MessageAggregate
             Id = id;
             ChatId = chatId;
             Text = text;
+            Sender = sender;
             SendTime = sendTime;
             LastEditTime = lastEditTime;
-            Sender = sender;
         }
 
         /// <summary>
@@ -93,4 +93,16 @@ namespace ChatService.Domain.Aggregates.MessageAggregate
             Text = newText;
         }
     }
+
+    /// <summary>
+    /// The Event created when message is created.
+    /// </summary>
+    /// <param name="Message">The new message.</param>
+    public record MessageCreatedEvent(Message Message) : DomainEvent;
+
+    /// <summary>
+    /// The Event created when message is modified.
+    /// </summary>
+    /// <param name="Message">The modified message.</param>
+    public record MessageModifiedEvent(Message Message) : DomainEvent;
 }

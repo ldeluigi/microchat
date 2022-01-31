@@ -10,6 +10,7 @@ namespace ChatService.Application.Queries;
 public static partial class GetPrivateChats
 {
     public record Query(
+        Guid UserId,
         string SearchString,
         Pagination Pagination) : PaginatedQueryBase<PrivateChatOutput>(Pagination);
 }

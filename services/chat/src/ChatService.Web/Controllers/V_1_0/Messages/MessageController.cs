@@ -43,9 +43,9 @@ public class MessageController : AbstractMediatrController
     }
 
     [HttpGet(MessageRoutes.GetMessages)]
-    public async Task<IActionResult> GetMessages([FromQuery] string pattern, [FromQuery] PaginationDto pagination)
+    public async Task<IActionResult> GetMessages([FromQuery] Guid userId, [FromQuery] string pattern, [FromQuery] PaginationDto pagination)
     {
-        var query = new Application.Queries.GetMessages.Query(pattern, Mapper.Map<Pagination>(pagination));
+        var query = new Application.Queries.GetMessages.Query(userId, pattern, Mapper.Map<Pagination>(pagination));
         return await Query(query)
             .Paging(Mapper.Map<MessageDTO>)
             .ReturnOk();

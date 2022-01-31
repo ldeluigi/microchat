@@ -2,9 +2,9 @@
 
 public static class PrivateChatRoutes
 {
-    public const string RegisterPrivateChat = "privatechats";
+    public const string RegisterPrivateChat = "chats";
 
-    public const string GetPrivateChats = "privatechats";
+    public const string GetUsersChats = "users/chats/{userId}";
 
     public const string GetPrivateChat = "privatechats/{privateChatId}";
 }
