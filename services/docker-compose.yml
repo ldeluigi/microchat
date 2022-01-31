@@ -82,9 +82,13 @@ services:
       - 9001:15672
     volumes:
       - "rabbitmq_volume:/var/lib/rabbitmq"
+    networks:
+      - *service-net
   redis:
     image: redis:6.2
     ports:
       - 9002:6379
     volumes:
       - "redis_volume:/data"
+    networks:
+      - *service-net
