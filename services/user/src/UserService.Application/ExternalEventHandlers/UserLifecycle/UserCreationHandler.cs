@@ -6,27 +6,27 @@ using System;
 using System.Threading.Tasks;
 using UserService.Domain.Aggregates.UserAggregate;
 
-namespace UserService.Application.ExternalEventHandlers.AccountLifecycle;
+namespace UserService.Application.ExternalEventHandlers.UserLifecycle;
 
 /// <summary>
 /// An external event published by the customer context whenever a new user is registered to the system.
 /// </summary>
 /// <param name="Id">The Id of the user.</param>
-public record AccountCreated(Guid Id) : ExternalEvent;
+public record UserCreated(Guid Id) : ExternalEvent;
 
 /// <summary>
 /// Class that handles Account Registration.
 /// </summary>
-public class AccountCreationHandler : ExternalEventHandlerBase<AccountCreated>
+public class UserCreationHandler : ExternalEventHandlerBase<UserCreated>
 {
     private readonly IUserRepository _userRepository;
 
-    public AccountCreationHandler(IUserRepository userRepository)
+    public UserCreationHandler(IUserRepository userRepository)
     {
         _userRepository = userRepository;
     }
 
-    protected override Task<Response<Nothing>> Handle(AccountCreated ev)
+    protected override Task<Response<Nothing>> Handle(UserCreated ev)
     {
         var user = User.Create(ev.Id);
         _userRepository.Save(user);

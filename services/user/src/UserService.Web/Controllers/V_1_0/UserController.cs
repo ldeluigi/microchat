@@ -38,7 +38,7 @@ public class UserController : AbstractMediatrController
     }
 
     [HttpGet(UsersRoutes.GetUsers)]
-    public async Task<IActionResult> GetAccounts([FromQuery] string pattern, [FromQuery] PaginationDto pagination)
+    public async Task<IActionResult> GetUsers([FromQuery] string pattern, [FromQuery] PaginationDto pagination)
     {
         var query = new GetUsers.Query(pattern, Mapper.Map<Pagination>(pagination));
         return await Query(query)
@@ -47,9 +47,9 @@ public class UserController : AbstractMediatrController
     }
 
     [HttpDelete(UsersRoutes.DeleteUser)]
-    public async Task<IActionResult> DeleteUser([FromRoute] Guid accountId)
+    public async Task<IActionResult> DeleteUser([FromRoute] Guid userId)
     {
-        var command = new UnregisterUser.Command(accountId);
+        var command = new UnregisterUser.Command(userId);
         return await Command(command)
             .MappingContent(Mapper.Map<UserDto>)
             .ReturnOk();

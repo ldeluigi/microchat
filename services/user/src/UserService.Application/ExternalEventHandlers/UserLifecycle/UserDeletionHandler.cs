@@ -8,27 +8,27 @@ using System;
 using System.Threading.Tasks;
 using UserService.Domain.Aggregates.UserAggregate;
 
-namespace UserService.Application.ExternalEventHandlers.AccountLifecycle;
+namespace UserService.Application.ExternalEventHandlers.UserLifecycle;
 
 /// <summary>
 /// An external event published by the customer context whenever a new user is deleted to the system.
 /// </summary>
 /// <param name="Id">The Id of the user.</param>
-public record AccountDeleted(Guid Id) : ExternalEvent;
+public record UserDeleted(Guid Id) : ExternalEvent;
 
 /// <summary>
-/// Class that handles Account Deletion.
+/// Class that handles User Deletion.
 /// </summary>
-public class AccountDeletionHandler : ExternalEventHandlerBase<AccountDeleted>
+public class UserDeletionHandler : ExternalEventHandlerBase<UserDeleted>
 {
     private readonly IUserRepository _userRepository;
 
-    public AccountDeletionHandler(IUserRepository userRepository)
+    public UserDeletionHandler(IUserRepository userRepository)
     {
         _userRepository = userRepository;
     }
 
-    protected override async Task<Response<Nothing>> Handle(AccountDeleted ev)
+    protected override async Task<Response<Nothing>> Handle(UserDeleted ev)
     {
         return await _userRepository.GetById(ev.Id)
             .ThenIfSuccess(_userRepository.Remove)
