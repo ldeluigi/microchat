@@ -16,10 +16,6 @@ public interface IAccountRepository :
 
     Task<Result<Account>> GetByUsername(Username username);
 
-    Task<Result<Account>> GetByPasswordRecoveryToken(Token token);
-
-    Task<Result<Account>> GetByConfirmationToken(Token token);
-
     Task<Result<Account>> GetByRefreshToken(Token token);
 
     Task<bool> EmailExists(Email email);

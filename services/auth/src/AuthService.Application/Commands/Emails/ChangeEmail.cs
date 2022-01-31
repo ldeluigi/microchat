@@ -1,11 +1,12 @@
-using AuthService.Domain.Aggregates.AccountAggregate;
+using AuthService.Domain.Authentication.Accounts;
 using EasyDesk.CleanArchitecture.Application.Data;
+using EasyDesk.CleanArchitecture.Application.ErrorManagement;
 using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Application.Responses;
+using EasyDesk.CleanArchitecture.Domain.Model;
 using EasyDesk.Tools;
 using System;
 using System.Threading.Tasks;
-using static EasyDesk.CleanArchitecture.Application.Responses.ResponseImports;
 
 namespace AuthService.Application.Commands.Emails;
 
@@ -15,67 +16,20 @@ public static class ChangeEmail
 
     public class Handler : UnitOfWorkHandler<Command, Nothing>
     {
-        private readonly IAccountRepository _accountRepository;
+        private readonly AccountLifecycleService _accountLifecycle;
 
         public Handler(
-            IAccountRepository accountRepository,
+            AccountLifecycleService accountLifecycle,
             IUnitOfWork unitOfWork) : base(unitOfWork)
         {
-            _accountRepository = accountRepository;
+            _accountLifecycle = accountLifecycle;
         }
 
-        private Task<Response<Nothing>> HandlePrototype(Command request)
+        protected override async Task<Response<Nothing>> HandleRequest(Command request)
         {
-            return OkAsync;
-            ////var user = await _dataAccess
-            ////    .Users
-            ////    .Where(x => x.Id == request.UserId)
-            ////    .Include(x => x.Identity)
-            ////    .ThenInclude(x => x.AccountVerificationTokens)
-            ////    .FirstAsync();
-
-            ////if (user == null)
-            ////{
-            ////    return Errors.NotFound<User>();
-            ////}
-
-            ////var emailExists = await _dataAccess.Users
-            ////    .Where(u => u.Email == request.Email)
-            ////    .AnyAsync();
-
-            ////if (emailExists)
-            ////{
-            ////    return Error.Create(IdentityErrorCodes.Email.AlreadyInUse, "The given email is already taken by another user");
-            ////}
-
-            ////var token = _tokenGenerator.NewAccountVerificationToken();
-
-            ////user.Identity.AccountVerificationTokens.ForEach(t => t.Valid = false);
-
-            ////user.Identity.AccountVerificationTokens.Add(token);
-
-            ////user.EmailUpdate = request.Email;
-
-            ////await _dataAccess.Save();
-
-            ////await _publisher.Publish(new EmailChangeRequested
-            ////{
-            ////    NewEmail = request.Email,
-            ////    OldEmail = user.Email,
-            ////    Name = user.FirstName,
-            ////    Token = token.Token
-            ////});
-
-            ////return new UserOutput
-            ////{
-            ////    Email = request.Email,
-            ////    UserId = user.Id
-            ////};
-        }
-
-        protected override Task<Response<Nothing>> HandleRequest(Command request)
-        {
-            throw new NotImplementedException();
+            return await _accountLifecycle
+                .UpdateEmail(request.UserId, Email.From(request.Email))
+                .ThenToResponse();
         }
     }
 }

@@ -1,12 +1,9 @@
 ﻿using AuthService.Domain.Aggregates.AccountAggregate.Events;
-using AuthService.Domain.Tokens;
 using EasyDesk.CleanArchitecture.Domain.Metamodel;
 using EasyDesk.CleanArchitecture.Domain.Model;
-using EasyDesk.Tools;
 using EasyDesk.Tools.Options;
 using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
 using System;
-using static EasyDesk.Tools.Options.OptionImports;
 
 namespace AuthService.Domain.Aggregates.AccountAggregate;
 
@@ -18,19 +15,15 @@ public class Account : AggregateRoot
         Username username,
         Timestamp creation,
         bool isActive,
-        Option<EmailConfirmationInfo> pendingConfirmation,
         AccountSessions sessions,
-        PasswordHash passwordHash,
-        Option<TokenInfo> passwordRecoveryToken)
+        PasswordHash passwordHash)
     {
         Id = id;
         Email = email;
         PasswordHash = passwordHash;
         IsActive = isActive;
-        PasswordRecoveryToken = passwordRecoveryToken;
         Username = username;
         Creation = creation;
-        PendingConfirmation = pendingConfirmation;
         Sessions = sessions;
     }
 
@@ -44,13 +37,9 @@ public class Account : AggregateRoot
 
     public AccountSessions Sessions { get; private set; }
 
-    public Option<EmailConfirmationInfo> PendingConfirmation { get; private set; }
-
     public bool IsActive { get; private set; }
 
     public PasswordHash PasswordHash { get; private set; }
-
-    public Option<TokenInfo> PasswordRecoveryToken { get; private set; }
 
     public static Account Create(
         Email email,
@@ -64,10 +53,8 @@ public class Account : AggregateRoot
             username: username,
             creation: creation,
             isActive: false,
-            pendingConfirmation: None,
             sessions: AccountSessions.Empty,
-            passwordHash: passwordHash,
-            passwordRecoveryToken: None);
+            passwordHash: passwordHash);
     }
 
     public void UpdateEmail(Email email) => Email = email;
@@ -75,33 +62,8 @@ public class Account : AggregateRoot
     public void UpdatePassword(PasswordHash passwordHash)
     {
         PasswordHash = passwordHash;
-        PasswordRecoveryToken = None;
         InvalidateAllSessions();
         EmitEvent(new PasswordChangedEvent(this));
-    }
-
-    public void StartPasswordRecovery(TokenInfo token)
-    {
-        PasswordRecoveryToken = Some(token);
-        EmitEvent(new PasswordRecoveryRequestedEvent(this, token));
-    }
-
-    public void ConfirmEmail()
-    {
-        IsActive = true;
-        PendingConfirmation.FlatMap(ci => ci.NewEmail).IfPresent(email =>
-        {
-            var oldEmail = Email;
-            Email = email;
-            EmitEvent(new EmailChangedEvent(this, oldEmail));
-        });
-        PendingConfirmation = None;
-    }
-
-    public void StartNewEmailConfirmation(EmailConfirmationInfo confirmationInfo)
-    {
-        PendingConfirmation = Some(confirmationInfo);
-        EmitEvent(new EmailConfirmationRequiredEvent(this, confirmationInfo.Token));
     }
 
     public Session StartNewSession(Guid accessTokenId, Timestamp expiration)

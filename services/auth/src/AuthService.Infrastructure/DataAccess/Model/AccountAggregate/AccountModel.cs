@@ -1,12 +1,10 @@
 ﻿using AuthService.Application.Queries.Accounts;
-using EasyDesk.CleanArchitecture.Application.Data;
 using EasyDesk.CleanArchitecture.Application.Mapping;
 using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 
 namespace AuthService.Infrastructure.DataAccess.Model.AccountAggregate;
 
@@ -25,19 +23,9 @@ public class AccountModel
 
     public string Email { get; set; }
 
-    public string EmailUpdate { get; set; }
-
     public string Password { get; set; }
 
     public string Salt { get; set; }
-
-    public string PasswordRecoveryToken { get; set; }
-
-    public Timestamp PasswordRecoveryTokenExpiration { get; set; }
-
-    public string ConfirmationToken { get; set; }
-
-    public Timestamp ConfirmationTokenExpiration { get; set; }
 
     public bool IsActive { get; set; }
 
@@ -49,9 +37,6 @@ public class AccountModel
         {
             builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.PasswordRecoveryToken)
-                .HasMaxLength(100);
-
             builder.Property(s => s.Password)
                 .HasMaxLength(256)
                 .IsRequired();
@@ -59,20 +44,6 @@ public class AccountModel
             builder.Property(s => s.Salt)
                 .HasMaxLength(256)
                 .IsRequired();
-
-            builder.Property(x => x.ConfirmationToken)
-                .HasMaxLength(100);
-
-            builder.Property(x => x.Username)
-                .IsRequired()
-                .HasMaxLength(DataConstraints.NameLength);
-
-            builder.Property(x => x.Email)
-                .IsRequired()
-                .HasMaxLength(DataConstraints.EmailLength);
-
-            builder.Property(x => x.EmailUpdate)
-                .HasMaxLength(DataConstraints.EmailLength);
 
             builder.Property(x => x.Creation)
                 .IsRequired();

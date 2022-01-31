@@ -1,6 +1,6 @@
 ﻿using AuthService.Domain.Aggregates.AccountAggregate;
+using AuthService.Domain.Aggregates.AccountAggregate.Events;
 using AuthService.Domain.Authentication.Passwords;
-using AuthService.Domain.Emails;
 using EasyDesk.CleanArchitecture.Domain.Metamodel;
 using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
 using EasyDesk.CleanArchitecture.Domain.Model;
@@ -26,30 +26,49 @@ public class AccountLifecycleService
     private readonly IAccountRepository _accountRepository;
     private readonly ITimestampProvider _timestampProvider;
     private readonly IDomainEventNotifier _eventNotifier;
-    private readonly EmailManagementService _emailManagementService;
     private readonly IRegistrationMethod<AccountRegistrationData> _registrationMethod;
 
     public AccountLifecycleService(
         IAccountRepository accountRepository,
         ITimestampProvider timestampProvider,
         IDomainEventNotifier eventNotifier,
-        EmailManagementService emailManagementService,
         AccountRegistrationMethod registrationMethod)
     {
         _accountRepository = accountRepository;
         _timestampProvider = timestampProvider;
         _eventNotifier = eventNotifier;
-        _emailManagementService = emailManagementService;
         _registrationMethod = registrationMethod;
     }
 
     public async Task<Result<Account>> Register(Email email, Username username, PlainTextPassword password)
     {
         return await VerifyEmailAndUsernameAreNotTaken(email, username)
-            .ThenFlatMapAsync(_ => _registrationMethod.CreateAccount(new AccountRegistrationData(username, email, password, _timestampProvider.Now))
-            .ThenIfSuccess(_emailManagementService.GenerateEmailConfirmationTokenForRegisteredUser)
+            .ThenFlatMapAsync(_ => _registrationMethod.CreateAccount(
+                new AccountRegistrationData(username, email, password, _timestampProvider.Now))
             .ThenIfSuccess(account => _accountRepository.Save(account))
             .ThenIfSuccess(account => _eventNotifier.Notify(new AccountRegisteredEvent(account))));
+    }
+
+    public async Task<Result<Account>> UpdateEmail(Guid guid, Email newEmail)
+    {
+        return await VerifyEmailIsNotTaken(newEmail)
+            .ThenFlatMapAsync(_ => _accountRepository.GetById(guid))
+            .ThenIfSuccess(account =>
+            {
+                var oldEmail = account.Email;
+                account.UpdateEmail(newEmail);
+                _accountRepository.Save(account);
+                _eventNotifier.Notify(new EmailChangedEvent(account, oldEmail));
+            });
+    }
+
+    private async Task<Result<Nothing>> VerifyEmailIsNotTaken(Email newEmail)
+    {
+        if (await _accountRepository.EmailExists(newEmail))
+        {
+            return new EmailAlreadyInUse();
+        }
+        return Ok;
     }
 
     private async Task<Result<Nothing>> VerifyEmailAndUsernameAreNotTaken(Email email, Username username)

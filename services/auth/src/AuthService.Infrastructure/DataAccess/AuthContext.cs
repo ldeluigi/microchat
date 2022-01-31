@@ -14,10 +14,8 @@ public class AuthContext : EntitiesContext
     {
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void SetupModel(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AuthContext).Assembly);
-
-        base.OnModelCreating(modelBuilder);
     }
 }

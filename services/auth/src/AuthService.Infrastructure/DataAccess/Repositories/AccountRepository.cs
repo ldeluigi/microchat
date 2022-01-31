@@ -23,31 +23,25 @@ public class AccountRepository : EfCoreRepository<Account, AccountModel, AuthCon
     }
 
     public async Task<bool> EmailExists(Email email) =>
-        await DbSet.AnyAsync(a => a.Email == email.ToString() || a.EmailUpdate == email.ToString());
+        await DbSet.AnyAsync(a => a.Email == email.ToString());
 
     public async Task<(bool EmailExists, bool UsernameExists)> EmailOrUsernameExists(Email email, Username username)
     {
         var user = await DbSet
             .AsNoTracking()
-            .Where(a => a.Email == email.ToString() || a.EmailUpdate == email.ToString() || a.Username == username.ToString())
+            .Where(a => a.Email == email.ToString() || a.Username == username.ToString())
             .FirstOptionAsync();
 
         return user.Match(
-            some: a => (a.Email == email.ToString() || a.EmailUpdate == email.ToString(), a.Username == username.ToString()),
+            some: a => (a.Email == email.ToString(), a.Username == username.ToString()),
             none: () => (false, false));
     }
-
-    public async Task<Result<Account>> GetByConfirmationToken(Token token) =>
-        await GetSingle(q => q.Where(a => a.ConfirmationToken == token.ToString()));
 
     public async Task<Result<Account>> GetByEmail(Email email) =>
         await GetSingle(q => q.Where(a => a.Email == email.ToString()));
 
     public async Task<Result<Account>> GetById(Guid id) =>
         await GetSingle(q => q.Where(a => a.Id == id));
-
-    public async Task<Result<Account>> GetByPasswordRecoveryToken(Token token) =>
-        await GetSingle(q => q.Where(a => a.PasswordRecoveryToken == token));
 
     public async Task<Result<Account>> GetByRefreshToken(Token token) =>
         await GetSingle(q => q.Where(u => u.Sessions.Any(s => s.RefreshToken == token.ToString())));

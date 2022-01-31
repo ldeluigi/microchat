@@ -4,9 +4,9 @@
     "net6.0": {
       "EasyDesk.CleanArchitecture.Domain": {
         "type": "Direct",
-        "requested": "[0.28.0, )",
-        "resolved": "0.28.0",
-        "contentHash": "Gy6+xXYCcWa6QjzLBjI5wqizEtNkHvcI5FHaFAOfr1tnPvqYGA9Ac11768yLvPKb4ROrhW+z9auVI8E3KP5PSQ==",
+        "requested": "[0.29.0, )",
+        "resolved": "0.29.0",
+        "contentHash": "+Uenv12878lSg16Q4L4shNBKWR/mqNAST25QOMLvvd0GU5AFiadXUDD/dOQRWMwW7xNJP1WWdREae72SmLOuHQ==",
         "dependencies": {
           "EasyDesk.Tools": "3.0.0"
         }

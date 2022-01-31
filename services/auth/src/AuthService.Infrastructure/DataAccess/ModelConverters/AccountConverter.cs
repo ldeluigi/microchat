@@ -1,5 +1,4 @@
 ﻿using AuthService.Domain.Aggregates.AccountAggregate;
-using AuthService.Domain.Tokens;
 using AuthService.Infrastructure.DataAccess.Model.AccountAggregate;
 using EasyDesk.CleanArchitecture.Dal.EfCore.ModelConversion;
 using EasyDesk.CleanArchitecture.Domain.Model;
@@ -14,12 +13,6 @@ public class AccountConverter : IModelConverter<Account, AccountModel>
 
     public Account ToDomain(AccountModel model)
     {
-        var token = model.PasswordRecoveryToken.AsOption()
-            .Map(t => new TokenInfo(Token.From(t), model.PasswordRecoveryTokenExpiration));
-        var pendingConfirmation = model.ConfirmationToken.AsOption()
-            .Map(t => new EmailConfirmationInfo(
-                model.EmailUpdate.AsOption().Map(Email.From),
-                new TokenInfo(Token.From(model.ConfirmationToken), model.ConfirmationTokenExpiration)));
         var sessions = AccountSessions.Create(model.Sessions.Select(_sessionConverter.ToDomain));
 
         return new(
@@ -28,10 +21,8 @@ public class AccountConverter : IModelConverter<Account, AccountModel>
             creation: model.Creation,
             email: Email.From(model.Email),
             isActive: model.IsActive,
-            pendingConfirmation: pendingConfirmation,
             sessions: sessions,
-            passwordHash: new PasswordHash(model.Password, model.Salt),
-            passwordRecoveryToken: token);
+            passwordHash: new PasswordHash(model.Password, model.Salt));
     }
 
     public void ApplyChanges(Account origin, AccountModel destination)
@@ -41,14 +32,6 @@ public class AccountConverter : IModelConverter<Account, AccountModel>
         destination.Email = origin.Email;
         destination.IsActive = origin.IsActive;
         (destination.Password, destination.Salt) = origin.PasswordHash;
-        (destination.PasswordRecoveryToken, destination.PasswordRecoveryTokenExpiration) = origin.PasswordRecoveryToken.Match(
-            some: t => (t.Value.ToString(), t.Expiration),
-            none: () => (null, null));
-        (destination.ConfirmationToken, destination.ConfirmationTokenExpiration, destination.EmailUpdate) = origin
-            .PendingConfirmation
-            .Match(
-                some: c => (c.Token.Value.ToString(), c.Token.Expiration, c.NewEmail.Map(x => x.ToString()).OrElseNull()),
-                none: () => (null, null, null));
         destination.Creation = origin.Creation;
         destination.Sessions.Clear();
         ConversionUtils.ApplyChangesToCollection(

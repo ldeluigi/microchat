@@ -1,11 +1,10 @@
-using EasyDesk.CleanArchitecture.Application.Data.DependencyInjection;
-using EasyDesk.CleanArchitecture.Application.Events.DependencyInjection;
+using UserService.Application;
+using UserService.Infrastructure;
+using EasyDesk.CleanArchitecture.Application.Modules;
 using EasyDesk.CleanArchitecture.Web.Startup;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using System;
-using UserService.Application;
-using UserService.Infrastructure;
 
 namespace UserService.Web;
 
@@ -31,15 +30,8 @@ public class Startup : BaseStartup
 
     protected override string ServiceName => "UserService";
 
-    protected override IDataAccessImplementation DataAccessImplementation => throw new NotImplementedException();
-
-    protected override bool UsesPublisher => false;
-
-    protected override bool UsesConsumer => false;
-
-    protected override IEventBusImplementation EventBusImplementation => throw new NotImplementedException();
-
-    protected override bool IsMultitenant => false;
-
-    protected override bool UsesSwagger => false;
+    public override void ConfigureApp(AppBuilder builder)
+    {
+        throw new NotImplementedException();
+    }
 }
