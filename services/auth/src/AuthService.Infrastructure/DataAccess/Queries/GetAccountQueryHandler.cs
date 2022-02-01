@@ -1,4 +1,6 @@
-﻿using AuthService.Application.Queries.Accounts;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using AuthService.Application.Queries.Accounts;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using EasyDesk.CleanArchitecture.Application.ErrorManagement;
@@ -6,8 +8,6 @@ using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Dal.EfCore.Utils;
 using EasyDesk.CleanArchitecture.Domain.Utils;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AuthService.Infrastructure.DataAccess.Queries;
 

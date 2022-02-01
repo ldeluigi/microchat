@@ -1,8 +1,8 @@
-﻿using AuthService.Domain.Aggregates.AccountAggregate;
+﻿using System;
+using AuthService.Domain.Aggregates.AccountAggregate;
 using EasyDesk.CleanArchitecture.Domain.Model;
 using EasyDesk.Tools.Options;
 using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
-using System;
 
 namespace AuthService.Domain.Authentication;
 

@@ -1,5 +1,5 @@
-﻿using AuthService.Domain.Aggregates.AccountAggregate;
-using System;
+﻿using System;
+using AuthService.Domain.Aggregates.AccountAggregate;
 
 namespace AuthService.Application.Queries.Accounts;
 

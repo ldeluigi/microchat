@@ -1,4 +1,5 @@
-﻿using AuthService.Domain.Aggregates.AccountAggregate;
+﻿using System;
+using AuthService.Domain.Aggregates.AccountAggregate;
 using AuthService.Domain.Authentication;
 using AuthService.Domain.Authentication.Accounts;
 using AuthService.Domain.Authentication.Passwords;
@@ -11,7 +12,6 @@ using EasyDesk.CleanArchitecture.Dal.EfCore.ModelConversion;
 using EasyDesk.CleanArchitecture.Domain.Time;
 using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace AuthService.Web.DependencyInjection;
 

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AuthService.Infrastructure.DataAccess;
 
-public class AuthContext : EntitiesContext
+public class AuthContext : DomainContext
 {
     public DbSet<AccountModel> Accounts { get; set; }
 
@@ -14,7 +14,7 @@ public class AuthContext : EntitiesContext
     {
     }
 
-    protected override void SetupModel(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AuthContext).Assembly);
     }

@@ -2,9 +2,9 @@
 using AuthService.Domain.Authentication;
 using AuthService.Domain.Authentication.Accounts;
 using AuthService.Domain.Authentication.Passwords;
-using EasyDesk.CleanArchitecture.Application.Data;
 using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Domain.Model;
+using FluentValidation;
 
 namespace AuthService.Application.Commands.Tokens;
 
@@ -12,16 +12,33 @@ public static class LoginHandlers
 {
     public record EmailLoginCommand(string Email, string Password) : CommandBase<AuthenticationResult>;
 
+    public class EmailLoginValidator : PasswordValidatorBase<EmailLoginCommand>
+    {
+        public EmailLoginValidator()
+        {
+            RuleFor(x => x.Email).Matches(Email.Pattern);
+            ValidatePassword(RuleFor(x => x.Password));
+        }
+    }
+
     public record UsernameLoginCommand(string Username, string Password) : CommandBase<AuthenticationResult>;
+
+    public class UsernameLoginValidator : PasswordValidatorBase<UsernameLoginCommand>
+    {
+        public UsernameLoginValidator()
+        {
+            RuleFor(x => x.Username).Matches(Username.Pattern);
+            ValidatePassword(RuleFor(x => x.Password));
+        }
+    }
 
     public class EmailLoginHandler : LoginHandlerBase<AccountEmailCredentials, EmailLoginCommand>
     {
         public EmailLoginHandler(
             IAccountRepository accountRepository,
             LoginService loginService,
-            AccountAuthenticationMethod accountLogin,
-            IUnitOfWork unitOfWork)
-            : base(loginService, accountRepository, accountLogin, unitOfWork)
+            AccountAuthenticationMethod accountLogin)
+            : base(loginService, accountRepository, accountLogin)
         {
         }
 
@@ -34,9 +51,8 @@ public static class LoginHandlers
         public UsernameLoginHandler(
             IAccountRepository accountRepository,
             LoginService loginService,
-            AccountAuthenticationMethod accountLogin,
-            IUnitOfWork unitOfWork)
-            : base(loginService, accountRepository, accountLogin, unitOfWork)
+            AccountAuthenticationMethod accountLogin)
+            : base(loginService, accountRepository, accountLogin)
         {
         }
 

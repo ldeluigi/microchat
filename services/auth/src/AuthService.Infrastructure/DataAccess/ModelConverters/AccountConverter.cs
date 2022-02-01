@@ -1,9 +1,9 @@
-﻿using AuthService.Domain.Aggregates.AccountAggregate;
+﻿using System.Linq;
+using AuthService.Domain.Aggregates.AccountAggregate;
 using AuthService.Infrastructure.DataAccess.Model.AccountAggregate;
 using EasyDesk.CleanArchitecture.Dal.EfCore.ModelConversion;
 using EasyDesk.CleanArchitecture.Domain.Model;
 using EasyDesk.Tools.Options;
-using System.Linq;
 
 namespace AuthService.Infrastructure.DataAccess.ModelConverters;
 

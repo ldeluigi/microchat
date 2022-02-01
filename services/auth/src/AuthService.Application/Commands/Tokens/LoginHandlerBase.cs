@@ -1,16 +1,25 @@
-﻿using AuthService.Domain.Aggregates.AccountAggregate;
+﻿using System.Threading.Tasks;
+using AuthService.Domain.Aggregates.AccountAggregate;
 using AuthService.Domain.Authentication;
 using AuthService.Domain.Authentication.Accounts;
-using EasyDesk.CleanArchitecture.Application.Data;
+using AuthService.Domain.Authentication.Passwords;
 using EasyDesk.CleanArchitecture.Application.ErrorManagement;
 using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
-using System.Threading.Tasks;
+using FluentValidation;
 
 namespace AuthService.Application.Commands.Tokens;
 
-public abstract class LoginHandlerBase<TCredentials, TRequest> : UnitOfWorkHandler<TRequest, AuthenticationResult>
+public abstract class PasswordValidatorBase<TCredentials> : AbstractValidator<TCredentials>
+{
+    protected void ValidatePassword(IRuleBuilderInitial<TCredentials, string> passwordRule)
+    {
+        passwordRule.MinimumLength(PlainTextPassword.MinimumLength);
+    }
+}
+
+public abstract class LoginHandlerBase<TCredentials, TRequest> : RequestHandlerBase<TRequest, AuthenticationResult>
     where TRequest : CommandBase<AuthenticationResult>
 {
     private readonly LoginService _loginService;
@@ -20,15 +29,14 @@ public abstract class LoginHandlerBase<TCredentials, TRequest> : UnitOfWorkHandl
     public LoginHandlerBase(
         LoginService loginService,
         IAccountRepository userRepository,
-        ILoginMethod<TCredentials> loginMethod,
-        IUnitOfWork unitOfWork) : base(unitOfWork)
+        ILoginMethod<TCredentials> loginMethod)
     {
         _loginService = loginService;
         _accountRepository = userRepository;
         _loginMethod = loginMethod;
     }
 
-    protected override async Task<Response<AuthenticationResult>> HandleRequest(TRequest request)
+    protected override async Task<Response<AuthenticationResult>> Handle(TRequest request)
     {
         var credentials = GetCredentials(request);
         return await _loginService.Login(credentials, _loginMethod)

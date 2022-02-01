@@ -1,4 +1,7 @@
-﻿using AuthService.Domain.Aggregates.AccountAggregate;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using AuthService.Domain.Aggregates.AccountAggregate;
 using AuthService.Infrastructure.DataAccess.Model.AccountAggregate;
 using EasyDesk.CleanArchitecture.Dal.EfCore.ModelConversion;
 using EasyDesk.CleanArchitecture.Dal.EfCore.Repositories;
@@ -7,9 +10,6 @@ using EasyDesk.CleanArchitecture.Domain.Metamodel;
 using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
 using EasyDesk.CleanArchitecture.Domain.Model;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AuthService.Infrastructure.DataAccess.Repositories;
 

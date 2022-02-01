@@ -1,15 +1,12 @@
-﻿using AuthService.Application.Commands.Emails;
+﻿using System;
+using System.Threading.Tasks;
+using AuthService.Application.Commands.Emails;
 using AuthService.Application.Commands.Registration;
 using AuthService.Application.Queries.Accounts;
 using AuthService.Web.Controllers.V_1_0.Accounts.DTO;
 using AuthService.Web.Controllers.V_1_0.Accounts.DTO.Outputs;
-using EasyDesk.CleanArchitecture.Application.Pages;
 using EasyDesk.CleanArchitecture.Web.Controllers;
-using EasyDesk.CleanArchitecture.Web.Dto;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 
 namespace AuthService.Web.Controllers.V_1_0.Accounts;
 
@@ -33,15 +30,6 @@ public class AccountController : AbstractMediatrController
         var query = new GetAccount.Query(accountId);
         return await Query(query)
             .MappingContent(Mapper.Map<AccountDto>)
-            .ReturnOk();
-    }
-
-    [HttpGet(AccountsRoutes.GetAccounts)]
-    public async Task<IActionResult> GetAccounts([FromQuery] string pattern, [FromQuery] PaginationDto pagination)
-    {
-        var query = new GetAccounts.Query(pattern, Mapper.Map<Pagination>(pagination));
-        return await Query(query)
-            .Paging(Mapper.Map<AccountDto>)
             .ReturnOk();
     }
 

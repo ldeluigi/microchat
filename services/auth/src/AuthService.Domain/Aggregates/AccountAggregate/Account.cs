@@ -1,9 +1,9 @@
-﻿using AuthService.Domain.Aggregates.AccountAggregate.Events;
+﻿using System;
+using AuthService.Domain.Aggregates.AccountAggregate.Events;
 using EasyDesk.CleanArchitecture.Domain.Metamodel;
 using EasyDesk.CleanArchitecture.Domain.Model;
 using EasyDesk.Tools.Options;
 using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
-using System;
 
 namespace AuthService.Domain.Aggregates.AccountAggregate;
 

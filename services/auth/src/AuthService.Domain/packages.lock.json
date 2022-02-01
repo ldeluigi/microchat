@@ -4,11 +4,11 @@
     "net6.0": {
       "EasyDesk.CleanArchitecture.Domain": {
         "type": "Direct",
-        "requested": "[0.29.0, )",
-        "resolved": "0.29.0",
-        "contentHash": "+Uenv12878lSg16Q4L4shNBKWR/mqNAST25QOMLvvd0GU5AFiadXUDD/dOQRWMwW7xNJP1WWdREae72SmLOuHQ==",
+        "requested": "[0.30.0, )",
+        "resolved": "0.30.0",
+        "contentHash": "vbxcAlHL0oOi2Rz2q8rIpn8szJlE6bL9A3BMK7Bi0MoGqL/Jb5XX+TDMQpUCF2R0LHtvobz73GX83b7uroLnjw==",
         "dependencies": {
-          "EasyDesk.Tools": "3.0.0"
+          "EasyDesk.Tools": "4.0.1"
         }
       },
       "StyleCop.Analyzers": {
@@ -22,8 +22,8 @@
       },
       "EasyDesk.Tools": {
         "type": "Transitive",
-        "resolved": "3.0.0",
-        "contentHash": "Yr3QzLw0peJBWFFprJ5HCT9nn7XVmfm+KbhAbyrz6f2RfBx0xSWFHU+9lxLPf9H+kGj8u230nG3fvxn/3BWmVA=="
+        "resolved": "4.0.1",
+        "contentHash": "NpWkY5cQZvRm9nGOVnPCNNiI1f0L0v27I/mhxK6c4yZyecVww/f8sNtX2DSNo4kNCFP6Z1yUY2vNpo5gyZx7Fg=="
       },
       "StyleCop.Analyzers.Unstable": {
         "type": "Transitive",

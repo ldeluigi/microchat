@@ -1,10 +1,10 @@
-﻿using AuthService.Application.Queries.Accounts;
+﻿using System;
+using System.Collections.Generic;
+using AuthService.Application.Queries.Accounts;
 using EasyDesk.CleanArchitecture.Application.Mapping;
 using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
 
 namespace AuthService.Infrastructure.DataAccess.Model.AccountAggregate;
 

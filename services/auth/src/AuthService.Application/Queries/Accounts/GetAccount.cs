@@ -1,5 +1,5 @@
-﻿using EasyDesk.CleanArchitecture.Application.Mediator;
-using System;
+﻿using System;
+using EasyDesk.CleanArchitecture.Application.Mediator;
 
 namespace AuthService.Application.Queries.Accounts;
 

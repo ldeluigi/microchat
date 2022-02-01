@@ -1,6 +1,6 @@
-﻿using EasyDesk.CleanArchitecture.Domain.Metamodel;
+﻿using System.Text.RegularExpressions;
+using EasyDesk.CleanArchitecture.Domain.Metamodel;
 using EasyDesk.CleanArchitecture.Domain.Metamodel.Values;
-using System.Text.RegularExpressions;
 
 namespace AuthService.Domain.Aggregates.AccountAggregate;
 

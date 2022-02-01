@@ -1,3 +1,4 @@
+
 version: '3.9'
 
 volumes:
@@ -51,29 +52,29 @@ services:
     #networks:
       #- *user-net
       #- *service-net
-  userdb:
-    <<: *mssql
-    ports:
-      - 8006:1433
-    volumes:
-      - "userdb_volume:/var/opt/mssql"
-    networks:
-      - *user-net
+#  userdb:
+#    <<: *mssql
+#    ports:
+#      - 8006:1433
+#    volumes:
+#      - "userdb_volume:/var/opt/mssql"
+#    networks:
+#      - *user-net
   #chat:
     #build: "./chat/src/ChatService.Web/"
     #networks:
       #- *chat-net
       #- *service-net
-  chatdb:
-    <<: *mssql
-    ports:
-      - "8007-8012:1433" #workaround for replicas still not working
-    volumes:
-      - "chatdb_volume:/var/opt/mssql"
-    networks:
-      - *chat-net
+#  chatdb:
+#    <<: *mssql
+#    ports:
+#      - "8007-8012:1433" #workaround for replicas still not working
+#    volumes:
+#      - "chatdb_volume:/var/opt/mssql"
+#    networks:
+#      - *chat-net
   rabbitmq: 
-    image: rabbitmq:3.9 #rabbitmq:3.9-management
+    image: rabbitmq:3.9-management
     #environment:
     #  - RABBITMQ_DEFAULT_USER=user
     #  - RABBITMQ_DEFAULT_PASS=password
