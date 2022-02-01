@@ -5,31 +5,30 @@ using System;
 using System.Threading.Tasks;
 using static EasyDesk.CleanArchitecture.Domain.Metamodel.Results.ResultImports;
 
-namespace ChatService.Domain.ChatService
+namespace ChatService.Domain.ChatService;
+
+public record PrivateChatRegistrationData(Guid Id, Guid Owner, Guid Partecipant, Timestamp CreationTime);
+
+public class PrivateChatRegistrationMethod : IRegistrationMethod<PrivateChatRegistrationData>
 {
-    public record PrivateChatRegistrationData(Guid Id, Guid Owner, Guid Partecipant, Timestamp CreationTime);
+    private readonly IPrivateChatRepository _privateChatRepository;
 
-    public class PrivateChatRegistrationMethod : IRegistrationMethod<PrivateChatRegistrationData>
+    public PrivateChatRegistrationMethod(IPrivateChatRepository privateChatRepository)
     {
-        private readonly IPrivateChatRepository _privateChatRepository;
+        _privateChatRepository = privateChatRepository;
+    }
 
-        public PrivateChatRegistrationMethod(IPrivateChatRepository privateChatRepository)
-        {
-            _privateChatRepository = privateChatRepository;
-        }
+    /// <inheritdoc/>
+    public Task<Result<PrivateChat>> CreatePrivateChat(PrivateChatRegistrationData chatData)
+    {
+        var chat = PrivateChat.Create(
+            chatData.Id,
+            chatData.Owner,
+            chatData.Partecipant,
+            chatData.CreationTime);
 
-        /// <inheritdoc/>
-        public Task<Result<PrivateChat>> CreatePrivateChat(PrivateChatRegistrationData chatData)
-        {
-            var chat = PrivateChat.Create(
-                chatData.Id,
-                chatData.Owner,
-                chatData.Partecipant,
-                chatData.CreationTime);
+        _privateChatRepository.Save(chat);
 
-            _privateChatRepository.Save(chat);
-
-            return Task.FromResult(Success(chat));
-        }
+        return Task.FromResult(Success(chat));
     }
 }
