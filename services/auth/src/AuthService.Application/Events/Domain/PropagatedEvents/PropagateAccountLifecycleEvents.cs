@@ -1,5 +1,5 @@
 ﻿using AuthService.Domain.Authentication.Accounts;
-using EasyDesk.CleanArchitecture.Application.Events.ExternalEvents;
+using EasyDesk.CleanArchitecture.Application.ExternalEvents;
 using EasyDesk.CleanArchitecture.Application.Mediator;
 using System;
 

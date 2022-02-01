@@ -34,9 +34,9 @@ export class LoginComponent implements OnInit {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
-  /*registration(): void {
+  registration(): void {
     this.router.navigate(['/register'], { queryParams: { returnUrl: `${this.returnUrl}`, username: `${this.f['username'].value}` }});
-  }*/
+  }
 
   // convenience getter for easy access to form fields
   // tslint:disable-next-line: typedef

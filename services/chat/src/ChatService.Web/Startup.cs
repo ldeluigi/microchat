@@ -1,13 +1,12 @@
-using System;
 using ChatService.Application;
 using ChatService.Infrastructure;
-using EasyDesk.CleanArchitecture.Application.Data.DependencyInjection;
-using EasyDesk.CleanArchitecture.Application.Events.DependencyInjection;
+using EasyDesk.CleanArchitecture.Application.Modules;
 using EasyDesk.CleanArchitecture.Web.Startup;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using System;
 
-namespace UserService.Web;
+namespace ChatService.Web;
 
 /// <summary>
 /// The boostrapper of the application.
@@ -31,15 +30,8 @@ public class Startup : BaseStartup
 
     protected override string ServiceName => "ChatService";
 
-    protected override IDataAccessImplementation DataAccessImplementation => throw new NotImplementedException();
-
-    protected override bool UsesPublisher => false;
-
-    protected override bool UsesConsumer => false;
-
-    protected override IEventBusImplementation EventBusImplementation => throw new NotImplementedException();
-
-    protected override bool IsMultitenant => false;
-
-    protected override bool UsesSwagger => false;
+    public override void ConfigureApp(AppBuilder builder)
+    {
+        throw new NotImplementedException();
+    }
 }

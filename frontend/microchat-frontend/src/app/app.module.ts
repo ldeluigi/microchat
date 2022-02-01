@@ -18,6 +18,7 @@ import { ErrorInterceptor } from './helper/interceptor/error.interceptor';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { HomeComponent } from './routes/home/home.component';
 import { MatInputModule } from '@angular/material/input';
+import { RegistrationComponent } from './routes/registration/registration.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { MatInputModule } from '@angular/material/input';
     ContactComponent,
     StatsComponent,
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    RegistrationComponent
   ],
   imports: [
     BrowserAnimationsModule,

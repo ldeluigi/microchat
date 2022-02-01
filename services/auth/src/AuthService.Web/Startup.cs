@@ -2,12 +2,16 @@ using AuthService.Application;
 using AuthService.Infrastructure;
 using AuthService.Infrastructure.DataAccess;
 using AuthService.Web.DependencyInjection;
+using EasyDesk.CleanArchitecture.Application.Authorization.DependencyInjection;
+using EasyDesk.CleanArchitecture.Application.Authorization.RoleBased.DependencyInjection;
 using EasyDesk.CleanArchitecture.Application.Data.DependencyInjection;
-using EasyDesk.CleanArchitecture.Application.Events.DependencyInjection;
+using EasyDesk.CleanArchitecture.Application.Messaging.DependencyInjection;
+using EasyDesk.CleanArchitecture.Application.Modules;
 using EasyDesk.CleanArchitecture.Dal.EfCore.DependencyInjection;
-using EasyDesk.CleanArchitecture.Infrastructure.Events.ServiceBus;
+using EasyDesk.CleanArchitecture.Messaging.ServiceBus.DependencyInjection;
 using EasyDesk.CleanArchitecture.Web.Authentication.Jwt;
 using EasyDesk.CleanArchitecture.Web.Startup;
+using EasyDesk.CleanArchitecture.Web.Startup.Modules;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -37,24 +41,23 @@ public class Startup : BaseStartup
 
     protected override string ServiceName => "Auth";
 
-    protected override bool UsesPublisher => true;
-
-    protected override bool UsesConsumer => false;
-
-    protected override bool IsMultitenant => false;
-
-    protected override bool UsesSwagger => true;
-
-    protected override void SetupAuthentication(AuthenticationOptions options) =>
-        options.AddScheme(new JwtBearerScheme(options =>
-        options
-        .UseJwtSettingsFromConfiguration(
-            Configuration,
-            AuthenticationInstaller.JwtScopeName)));
-
-    protected override IDataAccessImplementation DataAccessImplementation =>
-        new EfCoreDataAccess<AuthContext>(Configuration, applyMigrations: Environment.IsDevelopment());
-
-    protected override IEventBusImplementation EventBusImplementation =>
-        new AzureServiceBus(Configuration, prefix: Environment.EnvironmentName);
+    public override void ConfigureApp(AppBuilder builder)
+    {
+        builder
+            .AddApiVersioning()
+            .AddDataAccess(new EfCoreDataAccess<AuthContext>(Configuration, applyMigrations: Environment.IsDevelopment()))
+            .AddSwagger()
+            .AddAuthentication(options =>
+                options.AddScheme(new JwtBearerScheme(options =>
+                    options
+                    .UseJwtSettingsFromConfiguration(
+                        Configuration,
+                        JwtAuthorityModule.JwtScopeName))))
+            .AddAuthorization(configure =>
+                configure.UseRoleBasedPermissions())
+            .AddModule(new JwtAuthorityModule(Configuration))
+            .AddModule(new AuthDomainModule())
+            .AddMessaging(new AzureServiceBus(Configuration, prefix: Environment.EnvironmentName), options =>
+                options.AddOutboxSender());
+    }
 }

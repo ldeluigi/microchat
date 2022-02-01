@@ -36,6 +36,14 @@ jobs:
             working-directory: services/auth
             unit-test-project-name: test/AuthService.UnitTests
             human-friendly-name: AuthService
+          - main-project-name: src/UserService.Web
+            working-directory: services/user
+            unit-test-project-name: test/UserService.UnitTests
+            human-friendly-name: UserService
+          - main-project-name: src/ChatService.Web
+            working-directory: services/chat
+            unit-test-project-name: test/ChatService.UnitTests
+            human-friendly-name: ChatService
     steps:
       - name: Checkout
         uses: actions/checkout@v2
