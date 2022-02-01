@@ -14,8 +14,8 @@ export class ApiURLService {
     return this.loadApiUrl();
   }
 
-  get restApiUrl(): string {
-    return `${this.loadApiUrl()}/api`;
+  get authApiUrl(): string {
+    return `${this.loadApiUrl()}`;
   }
 
   get socketApiUrl(): string {

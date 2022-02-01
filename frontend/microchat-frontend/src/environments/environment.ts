@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  hubUrl: "",
-  apiUrl: 'http://192.168.43.254:8080' //'http://localhost:8080'
+  hubUrl: "https://localhost:7058/chatHub",
+  apiUrl: 'http://localhost:8080' //'http://localhost:8080'
 };
 
 /*
