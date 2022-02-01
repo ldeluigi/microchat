@@ -31,14 +31,33 @@ x-mssql-config: &mssql
   environment:
     MSSQL_PID: Developer
     ACCEPT_EULA: 'Y'
-    SA_PASSWORD: ${PASSWORD:?password not set}
-
+    SA_PASSWORD: ${DB_PASSWORD:?password not set}
+    
 services:
-  #auth:
-    #build: "./auth/src/AuthService.Web/"
-    #networks:
-      #- *auth-net
-      #- *service-net
+  auth:
+    depends_on:
+      - rabbitmq
+      - authdb
+      - redis
+    command: ["sleep", "10000"]
+    build:
+      context: "./auth/"
+      dockerfile: "src/AuthService.Web/Dockerfile"
+      labels:
+        - com.microsoft.visual-studio.project-name=AuthService.Web
+    image: authserviceweb:latest
+    ports:
+      - 8080:80
+      - 8081:443
+    environment:
+      MICROCHAT_JwtScopes__Global__Key: valuevaluevalue
+      MICROCHAT_JwtScopes__Global__Lifetime: 00:05:00
+      MICROCHAT_Migrations__RunOnStartup: 'true'
+      MICROCHAT_ConnectionStrings__MainDb: Server=authdb,1433;Database=AuthDb;User Id=SA;Password=${DB_PASSWORD}
+      MICROCHAT_ConnectionStrings__RabbitMq: amqp://guest:${RABBITMQ_PASSWORD}@rabbitmq:5672/
+    networks:
+      - *auth-net
+      - *service-net
   authdb:
     <<: *mssql
     ports:
@@ -75,9 +94,9 @@ services:
 #      - *chat-net
   rabbitmq: 
     image: rabbitmq:3.9-management
-    #environment:
+    environment:
     #  - RABBITMQ_DEFAULT_USER=user
-    #  - RABBITMQ_DEFAULT_PASS=password
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD?:password not set}
     ports:
       - 9000:5672
       - 9001:15672
