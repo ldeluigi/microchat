@@ -8,6 +8,7 @@ using EasyDesk.CleanArchitecture.Application.Data.DependencyInjection;
 using EasyDesk.CleanArchitecture.Application.Messaging.DependencyInjection;
 using EasyDesk.CleanArchitecture.Application.Modules;
 using EasyDesk.CleanArchitecture.Dal.EfCore.DependencyInjection;
+using EasyDesk.CleanArchitecture.Infrastructure.Configuration;
 using EasyDesk.CleanArchitecture.Web.Authentication.Jwt;
 using EasyDesk.CleanArchitecture.Web.Startup;
 using EasyDesk.CleanArchitecture.Web.Startup.Modules;
@@ -46,7 +47,7 @@ public class Startup : BaseStartup
             .AddApiVersioning()
             .AddDataAccess(new EfCoreDataAccess<AuthContext>(
                 Configuration.GetConnectionString("MainDb"),
-                applyMigrations: Environment.IsDevelopment() || Configuration.GetSection("Migration").GetValue<bool>("RunOnStartup")))
+                applyMigrations: Environment.IsDevelopment() || Configuration.GetRequiredSection("Migrations").RequireValue<bool>("RunOnStartup")))
             .AddSwagger()
             .AddAuthentication(options =>
                 options.AddScheme(new JwtBearerScheme(options =>
