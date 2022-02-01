@@ -1,4 +1,6 @@
-﻿using AuthService.Domain.Aggregates.AccountAggregate;
+﻿using System;
+using System.Threading.Tasks;
+using AuthService.Domain.Aggregates.AccountAggregate;
 using AuthService.Domain.Aggregates.AccountAggregate.Events;
 using AuthService.Domain.Authentication.Passwords;
 using EasyDesk.CleanArchitecture.Domain.Metamodel;
@@ -6,8 +8,6 @@ using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
 using EasyDesk.CleanArchitecture.Domain.Model;
 using EasyDesk.CleanArchitecture.Domain.Time;
 using EasyDesk.Tools;
-using System;
-using System.Threading.Tasks;
 using static EasyDesk.CleanArchitecture.Domain.Metamodel.Results.ResultImports;
 using static EasyDesk.Tools.Options.OptionImports;
 
@@ -26,17 +26,20 @@ public class AccountLifecycleService
     private readonly IAccountRepository _accountRepository;
     private readonly ITimestampProvider _timestampProvider;
     private readonly IDomainEventNotifier _eventNotifier;
+    private readonly PasswordService _passwordService;
     private readonly IRegistrationMethod<AccountRegistrationData> _registrationMethod;
 
     public AccountLifecycleService(
         IAccountRepository accountRepository,
         ITimestampProvider timestampProvider,
         IDomainEventNotifier eventNotifier,
+        PasswordService passwordService,
         AccountRegistrationMethod registrationMethod)
     {
         _accountRepository = accountRepository;
         _timestampProvider = timestampProvider;
         _eventNotifier = eventNotifier;
+        _passwordService = passwordService;
         _registrationMethod = registrationMethod;
     }
 
@@ -62,6 +65,15 @@ public class AccountLifecycleService
             });
     }
 
+    public async Task<Result<Account>> UpdatePassword(Guid guid, PlainTextPassword oldPassword, PlainTextPassword newPassword)
+    {
+        return await _accountRepository
+            .GetById(guid)
+                .ThenRequire(account => _passwordService
+                    .ChangePassword(account, PlainTextPassword.From(oldPassword), PlainTextPassword.From(newPassword)))
+                .ThenIfSuccess(account => _accountRepository.Save(account));
+    }
+
     private async Task<Result<Nothing>> VerifyEmailIsNotTaken(Email newEmail)
     {
         if (await _accountRepository.EmailExists(newEmail))
@@ -85,11 +97,11 @@ public class AccountLifecycleService
         return Ok;
     }
 
-    public async Task<Result<Account>> Unregister(Guid userId)
+    public async Task<Result<Account>> Unregister(Guid accountId)
     {
         return await _accountRepository
-            .GetById(userId)
-            .ThenIfSuccess(user => _accountRepository.Remove(user))
-            .ThenIfSuccess(user => _eventNotifier.Notify(new AccountUnregisteredEvent(user)));
+            .GetById(accountId)
+            .ThenIfSuccess(account => _accountRepository.Remove(account))
+            .ThenIfSuccess(account => _eventNotifier.Notify(new AccountUnregisteredEvent(account)));
     }
 }

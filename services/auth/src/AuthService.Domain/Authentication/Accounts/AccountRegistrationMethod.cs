@@ -1,9 +1,9 @@
-﻿using AuthService.Domain.Aggregates.AccountAggregate;
+﻿using System.Threading.Tasks;
+using AuthService.Domain.Aggregates.AccountAggregate;
 using AuthService.Domain.Authentication.Passwords;
 using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
 using EasyDesk.CleanArchitecture.Domain.Model;
 using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
-using System.Threading.Tasks;
 using static EasyDesk.CleanArchitecture.Domain.Metamodel.Results.ResultImports;
 
 namespace AuthService.Domain.Authentication.Accounts;
@@ -12,14 +12,11 @@ public record AccountRegistrationData(Username Username, Email Email, PlainTextP
 
 public class AccountRegistrationMethod : IRegistrationMethod<AccountRegistrationData>
 {
-    private readonly IAccountRepository _accountRepository;
     private readonly IHashingService _hashingService;
 
     public AccountRegistrationMethod(
-        IAccountRepository accountRepository,
         IHashingService hashingService)
     {
-        _accountRepository = accountRepository;
         _hashingService = hashingService;
     }
 
@@ -31,8 +28,6 @@ public class AccountRegistrationMethod : IRegistrationMethod<AccountRegistration
             passwordHash: passwordHash,
             username: accountData.Username,
             creation: accountData.Creation);
-
-        _accountRepository.Save(account);
 
         return Task.FromResult(Success(account));
     }

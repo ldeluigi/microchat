@@ -1,11 +1,11 @@
-﻿using EasyDesk.CleanArchitecture.Domain.Model;
-using EasyDesk.Tools.Collections;
-using EasyDesk.Tools.Options;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using EasyDesk.CleanArchitecture.Domain.Model;
+using EasyDesk.Tools.Collections;
+using EasyDesk.Tools.Options;
 using static EasyDesk.Tools.Collections.ImmutableCollections;
 
 namespace AuthService.Domain.Aggregates.AccountAggregate;

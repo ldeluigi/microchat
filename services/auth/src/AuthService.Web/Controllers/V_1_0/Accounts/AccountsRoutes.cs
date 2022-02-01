@@ -4,8 +4,6 @@ public static class AccountsRoutes
 {
     public const string RegisterAccount = "accounts";
 
-    public const string GetAccounts = "accounts";
-
     public const string GetAccount = "accounts/{accountId}";
 
     public const string DeleteAccount = "accounts/{accountId}";

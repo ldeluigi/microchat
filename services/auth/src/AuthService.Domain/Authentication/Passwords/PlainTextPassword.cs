@@ -1,6 +1,6 @@
-﻿using EasyDesk.CleanArchitecture.Domain.Metamodel;
+﻿using System;
+using EasyDesk.CleanArchitecture.Domain.Metamodel;
 using EasyDesk.CleanArchitecture.Domain.Metamodel.Values;
-using System;
 
 namespace AuthService.Domain.Authentication.Passwords;
 

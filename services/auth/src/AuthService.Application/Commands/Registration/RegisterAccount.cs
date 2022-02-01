@@ -1,42 +1,55 @@
-﻿using AuthService.Application.Queries.Accounts;
+﻿using System.Threading.Tasks;
+using AuthService.Application.Commands.Tokens;
+using AuthService.Application.Queries.Accounts;
 using AuthService.Domain.Aggregates.AccountAggregate;
 using AuthService.Domain.Authentication.Accounts;
 using AuthService.Domain.Authentication.Passwords;
-using EasyDesk.CleanArchitecture.Application.Data;
 using EasyDesk.CleanArchitecture.Application.ErrorManagement;
 using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
 using EasyDesk.CleanArchitecture.Domain.Model;
-using System.Threading.Tasks;
+using FluentValidation;
 
 namespace AuthService.Application.Commands.Registration;
 
 public static class RegisterAccount
 {
+    // TODO: allow unknows user
     public record Command(
         string Email,
         string Password,
         string Username) : CommandBase<AccountOutput>;
 
-    public class Handler : UnitOfWorkHandler<Command, AccountOutput>
+    public class Validator : PasswordValidatorBase<Command>
+    {
+        public Validator()
+        {
+            RuleFor(x => x.Email).Matches(Email.Pattern);
+            ValidatePassword(RuleFor(x => x.Password));
+            RuleFor(x => x.Username)
+                .MinimumLength(Username.MinimumLenght)
+                .Matches(Username.Pattern);
+        }
+    }
+
+    public class Handler : RequestHandlerBase<Command, AccountOutput>
     {
         private readonly AccountLifecycleService _accountLifecycleService;
 
         public Handler(
-            AccountLifecycleService accountLifecycleService,
-            IUnitOfWork unitOfWork) : base(unitOfWork)
+            AccountLifecycleService accountLifecycleService)
         {
             _accountLifecycleService = accountLifecycleService;
         }
 
-        protected override async Task<Response<AccountOutput>> HandleRequest(Command request)
+        protected override async Task<Response<AccountOutput>> Handle(Command request)
         {
             return await _accountLifecycleService
                 .Register(
-                email: Email.From(request.Email),
-                username: Username.From(request.Username),
-                password: PlainTextPassword.From(request.Password))
+                    email: Email.From(request.Email),
+                    username: Username.From(request.Username),
+                    password: PlainTextPassword.From(request.Password))
                 .ThenMap(AccountOutput.From)
                 .ThenToResponse();
         }

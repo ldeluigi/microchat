@@ -1,9 +1,9 @@
-﻿using AuthService.Application.Commands.Tokens;
+﻿using System.Threading.Tasks;
+using AuthService.Application.Commands.Tokens;
 using AuthService.Web.Controllers.V_1_0.Tokens.DTO;
 using AuthService.Web.Controllers.V_1_0.Tokens.DTO.Outputs;
 using EasyDesk.CleanArchitecture.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace AuthService.Web.Controllers.V_1_0.Tokens;
 

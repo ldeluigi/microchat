@@ -1,6 +1,6 @@
-﻿using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
 
 namespace AuthService.Domain.Authentication;
 

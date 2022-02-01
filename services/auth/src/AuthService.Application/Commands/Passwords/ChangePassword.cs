@@ -1,49 +1,45 @@
-﻿using AuthService.Domain.Aggregates.AccountAggregate;
+﻿using System;
+using System.Threading.Tasks;
+using AuthService.Application.Queries.Accounts;
+using AuthService.Domain.Authentication.Accounts;
 using AuthService.Domain.Authentication.Passwords;
-using EasyDesk.CleanArchitecture.Application.Data;
 using EasyDesk.CleanArchitecture.Application.ErrorManagement;
 using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
-using EasyDesk.Tools;
 using FluentValidation;
-using System;
-using System.Threading.Tasks;
 
 namespace AuthService.Application.Commands.Passwords;
 
 public static class ChangePassword
 {
-    public record Command(string OldPassword, string NewPassword, Guid AccountId) : CommandBase<Nothing>;
+    public record Command(string OldPassword, string NewPassword, Guid AccountId) : CommandBase<AccountOutput>;
 
     public class Validator : AbstractValidator<Command>
     {
         public Validator()
         {
             RuleFor(c => c.NewPassword).NotEqual(x => x.OldPassword);
+            RuleFor(c => c.NewPassword).MinimumLength(PlainTextPassword.MinimumLength);
         }
     }
 
-    public class Handler : UnitOfWorkHandler<Command, Nothing>
+    public class Handler : RequestHandlerBase<Command, AccountOutput>
     {
-        private readonly IAccountRepository _accountRepository;
-        private readonly PasswordService _passwordService;
+        private readonly AccountLifecycleService _accountLifecycleService;
 
         public Handler(
-            IAccountRepository accountRepository,
-            PasswordService passwordService,
-            IUnitOfWork unitOfWork) : base(unitOfWork)
+            AccountLifecycleService accountLifecycleService)
         {
-            _accountRepository = accountRepository;
-            _passwordService = passwordService;
+            _accountLifecycleService = accountLifecycleService;
         }
 
-        protected override async Task<Response<Nothing>> HandleRequest(Command request)
+        protected override async Task<Response<AccountOutput>> Handle(Command request)
         {
-            return await _accountRepository
-                .GetById(request.AccountId)
-                .ThenRequire(account => _passwordService.ChangePassword(account, PlainTextPassword.From(request.OldPassword), PlainTextPassword.From(request.NewPassword)))
-                .ThenIfSuccess(account => _accountRepository.Save(account))
+            // TODO: add check for authorization
+            return await _accountLifecycleService
+                .UpdatePassword(request.AccountId, PlainTextPassword.From(request.OldPassword), PlainTextPassword.From(request.NewPassword))
+                .ThenMap(AccountOutput.From)
                 .ThenToResponse();
         }
     }

@@ -1,30 +1,30 @@
-﻿using AuthService.Domain.Authentication.Accounts;
-using EasyDesk.CleanArchitecture.Application.ExternalEvents;
+﻿using System;
+using AuthService.Domain.Authentication.Accounts;
 using EasyDesk.CleanArchitecture.Application.Mediator;
-using System;
+using EasyDesk.CleanArchitecture.Application.Messaging;
 
 namespace AuthService.Application.Events.Domain.PropagatedEvents;
 
-public record UserCreated(Guid UserId) : ExternalEvent;
+public record AccountCreated(Guid AccountId) : IMessage;
 
-public record UserDeleted(Guid UserId) : ExternalEvent;
+public record AccountDeleted(Guid AccountId) : IMessage;
 
 public class PropagateAccountRegisteredEvent : DomainEventPropagator<AccountRegisteredEvent>
 {
-    public PropagateAccountRegisteredEvent(IExternalEventPublisher publisher) : base(publisher)
+    public PropagateAccountRegisteredEvent(MessageBroker messageBroker) : base(messageBroker)
     {
     }
 
-    protected override ExternalEvent ConvertToExternalEvent(AccountRegisteredEvent ev) =>
-        new UserCreated(ev.Account.Id);
+    protected override IMessage ConvertToMessage(AccountRegisteredEvent ev) =>
+        new AccountCreated(ev.Account.Id);
 }
 
 public class PropagateAccountUnregisteredEvent : DomainEventPropagator<AccountUnregisteredEvent>
 {
-    public PropagateAccountUnregisteredEvent(IExternalEventPublisher publisher) : base(publisher)
+    public PropagateAccountUnregisteredEvent(MessageBroker publisher) : base(publisher)
     {
     }
 
-    protected override ExternalEvent ConvertToExternalEvent(AccountUnregisteredEvent ev) =>
-        new UserDeleted(ev.Account.Id);
+    protected override IMessage ConvertToMessage(AccountUnregisteredEvent ev) =>
+        new AccountDeleted(ev.Account.Id);
 }

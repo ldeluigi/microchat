@@ -1,21 +1,19 @@
+using System;
 using AuthService.Application;
 using AuthService.Infrastructure;
 using AuthService.Infrastructure.DataAccess;
 using AuthService.Web.DependencyInjection;
-using EasyDesk.CleanArchitecture.Application.Authorization.DependencyInjection;
-using EasyDesk.CleanArchitecture.Application.Authorization.RoleBased.DependencyInjection;
 using EasyDesk.CleanArchitecture.Application.Data.DependencyInjection;
 using EasyDesk.CleanArchitecture.Application.Messaging.DependencyInjection;
 using EasyDesk.CleanArchitecture.Application.Modules;
 using EasyDesk.CleanArchitecture.Dal.EfCore.DependencyInjection;
-using EasyDesk.CleanArchitecture.Messaging.ServiceBus.DependencyInjection;
 using EasyDesk.CleanArchitecture.Web.Authentication.Jwt;
 using EasyDesk.CleanArchitecture.Web.Startup;
 using EasyDesk.CleanArchitecture.Web.Startup.Modules;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using System;
+using Rebus.Config;
 
 namespace AuthService.Web;
 
@@ -53,11 +51,15 @@ public class Startup : BaseStartup
                     .UseJwtSettingsFromConfiguration(
                         Configuration,
                         JwtAuthorityModule.JwtScopeName))))
-            .AddAuthorization(configure =>
-                configure.UseRoleBasedPermissions())
+            ////.AddModule(new PermissionsModule())
+            ////.AddAuthorization(configure => { })
             .AddModule(new JwtAuthorityModule(Configuration))
             .AddModule(new AuthDomainModule())
-            .AddMessaging(new AzureServiceBus(Configuration, prefix: Environment.EnvironmentName), options =>
-                options.AddOutboxSender());
+            .AddRebusMessaging(configure =>
+                configure
+                    .UseOutbox()
+                    .AddKnownMessageTypesFromAssembliesOf(typeof(ApplicationMarker))
+                    .ConfigureTransport(t =>
+                        t.UseRabbitMqAsOneWayClient(Configuration.GetConnectionString("RabbitMq"))));
     }
 }

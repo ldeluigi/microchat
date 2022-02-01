@@ -1,7 +1,7 @@
-﻿using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
+﻿using System;
+using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 
 namespace AuthService.Infrastructure.DataAccess.Model.AccountAggregate;
 

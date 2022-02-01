@@ -1,4 +1,5 @@
-﻿using AuthService.Domain.Authentication;
+﻿using System;
+using AuthService.Domain.Authentication;
 using AuthService.Domain.Authentication.Passwords;
 using AuthService.Infrastructure.Authentication;
 using AuthService.Infrastructure.PasswordHashing;
@@ -7,7 +8,6 @@ using EasyDesk.CleanArchitecture.Infrastructure.Configuration;
 using EasyDesk.CleanArchitecture.Infrastructure.Jwt;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace AuthService.Web.DependencyInjection;
 

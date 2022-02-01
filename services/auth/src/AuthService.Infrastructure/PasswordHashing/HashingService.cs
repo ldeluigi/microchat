@@ -1,7 +1,7 @@
-﻿using AuthService.Domain.Aggregates.AccountAggregate;
-using AuthService.Domain.Authentication.Passwords;
-using System;
+﻿using System;
 using System.Linq;
+using AuthService.Domain.Aggregates.AccountAggregate;
+using AuthService.Domain.Authentication.Passwords;
 
 namespace AuthService.Infrastructure.PasswordHashing;
 

@@ -1,5 +1,5 @@
-﻿using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
-using System;
+﻿using System;
+using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
 
 namespace AuthService.Web.Controllers.V_1_0.Tokens.DTO.Outputs;
 

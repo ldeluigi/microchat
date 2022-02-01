@@ -1,8 +1,8 @@
-﻿using AuthService.Domain.Aggregates.AccountAggregate;
+﻿using System.Threading.Tasks;
+using AuthService.Domain.Aggregates.AccountAggregate;
 using EasyDesk.CleanArchitecture.Domain.Metamodel;
 using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
 using EasyDesk.Tools;
-using System.Threading.Tasks;
 using static EasyDesk.CleanArchitecture.Domain.Metamodel.Results.ResultImports;
 
 namespace AuthService.Domain.Authentication.Accounts;

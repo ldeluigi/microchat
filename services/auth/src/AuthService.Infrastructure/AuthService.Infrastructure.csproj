@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EasyDesk.CleanArchitecture.Infrastructure" Version="0.29.0" />
-    <PackageReference Include="EasyDesk.CleanArchitecture.Dal.EfCore" Version="0.29.0" />
+    <PackageReference Include="EasyDesk.CleanArchitecture.Infrastructure" Version="0.30.0" />
+    <PackageReference Include="EasyDesk.CleanArchitecture.Dal.EfCore" Version="0.30.0" />
     <PackageReference Include="EasyDesk.CleanArchitecture.Messaging.ServiceBus" Version="0.29.0" />
   </ItemGroup>
 
