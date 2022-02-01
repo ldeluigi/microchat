@@ -45,7 +45,7 @@ public class Startup : BaseStartup
         builder
             .AddApiVersioning()
             .AddDataAccess(new EfCoreDataAccess<AuthContext>(
-                Configuration,
+                Configuration.GetConnectionString("MainDb"),
                 applyMigrations: Environment.IsDevelopment() || Configuration.GetSection("Migration").GetValue<bool>("RunOnStartup")))
             .AddSwagger()
             .AddAuthentication(options =>

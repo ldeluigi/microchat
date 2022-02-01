@@ -14,7 +14,7 @@ public class AuthContext : DomainContext
     {
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void ConfigureDomainModel(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AuthContext).Assembly);
     }
