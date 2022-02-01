@@ -4,7 +4,6 @@ using ChatService.Infrastructure.DataAccess.Repositories;
 using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Application.Pages;
 using EasyDesk.CleanArchitecture.Application.Responses;
-using EasyDesk.CleanArchitecture.Dal.EfCore.Utils;
 using System;
 using System.Threading.Tasks;
 using static ChatService.Application.Queries.GetMessages;
@@ -22,6 +21,7 @@ public class GetMessaggesQueryHandle : PaginatedQueryHandlerBase<Query, MessageO
         _mapper = mapper;
     }
 
+    // TODO
     protected override async Task<Response<Page<MessageOutput>>> Handle(Query request)
     {
         throw new NotImplementedException();

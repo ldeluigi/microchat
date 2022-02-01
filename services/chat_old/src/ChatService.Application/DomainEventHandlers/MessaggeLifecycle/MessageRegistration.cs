@@ -21,5 +21,6 @@ public class MessageRegistration : DomainEventHandlerBase<MessageCreatedEvent>
         _messageRepository = messageRepository;
     }
 
-    protected override Task<Response<Nothing>> Handle(MessageCreatedEvent ev) => throw new System.NotImplementedException();
+    // TODO
+    protected override Task<Response<Nothing>> Handle(MessageCreatedEvent ev) => throw new NotImplementedException();
 }

@@ -4,9 +4,10 @@ using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.Tools;
 using System;
 using System.Threading.Tasks;
-using UserService.Domain.Aggregates.UserAggregate;
 
-namespace UserService.Application.ExternalEventHandlers.AccountLifecycle;
+namespace ChatService.Application.ExternalEventHandlers.UserLifecycle;
+
+// TODO
 
 /// <summary>
 /// An external event published by the customer context whenever a new user is registered to the system.
