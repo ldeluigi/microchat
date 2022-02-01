@@ -1,12 +1,10 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import * as $ from 'jquery';
 import { Subscription } from 'rxjs';
 import { SignalRService } from 'src/app/services/signal-r.service';
 import { Chat } from 'src/model/Chat';
 import { Message } from 'src/model/Message';
 import { Stats } from 'src/model/Stats';
-import { ChatComponent } from '../chat/chat.component';
 import { StatsComponent } from '../stats/stats.component';
 
 @Component({
@@ -53,8 +51,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     //$('#action_menu_btn').on("click", function(){ $('.action_menu').toggle(); });
 
     //getChatList
-    this.chatList.push({id:"1", hasNewMessages:8, user: {id: "4218-4124-6315-2412", name: "ThommyN1"}});
-    this.chatList.push({id:"2", hasNewMessages:5});
+    this.chatList.push({id:"a6e155fa-3651-4358-97d3-6394942c2daa", hasNewMessages:8, user: {id: "c6ddc9d5-6a84-4fc1-972f-57b2d866aadb", name: "ThommyN1"}});
+    this.chatList.push({id:"f04cc7ad-008c-4662-a581-e0c53aa53167", hasNewMessages:5});
     this.chatList.push({id:"3", hasNewMessages:0});
     this.chatList.push({id:"4", hasNewMessages:2});
     this.initActiveList();

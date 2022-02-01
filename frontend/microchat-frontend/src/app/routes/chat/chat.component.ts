@@ -25,7 +25,7 @@ export class ChatComponent implements OnChanges {
       this.getOldMessages();
     } 
     if (changes['message'] && changes['message'].currentValue) {
-      console.log("TODO: new Message");
+      this.messages.push(changes['message'].currentValue);
     }
   }
 
