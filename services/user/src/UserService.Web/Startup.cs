@@ -1,10 +1,10 @@
-using UserService.Application;
-using UserService.Infrastructure;
+using System;
 using EasyDesk.CleanArchitecture.Application.Modules;
 using EasyDesk.CleanArchitecture.Web.Startup;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using System;
+using UserService.Application;
+using UserService.Infrastructure;
 
 namespace UserService.Web;
 
