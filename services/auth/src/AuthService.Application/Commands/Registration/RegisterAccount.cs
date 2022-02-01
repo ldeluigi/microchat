@@ -4,6 +4,7 @@ using AuthService.Application.Queries.Accounts;
 using AuthService.Domain.Aggregates.AccountAggregate;
 using AuthService.Domain.Authentication.Accounts;
 using AuthService.Domain.Authentication.Passwords;
+using EasyDesk.CleanArchitecture.Application.Authorization;
 using EasyDesk.CleanArchitecture.Application.ErrorManagement;
 using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Application.Responses;
@@ -15,7 +16,7 @@ namespace AuthService.Application.Commands.Registration;
 
 public static class RegisterAccount
 {
-    // TODO: allow unknows user
+    [AllowUnknownUser]
     public record Command(
         string Email,
         string Password,

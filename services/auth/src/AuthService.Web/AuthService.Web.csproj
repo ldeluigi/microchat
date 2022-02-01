@@ -23,6 +23,7 @@
   <PropertyGroup>
     <RootFolder>..\..\..</RootFolder>
     <UserSecretsId>c624e066-2cd4-4b1d-aaf6-81a151194536</UserSecretsId>
+    <DockerfileContext>..\..</DockerfileContext>
   </PropertyGroup>
 
 </Project>

@@ -3,6 +3,7 @@ using AuthService.Application;
 using AuthService.Infrastructure;
 using AuthService.Infrastructure.DataAccess;
 using AuthService.Web.DependencyInjection;
+using EasyDesk.CleanArchitecture.Application.Authorization.DependencyInjection;
 using EasyDesk.CleanArchitecture.Application.Data.DependencyInjection;
 using EasyDesk.CleanArchitecture.Application.Messaging.DependencyInjection;
 using EasyDesk.CleanArchitecture.Application.Modules;
@@ -43,7 +44,9 @@ public class Startup : BaseStartup
     {
         builder
             .AddApiVersioning()
-            .AddDataAccess(new EfCoreDataAccess<AuthContext>(Configuration, applyMigrations: Environment.IsDevelopment()))
+            .AddDataAccess(new EfCoreDataAccess<AuthContext>(
+                Configuration,
+                applyMigrations: Environment.IsDevelopment() || Configuration.GetSection("Migration").GetValue<bool>("RunOnStartup")))
             .AddSwagger()
             .AddAuthentication(options =>
                 options.AddScheme(new JwtBearerScheme(options =>
@@ -51,8 +54,8 @@ public class Startup : BaseStartup
                     .UseJwtSettingsFromConfiguration(
                         Configuration,
                         JwtAuthorityModule.JwtScopeName))))
-            ////.AddModule(new PermissionsModule())
-            ////.AddAuthorization(configure => { })
+            .AddModule(new PermissionsModule())
+            .AddAuthorization(configure => { })
             .AddModule(new JwtAuthorityModule(Configuration))
             .AddModule(new AuthDomainModule())
             .AddRebusMessaging(configure =>
