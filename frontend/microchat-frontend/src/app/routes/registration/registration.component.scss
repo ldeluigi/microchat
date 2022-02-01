@@ -1,0 +1,51 @@
+
+:host {
+  display: flex;
+  justify-content: center;
+  margin-top: 10%;
+}
+
+.mat-card {
+  width: 55%;
+  max-width: 350px;
+}
+
+form {
+  width: 80%;
+}
+
+.mat-form-field {
+  margin: 1 0;
+  width: 100%;
+}
+
+mat-card-title,
+mat-card-content {
+  padding: 2%;
+  display: flex;
+  justify-content: center;
+}
+
+.error {
+  text-align: center;
+  padding: 3%;
+  color: white;
+  background-color: red;
+}
+
+.button {
+  display: flex;
+  justify-content: flex-end;
+}
+
+:host ::ng-deep {
+  p {
+    margin: 0px;
+  }
+  .mat-form-field.mat-form-field-invalid .mat-form-field-label {
+    color: blue;
+  }
+  .mat-hint {
+    color: grey;
+  }
+}
