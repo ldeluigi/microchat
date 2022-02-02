@@ -39,15 +39,18 @@ public class Startup : BaseStartup
 
     protected override Type WebAssemblyMarker => typeof(Startup);
 
-    protected override string ServiceName => "Auth";
+    protected override string ServiceName => "AuthService";
 
     public override void ConfigureApp(AppBuilder builder)
     {
+        var shouldApplyMigrations = Configuration
+                    .RequireSection("Migrations")
+                    .RequireValue<bool>("RunOnStartup");
         builder
             .AddApiVersioning()
             .AddDataAccess(new EfCoreDataAccess<AuthContext>(
                 Configuration.GetConnectionString("MainDb"),
-                applyMigrations: Environment.IsDevelopment() || Configuration.RequireSection("Migrations").RequireValue<bool>("RunOnStartup")))
+                applyMigrations: Environment.IsDevelopment() || shouldApplyMigrations))
             .AddSwagger()
             .AddAuthentication(options =>
                 options.AddScheme(new JwtBearerScheme(options =>

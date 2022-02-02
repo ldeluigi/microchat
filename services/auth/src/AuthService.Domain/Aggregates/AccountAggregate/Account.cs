@@ -9,7 +9,7 @@ namespace AuthService.Domain.Aggregates.AccountAggregate;
 
 public class Account : AggregateRoot
 {
-    public Account(
+    private Account(
         Guid id,
         Email email,
         Username username,
@@ -55,6 +55,25 @@ public class Account : AggregateRoot
             isActive: false,
             sessions: AccountSessions.Empty,
             passwordHash: passwordHash);
+    }
+
+    public static Account Create(
+        Guid id,
+        Email email,
+        Username username,
+        Timestamp creation,
+        bool isActive,
+        AccountSessions sessions,
+        PasswordHash passwordHash)
+    {
+        return new(
+            id,
+            email,
+            username,
+            creation,
+            isActive,
+            sessions,
+            passwordHash);
     }
 
     public void UpdateEmail(Email email) => Email = email;

@@ -48,6 +48,15 @@ public class AccountModel
             builder.Property(x => x.Creation)
                 .IsRequired();
 
+            builder.Property(x => x.Username)
+                .HasMaxLength(50);
+
+            builder.HasIndex(x => x.Username)
+                .IsUnique();
+
+            builder.HasIndex(x => x.Email)
+                .IsUnique();
+
             builder.HasMany(x => x.Sessions)
                 .WithOne(x => x.Account)
                 .HasForeignKey(x => x.AccountId)
