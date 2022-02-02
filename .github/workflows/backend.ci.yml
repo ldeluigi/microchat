@@ -24,13 +24,15 @@ env:
 jobs:
   build:
     name: Build Microservices
-    runs-on: ubuntu-20.04
+    runs-on: ${{ matrix.os }}
     defaults:
       run:
+        shell: bash
         working-directory: ${{ matrix.working-directory }}
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-20.04, windows-2022]
         include:
           - main-project-name: src/AuthService.Web
             working-directory: services/auth
@@ -57,6 +59,10 @@ jobs:
           warnings-as-errors: true
           #build-configuration: Release
           path: ${{ matrix.working-directory }}
+      - name: Build with Docker
+        run: |
+          docker build -f './${{ matrix.main-project-name }}/Dockerfile' --force-rm --no-cache -t test-build .
+          docker image rm test-build
       - name: Run Unit Tests
         uses: EasyDesk/action-dotnet-test@v1
         with:
