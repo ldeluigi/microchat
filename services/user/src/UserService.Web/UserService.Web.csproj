@@ -12,6 +12,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Rebus.RabbitMq" Version="7.3.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,12 +20,10 @@
     <ProjectReference Include="..\UserService.Infrastructure\UserService.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\V_1_0\" />
-  </ItemGroup>
-
   <PropertyGroup>
     <RootFolder>..\..\..</RootFolder>
+    <UserSecretsId>23629e4e-cdf8-4069-a34b-f900827d7fba</UserSecretsId>
+    <DockerfileContext>..\..</DockerfileContext>
   </PropertyGroup>
 
 </Project>

@@ -57,7 +57,7 @@ public class Account : AggregateRoot
             passwordHash: passwordHash);
     }
 
-    public static Account Create(
+    public static Account CreateAlreadyActive(
         Guid id,
         Email email,
         Username username,
@@ -66,7 +66,7 @@ public class Account : AggregateRoot
         AccountSessions sessions,
         PasswordHash passwordHash)
     {
-        return new(
+        var acc = new Account(
             id,
             email,
             username,
@@ -74,6 +74,8 @@ public class Account : AggregateRoot
             isActive,
             sessions,
             passwordHash);
+        acc.IsActive = true;
+        return acc;
     }
 
     public void UpdateEmail(Email email) => Email = email;

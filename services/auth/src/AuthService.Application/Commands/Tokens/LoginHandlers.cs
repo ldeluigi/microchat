@@ -2,6 +2,7 @@
 using AuthService.Domain.Authentication;
 using AuthService.Domain.Authentication.Accounts;
 using AuthService.Domain.Authentication.Passwords;
+using EasyDesk.CleanArchitecture.Application.Authorization;
 using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Domain.Model;
 using FluentValidation;
@@ -10,6 +11,7 @@ namespace AuthService.Application.Commands.Tokens;
 
 public static class LoginHandlers
 {
+    [AllowUnknownUser]
     public record EmailLoginCommand(string Email, string Password) : CommandBase<AuthenticationResult>;
 
     public class EmailLoginValidator : PasswordValidatorBase<EmailLoginCommand>
@@ -21,6 +23,7 @@ public static class LoginHandlers
         }
     }
 
+    [AllowUnknownUser]
     public record UsernameLoginCommand(string Username, string Password) : CommandBase<AuthenticationResult>;
 
     public class UsernameLoginValidator : PasswordValidatorBase<UsernameLoginCommand>

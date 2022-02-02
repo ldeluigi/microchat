@@ -1,31 +1,6 @@
 
 version: '3.9'
 
-volumes:
-  authdb_volume:
-  userdb_volume:
-  chatdb_volume:
-  rabbitmq_volume:
-  redis_volume:
-
-x-db-driver-config: &db-driver
-  driver: bridge
-
-networks:
-  auth-net:
-    <<: *db-driver
-  user-net:
-    <<: *db-driver
-  chat-net:
-    <<: *db-driver
-  global:
-    driver: bridge
-
-x-auth-net: &auth-net auth-net
-x-user-net: &user-net user-net
-x-chat-net: &chat-net chat-net
-x-service-net: &service-net global
-
 x-mssql-config: &mssql
   image: mcr.microsoft.com/mssql/server:2019-CU3-ubuntu-18.04
   environment:
@@ -34,30 +9,30 @@ x-mssql-config: &mssql
     SA_PASSWORD: ${DB_PASSWORD:?password not set}
     
 services:
-  auth:
-    depends_on:
-      - rabbitmq
-      - authdb
-      - redis
-    command: ["sleep", "10000"]
-    build:
-      context: "./auth/"
-      dockerfile: "src/AuthService.Web/Dockerfile"
-      labels:
-        - com.microsoft.visual-studio.project-name=AuthService.Web
-    image: authserviceweb:latest
-    ports:
-      - 8080:80
-      - 8081:443
-    environment:
-      MICROCHAT_JwtScopes__Global__Key: valuevaluevalue
-      MICROCHAT_JwtScopes__Global__Lifetime: 00:05:00
-      MICROCHAT_Migrations__RunOnStartup: 'true'
-      MICROCHAT_ConnectionStrings__MainDb: Server=authdb,1433;Database=AuthDb;User Id=SA;Password=${DB_PASSWORD}
-      MICROCHAT_ConnectionStrings__RabbitMq: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
-    networks:
-      - *auth-net
-      - *service-net
+  # auth:
+  #   depends_on:
+  #     - rabbitmq
+  #     - authdb
+  #     - redis
+  #   command: ["sleep", "10000"]
+  #   build:
+  #     context: "./auth/"
+  #     dockerfile: "src/AuthService.Web/Dockerfile"
+  #     labels:
+  #       - com.microsoft.visual-studio.project-name=AuthService.Web
+  #   image: authserviceweb:latest
+  #   ports:
+  #     - 8080:80
+  #     - 8081:443
+  #   environment:
+  #     MICROCHAT_JwtScopes__Global__Key: valuevaluevalue
+  #     MICROCHAT_JwtScopes__Global__Lifetime: 00:05:00
+  #     MICROCHAT_Migrations__RunOnStartup: 'true'
+  #     MICROCHAT_ConnectionStrings__MainDb: Server=authdb,1433;Database=AuthDb;User Id=SA;Password=${DB_PASSWORD}
+  #     MICROCHAT_ConnectionStrings__RabbitMq: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
+  #   networks:
+  #     - auth-net
+  #     - global
   authdb:
     <<: *mssql
     ports:
@@ -65,25 +40,25 @@ services:
     volumes:
       - "authdb_volume:/var/opt/mssql"
     networks:
-      - *auth-net
+      - auth-net
   #user:
     #build: "./user/src/UserService.Web/"
     #networks:
       #- *user-net
-      #- *service-net
-#  userdb:
-#    <<: *mssql
-#    ports:
-#      - 8006:1433
-#    volumes:
-#      - "userdb_volume:/var/opt/mssql"
-#    networks:
-#      - *user-net
+      #- *global
+  userdb:
+   <<: *mssql
+   ports:
+     - 8006:1433
+   volumes:
+     - "userdb_volume:/var/opt/mssql"
+   networks:
+     - user-net
   #chat:
     #build: "./chat/src/ChatService.Web/"
     #networks:
       #- *chat-net
-      #- *service-net
+      #- *global
 #  chatdb:
 #    <<: *mssql
 #    ports:
@@ -103,7 +78,7 @@ services:
     volumes:
       - "rabbitmq_volume:/var/lib/rabbitmq"
     networks:
-      - *service-net
+      - global
   redis:
     image: redis:6.2
     ports:
@@ -111,4 +86,25 @@ services:
     volumes:
       - "redis_volume:/data"
     networks:
-      - *service-net
+      - global
+
+
+volumes:
+  authdb_volume:
+  userdb_volume:
+  chatdb_volume:
+  rabbitmq_volume:
+  redis_volume:
+
+x-db-driver-config: &db-driver
+  driver: bridge
+
+networks:
+  auth-net:
+    <<: *db-driver
+  user-net:
+    <<: *db-driver
+  chat-net:
+    <<: *db-driver
+  global:
+    driver: bridge
