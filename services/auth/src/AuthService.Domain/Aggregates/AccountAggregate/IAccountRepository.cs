@@ -20,7 +20,7 @@ public interface IAccountRepository :
 
     Task<bool> EmailExists(Email email);
 
-    Task<bool> UsernameExists(Username email);
+    Task<bool> UsernameExists(Username username);
 
     Task<(bool EmailExists, bool UsernameExists)> EmailOrUsernameExists(Email email, Username username);
 }

@@ -37,6 +37,9 @@ public class AccountRepository : EfCoreRepository<Account, AccountModel, AuthCon
             none: () => (false, false));
     }
 
+    public async Task<bool> UsernameExists(Username username) =>
+        await DbSet.AnyAsync(a => a.Username == username.ToString());
+
     public async Task<Result<Account>> GetByEmail(Email email) =>
         await GetSingle(q => q.Where(a => a.Email == email.ToString()));
 
