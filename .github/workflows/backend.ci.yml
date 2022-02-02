@@ -60,6 +60,7 @@ jobs:
           #build-configuration: Release
           path: ${{ matrix.working-directory }}
       - name: Build with Docker
+        if: contains(matrix.os, ubuntu)
         run: |
           docker build -f './${{ matrix.main-project-name }}/Dockerfile' --force-rm --no-cache -t test-build .
           docker image rm test-build
@@ -81,7 +82,7 @@ jobs:
           output-dir: ${{ env.output-dir }}/${{ inputs.app-publish-dir || 'app' }}
           #build-configuration: Release
       - uses: actions/upload-artifact@v2
-        if: inputs.app-publish-dir != ''
+        if: inputs.app-publish-dir != '' && contains(matrix.os, ubuntu)
         with:
           name: ${{ matrix.human-friendly-name }}_${{ env.artifact-name }}
           path: ${{ env.output-dir }}
