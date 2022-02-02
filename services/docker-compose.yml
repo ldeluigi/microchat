@@ -54,7 +54,7 @@ services:
       MICROCHAT_JwtScopes__Global__Lifetime: 00:05:00
       MICROCHAT_Migrations__RunOnStartup: 'true'
       MICROCHAT_ConnectionStrings__MainDb: Server=authdb,1433;Database=AuthDb;User Id=SA;Password=${DB_PASSWORD}
-      MICROCHAT_ConnectionStrings__RabbitMq: amqp://guest:${RABBITMQ_PASSWORD}@rabbitmq:5672/
+      MICROCHAT_ConnectionStrings__RabbitMq: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
     networks:
       - *auth-net
       - *service-net
@@ -93,10 +93,10 @@ services:
 #    networks:
 #      - *chat-net
   rabbitmq: 
-    image: rabbitmq:3.9-management
+    image: rabbitmq:3.9 #-management
     environment:
-    #  - RABBITMQ_DEFAULT_USER=user
-      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD?:password not set}
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER?:RMQuser not set}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD?:RMQpassword not set}
     ports:
       - 9000:5672
       - 9001:15672
