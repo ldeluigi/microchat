@@ -63,11 +63,6 @@ jobs:
           warnings-as-errors: true
           #build-configuration: Release
           path: ${{ matrix.working-directory }}
-      - name: Build with Docker
-        if: contains(matrix.os, 'ubuntu')
-        run: |
-          docker build -f './${{ matrix.main-project-name }}/Dockerfile' --force-rm --no-cache -t test-build .
-          docker image rm test-build
       - name: Run Unit Tests
         uses: EasyDesk/action-dotnet-test@v1
         with:
@@ -85,6 +80,11 @@ jobs:
           path: ${{ matrix.working-directory }}/${{ matrix.main-project-name }}
           output-dir: ${{ env.output-dir }}/${{ inputs.app-publish-dir || 'app' }}
           #build-configuration: Release
+      - name: Build with Docker
+        if: contains(matrix.os, 'ubuntu')
+        run: |
+          docker build -f './${{ matrix.main-project-name }}/Dockerfile' --force-rm --no-cache -t test-build .
+          docker image rm test-build
       - uses: actions/upload-artifact@v2
         if: inputs.app-publish-dir != '' && contains(matrix.os, 'ubuntu')
         with:
