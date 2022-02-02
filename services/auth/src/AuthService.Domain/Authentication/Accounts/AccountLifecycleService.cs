@@ -65,6 +65,18 @@ public class AccountLifecycleService
             });
     }
 
+    public async Task<Result<Account>> UpdateUsername(Guid guid, Username newUsername)
+    {
+        return await VerifyUsernameIsNotTaken(newUsername)
+            .ThenFlatMapAsync(_ => _accountRepository.GetById(guid))
+            .ThenIfSuccess(account =>
+            {
+                account.UpdateUsername(newUsername);
+                _accountRepository.Save(account);
+                _eventNotifier.Notify(new UsernameChangedEvent(account));
+            });
+    }
+
     public async Task<Result<Account>> UpdatePassword(Guid guid, PlainTextPassword oldPassword, PlainTextPassword newPassword)
     {
         return await _accountRepository
@@ -79,6 +91,15 @@ public class AccountLifecycleService
         if (await _accountRepository.EmailExists(newEmail))
         {
             return new EmailAlreadyInUse();
+        }
+        return Ok;
+    }
+
+    private async Task<Result<Nothing>> VerifyUsernameIsNotTaken(Username newUsername)
+    {
+        if (await _accountRepository.UsernameExists(newUsername))
+        {
+            return new UsernameAlreadyInUse();
         }
         return Ok;
     }

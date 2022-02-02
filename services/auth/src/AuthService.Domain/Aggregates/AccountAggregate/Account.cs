@@ -66,6 +66,8 @@ public class Account : AggregateRoot
         EmitEvent(new PasswordChangedEvent(this));
     }
 
+    public void UpdateUsername(Username username) => Username = username;
+
     public Session StartNewSession(Guid accessTokenId, Timestamp expiration)
     {
         var session = new Session(accessTokenId, Token.Random(), expiration);

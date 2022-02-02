@@ -1,16 +1,25 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EasyDesk.CleanArchitecture.Infrastructure" Version="0.30.0" />
+    <PackageReference Include="EasyDesk.CleanArchitecture.Dal.EfCore" Version="0.31.0" />
+    <PackageReference Include="EasyDesk.CleanArchitecture.Infrastructure" Version="0.31.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\UserService.Application\UserService.Application.csproj" />
     <ProjectReference Include="..\UserService.Domain\UserService.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DataAccess\Migrations\" />
+    <Folder Include="DataAccess\Model\" />
+    <Folder Include="DataAccess\ModelConverters\" />
+    <Folder Include="DataAccess\Repositories\" />
+    <Folder Include="DataAccess\Queries\" />
   </ItemGroup>
 
   <PropertyGroup>

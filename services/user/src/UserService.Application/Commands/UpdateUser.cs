@@ -3,6 +3,7 @@ using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
 using EasyDesk.Tools.Options;
+using FluentValidation;
 using Microchat.UserService.Application.Queries;
 using System;
 using System.Threading.Tasks;
@@ -10,15 +11,23 @@ using UserService.Domain.Aggregates.UserAggregate;
 
 namespace UserService.Application.Commands;
 
-// farsi passare id e poi modificare i campi modificabili (opzionali perchè non necessariamente li voglio modificare)
-
-// carico user con user repo
-// modifico i campi
-// salvo lo user aggiornato facendo thenIfSuccess per ogni modifica e per ultimo thenToResponse()
-// simile a AuthService changePassword
 public static class UpdateUser
 {
-    public record Command(Guid UserId, Option<string> Name, Option<string> Surname, Option<string> Email) : CommandBase<UserOutput>;
+    public record Command(Guid UserId, Option<string> Name, Option<string> Surname) : CommandBase<UserOutput>;
+
+    public class Validator : AbstractValidator<Command>
+    {
+        private void ValidateName(Func<Command, Option<string>> field) =>
+            When(c => field(c).IsPresent, () =>
+                RuleFor(c => field(c).Value)
+                    .Length(Name.MinimumLength, Name.MaximumLength));
+
+        public Validator()
+        {
+            ValidateName(c => c.Name);
+            ValidateName(c => c.Surname);
+        }
+    }
 
     public class Handler : RequestHandlerBase<Command, UserOutput>
     {
@@ -32,9 +41,17 @@ public static class UpdateUser
         protected override async Task<Response<UserOutput>> Handle(Command request)
         {
             return await _userRepository.GetById(request.UserId)
-                .ThenIfSuccess(user => request.Name.IfPresent(userName => user.UpdateName(Name.From(userName))))
-                .ThenIfSuccess(user => request.Surname.IfPresent(userSurname => user.UpdateSurname(Name.From(userSurname))))
-                .ThenIfSuccess(user => request.Email.IfPresent(userEmail => user.UpdateEmail(Email.From(userEmail))))
+                .ThenIfSuccess(user =>
+                {
+                    if (request.Name.IsPresent)
+                    {
+                        user.UpdateName(Name.From(request.Name.Value));
+                    }
+                    if (request.Surname.IsPresent)
+                    {
+                        user.UpdateSurname(Name.From(request.Surname.Value));
+                    }
+                })
                 .ThenIfSuccess(user => _userRepository.Save(user))
                 .ThenMap(UserOutput.From)
                 .ThenToResponse();
