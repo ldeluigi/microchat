@@ -4,13 +4,13 @@
     "net6.0": {
       "EasyDesk.CleanArchitecture.Application": {
         "type": "Direct",
-        "requested": "[0.31.1, )",
-        "resolved": "0.31.1",
-        "contentHash": "ulcwMoj6J8qRd9VxeydQS3Y4UVIa/uwbR1kr1+4H8dBbtz3fHidTuSyHEA5IA5kC4EbP0c2UZ0OcZj2pSRjGDQ==",
+        "requested": "[0.32.0, )",
+        "resolved": "0.32.0",
+        "contentHash": "Ye8ZX22HF7jJc16nhOladck+SREFkGVIMOB7c3CY4h0TfKQl3Kwx2doNMKkLyeqA6+WKjfhFFH96W/IufzkJKQ==",
         "dependencies": {
           "AutoMapper": "11.0.0",
           "AutoMapper.Extensions.Microsoft.DependencyInjection": "11.0.0",
-          "EasyDesk.CleanArchitecture.Domain": "0.31.1",
+          "EasyDesk.CleanArchitecture.Domain": "0.32.0",
           "EasyDesk.Tools": "4.0.1",
           "FluentValidation": "10.3.6",
           "FluentValidation.DependencyInjectionExtensions": "10.3.6",
@@ -53,8 +53,8 @@
       },
       "EasyDesk.CleanArchitecture.Domain": {
         "type": "Transitive",
-        "resolved": "0.31.1",
-        "contentHash": "PJybxhZ3iiVNWijaD9TwjfXWLq3DdRVxRuVwCBqMzu4g0DeBU+m89G4VMBrcm054eulVB/bhAavXJmSjGUJyNw==",
+        "resolved": "0.32.0",
+        "contentHash": "YXuGcY8etwkG0ndAcMcuBAFZlq/zefCp77AjZAW0Z/A4fBd2IjH+Lyb4jEpWcKfvqRg9ccnvf2+jy2pJPHgu1g==",
         "dependencies": {
           "EasyDesk.Tools": "4.0.1"
         }
@@ -527,7 +527,7 @@
       "authservice.domain": {
         "type": "Project",
         "dependencies": {
-          "EasyDesk.CleanArchitecture.Domain": "0.31.1"
+          "EasyDesk.CleanArchitecture.Domain": "0.32.0"
         }
       }
     }

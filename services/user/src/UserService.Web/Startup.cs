@@ -65,6 +65,7 @@ public class Startup : BaseStartup
                     .UseOutbox()
                     .AddKnownMessageTypesFromAssembliesOf(typeof(ApplicationMarker))
                     .ConfigureTransport(t =>
-                        t.UseRabbitMq(Configuration.GetConnectionString("RabbitMq"), ServiceName)));
+                        t.UseRabbitMq(Configuration.GetConnectionString("RabbitMq"), ServiceName)))
+            .AddModule(new TopicSubscriberModule());
     }
 }

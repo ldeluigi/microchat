@@ -1,5 +1,4 @@
-﻿using EasyDesk.CleanArchitecture.Application.Pages;
-using EasyDesk.CleanArchitecture.Web.Controllers;
+﻿using EasyDesk.CleanArchitecture.Web.Controllers;
 using EasyDesk.CleanArchitecture.Web.Dto;
 using Microchat.UserService.Application.Queries;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +23,7 @@ public class UserController : AbstractMediatrController
     [HttpGet(UserRoutes.GetUsers)]
     public async Task<IActionResult> GetUsers([FromQuery] string search, [FromQuery] PaginationDto pagination)
     {
-        var query = new GetUsers.Query(search, Mapper.Map<Pagination>(pagination));
+        var query = new GetUsers.Query(search, pagination);
         return await Query(query)
             .Paging(Mapper.Map<UserDto>)
             .ReturnOk();
