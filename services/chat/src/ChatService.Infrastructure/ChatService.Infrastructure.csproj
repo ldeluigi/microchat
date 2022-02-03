@@ -5,12 +5,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EasyDesk.CleanArchitecture.Infrastructure" Version="0.30.0" />
+    <PackageReference Include="EasyDesk.CleanArchitecture.Dal.EfCore" Version="0.32.0" />
+    <PackageReference Include="EasyDesk.CleanArchitecture.Infrastructure" Version="0.32.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ChatService.Application\ChatService.Application.csproj" />
     <ProjectReference Include="..\ChatService.Domain\ChatService.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DataAccess\Migrations\" />
+    <Folder Include="DataAccess\Model\" />
+    <Folder Include="DataAccess\ModelConverters\" />
+    <Folder Include="DataAccess\Repositories\" />
+    <Folder Include="DataAccess\Queries\" />
   </ItemGroup>
 
   <PropertyGroup>

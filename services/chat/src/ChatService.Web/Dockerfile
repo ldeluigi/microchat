@@ -1,3 +1,5 @@
+#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
 EXPOSE 80
@@ -5,13 +7,13 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["ChatService.Web/ChatService.Web.csproj", "ChatService.Web/"]
-COPY ["ChatService.Infrastructure/ChatService.Infrastructure.csproj", "ChatService.Infrastructure/"]
-COPY ["ChatService.Application/ChatService.Application.csproj", "ChatService.Application/"]
-COPY ["ChatService.Domain/ChatService.Domain.csproj", "ChatService.Domain/"]
-RUN dotnet restore "ChatService.Web/ChatService.Web.csproj"
+COPY ["src/ChatService.Web/ChatService.Web.csproj", "src/ChatService.Web/"]
+COPY ["src/ChatService.Infrastructure/ChatService.Infrastructure.csproj", "src/ChatService.Infrastructure/"]
+COPY ["src/ChatService.Domain/ChatService.Domain.csproj", "src/ChatService.Domain/"]
+COPY ["src/ChatService.Application/ChatService.Application.csproj", "src/ChatService.Application/"]
+RUN dotnet restore "src/ChatService.Web/ChatService.Web.csproj"
 COPY . .
-WORKDIR "/src/ChatService.Web"
+WORKDIR "/src/src/ChatService.Web"
 RUN dotnet build "ChatService.Web.csproj" -c Release -o /app/build
 
 FROM build AS publish
