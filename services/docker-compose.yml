@@ -9,30 +9,30 @@ x-mssql-config: &mssql
     SA_PASSWORD: ${DB_PASSWORD:?password not set}
     
 services:
-  # auth:
-  #   depends_on:
-  #     - rabbitmq
-  #     - authdb
-  #     - redis
-  #   command: ["sleep", "10000"]
-  #   build:
-  #     context: "./auth/"
-  #     dockerfile: "src/AuthService.Web/Dockerfile"
-  #     labels:
-  #       - com.microsoft.visual-studio.project-name=AuthService.Web
-  #   image: authserviceweb:latest
-  #   ports:
-  #     - 8080:80
-  #     - 8081:443
-  #   environment:
-  #     MICROCHAT_JwtScopes__Global__Key: valuevaluevalue
-  #     MICROCHAT_JwtScopes__Global__Lifetime: 00:05:00
-  #     MICROCHAT_Migrations__RunOnStartup: 'true'
-  #     MICROCHAT_ConnectionStrings__MainDb: Server=authdb,1433;Database=AuthDb;User Id=SA;Password=${DB_PASSWORD}
-  #     MICROCHAT_ConnectionStrings__RabbitMq: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
-  #   networks:
-  #     - auth-net
-  #     - global
+  auth:
+    depends_on:
+      - rabbitmq
+      - authdb
+      - redis
+    build:
+      context: "./auth/"
+      dockerfile: "src/AuthService.Web/Dockerfile"
+      labels:
+        - com.microsoft.visual-studio.project-name=AuthService.Web
+    restart: on-failure
+    image: authserviceweb:latest
+    ports:
+      - 8080:80
+      - 8081:443
+    environment:
+      MICROCHAT_JwtScopes__Global__Key: ${JWT_SECRET?secret unset}
+      MICROCHAT_JwtScopes__Global__Lifetime: 00:05:00
+      MICROCHAT_Migrations__RunOnStartup: 'true'
+      MICROCHAT_ConnectionStrings__MainDb: Server=authdb,1433;Database=AuthDb;User Id=SA;Password=${DB_PASSWORD}
+      MICROCHAT_ConnectionStrings__RabbitMq: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
+    networks:
+      - auth-net
+      - global
   authdb:
     <<: *mssql
     ports:
@@ -41,11 +41,30 @@ services:
       - "authdb_volume:/var/opt/mssql"
     networks:
       - auth-net
-  #user:
-    #build: "./user/src/UserService.Web/"
-    #networks:
-      #- *user-net
-      #- *global
+  user:
+    depends_on:
+      - rabbitmq
+      - userdb
+      - redis
+    build:
+      context: "./user/"
+      dockerfile: "src/UserService.Web/Dockerfile"
+      labels:
+        - com.microsoft.visual-studio.project-name=UserService.Web
+    restart: on-failure
+    image: userserviceweb:latest
+    ports:
+      - 8082:80
+      - 8083:443
+    environment:
+      MICROCHAT_JwtScopes__Global__Key: ${JWT_SECRET?secret unset}
+      MICROCHAT_JwtScopes__Global__Lifetime: 00:05:00
+      MICROCHAT_Migrations__RunOnStartup: 'true'
+      MICROCHAT_ConnectionStrings__MainDb: Server=userdb,1433;Database=UserDb;User Id=SA;Password=${DB_PASSWORD}
+      MICROCHAT_ConnectionStrings__RabbitMq: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
+    networks:
+      - user-net
+      - global
   userdb:
    <<: *mssql
    ports:
