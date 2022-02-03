@@ -19,6 +19,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { HomeComponent } from './routes/home/home.component';
 import { MatInputModule } from '@angular/material/input';
 import { RegistrationComponent } from './routes/registration/registration.component';
+import { ElementScrollPercentageDirective } from './helper/directive/element-scroll-percentage.directive';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { RegistrationComponent } from './routes/registration/registration.compon
     StatsComponent,
     LoginComponent,
     HomeComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    ElementScrollPercentageDirective
   ],
   imports: [
     BrowserAnimationsModule,
