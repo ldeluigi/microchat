@@ -17,7 +17,7 @@ export class ContactComponent implements OnInit {
 
   title(): string {
     return this.chat ? 
-            this.chat.user ? this.chat.user.name + " - " + this.chat.user.id : this.chat.id
+            this.chat.user ? this.chat.user.name.length > 0 ? this.chat.user.name + " - " + this.chat.user.id : this.chat.user.id : this.chat.id
             : "Waiting for chat"
   }
 
