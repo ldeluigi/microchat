@@ -8,6 +8,7 @@ using EasyDesk.CleanArchitecture.Infrastructure.Configuration;
 using EasyDesk.CleanArchitecture.Infrastructure.Jwt;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace AuthService.Web.DependencyInjection;
 
@@ -34,6 +35,6 @@ public class JwtAuthorityModule : IAppModule
 
     private IAccessTokenService CreateAccessTokenService(IServiceProvider provider)
     {
-        return new JwtAccessTokenService(provider.GetRequiredService<JwtService>(), provider.GetRequiredService<JwtSettings>());
+        return new JwtAccessTokenService(provider.GetRequiredService<JwtService>(), provider.GetRequiredService<JwtSettings>(), provider.GetRequiredService<ILogger<JwtAccessTokenService>>());
     }
 }
