@@ -23,8 +23,8 @@ export class UserService {
   ) {
   }
 
-  userValue(searchString: string): Observable<User> {
-    return this.http.post<Response<User>>(`${this.apiURL.authApiUrl}/users${this.userVersion}`, searchString)
+  userValue(searchString: string): Observable<User[]> {
+    return this.http.get<Response<User[]>>(`${this.apiURL.userApiUrl}${this.userVersion}`, {params: {search: searchString}})
       .pipe(map(u => u.data));
   }
 }
