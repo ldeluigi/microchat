@@ -24,8 +24,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   search!: string;
   signalRSubscription!: Subscription;
   newIncomingMessage: Message | undefined;
+  scrollPerc = 0;
   @ViewChild('chatSelector') appChat!: ElementRef;
-
 
   constructor(
     private userService: UserService,
@@ -150,5 +150,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   logout() {
     this.accountService.logout();
+  }
+
+  scroll(event: number) {
+    this.scrollPerc = event;
+    //console.log(event);
   }
 }
