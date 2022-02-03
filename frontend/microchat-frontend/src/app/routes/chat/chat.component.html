@@ -5,7 +5,6 @@
       [ngTemplateOutletContext]="{src:getSrcImg(message)}">
     </ng-container>
     <div class="msg_cotainer">
-      <span class="msg_user">{{message.sender}}</span>
       {{message.text}}
       <span class="msg_time">8:40 AM, Today
         <i *ngIf="message.edited" class="fas fa-edit"></i>

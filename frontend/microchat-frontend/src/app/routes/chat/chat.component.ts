@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { AccountService } from 'src/app/services/account.service';
 import { Chat } from 'src/model/Chat';
 import { Message } from 'src/model/Message';
 
@@ -12,7 +13,9 @@ export class ChatComponent implements OnChanges {
   @Input() message!: Message | undefined;
   messages: Message[] = []; // messages
 
-  constructor() {}
+  constructor(
+    private accountService: AccountService
+  ) {}
 
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -45,7 +48,7 @@ export class ChatComponent implements OnChanges {
   }
 
   private amITheSender(sender: string) {
-    return sender == "Simo"
+    return sender == this.accountService.userValue?.userId
   }
 
   getSrcImg(message: Message) {

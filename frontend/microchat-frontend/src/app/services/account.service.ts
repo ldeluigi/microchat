@@ -59,7 +59,7 @@ export class AccountService {
 
   login(username: string, password: string): Observable<LoggedUser | null> {
     // console.log({ username: username, password: password });
-    return this.http.post<Response<LoggedUser | null>>(`${this.apiURL.authApiUrl}/token/login${this.authVersion}`, { username: username, password: password })
+    return this.http.post<Response<LoggedUser | null>>(`${this.apiURL.tokenApiUrl}/login${this.authVersion}`, { username: username, password: password })
       .pipe(map(u => {
         this.saveUser(u.data);
         this.logService.messageSnackBar('Logged in properly');
@@ -75,11 +75,11 @@ export class AccountService {
     } else { // User ask for logout
       this.logService.messageSnackBar('Logged out properly');
     }
-    this.router.navigate(['/']);
+    this.router.navigate(['/login']);
   }
 
   register(user: UserRegistration): Observable<UserRegistrationResponse> {
-    return this.http.post<Response<UserRegistrationResponse>>(`${this.apiURL.authApiUrl}/accounts${this.authVersion}`, user)
+    return this.http.post<Response<UserRegistrationResponse>>(`${this.apiURL.authApiUrl}${this.authVersion}`, user)
       .pipe(map(u => u.data));
   }
 
@@ -102,7 +102,7 @@ export class AccountService {
       this.logService.log('No user logged while try to update user info', LogLevel.Error);
       throw Error('Invalid user');
     }
-    this.http.put(`${this.apiURL.authApiUrl}/accounts/${user.userId}${this.authVersion}`, data)
+    this.http.put(`${this.apiURL.authApiUrl}${user.userId}${this.authVersion}`, data)
       .pipe(map(_ => {
         this.logService.messageSnackBar('Data updated correctly');
         return;
@@ -115,8 +115,10 @@ export class AccountService {
       this.logService.log('No user logged while try to refresh token', LogLevel.Error);
       return throwError(() => new Error('No user logged'));
     }
-    return this.http.post<Response<TokenRefresh>>(`${this.apiURL.authApiUrl}/token/refresh${this.authVersion}`, { token: user.accessToken, refresh: user.refreshToken })
+    console.log("refreshing");
+    return this.http.post<Response<TokenRefresh>>(`${this.apiURL.tokenApiUrl}/refresh${this.authVersion}`, { token: user.accessToken, refresh: user.refreshToken })
       .pipe(map(a => {
+        console.log(a);
         user.accessToken = a.data.token;
         user.refreshToken = a.data.refresh;
         this.saveUser(user);
@@ -130,7 +132,7 @@ export class AccountService {
       this.logService.log('No user logged while try to delete user', LogLevel.Error);
       return throwError(() => new Error('No user logged'));
     }
-    return this.http.delete<Response<LoggedUser>>(`${this.apiURL.authApiUrl}/accounts/${user.userId}${this.authVersion}`)
+    return this.http.delete<Response<LoggedUser>>(`${this.apiURL.authApiUrl}/${user.userId}${this.authVersion}`)
       .pipe(map(a => {
         this.saveUser(null);
         return a.data;

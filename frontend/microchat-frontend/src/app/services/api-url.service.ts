@@ -14,12 +14,24 @@ export class ApiURLService {
     return this.loadApiUrl();
   }
 
-  get authApiUrl(): string {
-    return `${this.loadApiUrl()}`;
+  get chatApiUrl(): string {
+    var port = environment.chatPort;
+    return `${this.loadApiUrl()}:${port}/signalr/chat`;
   }
 
-  get socketApiUrl(): string {
-    return `${this.loadApiUrl()}/socket`;
+  get authApiUrl(): string {
+    var port = environment.authPort;
+    return `${this.loadApiUrl()}:${port}/accounts`;
+  }
+
+  get tokenApiUrl(): string {
+    var port = environment.authPort;
+    return `${this.loadApiUrl()}:${port}/token`;
+  }
+
+  get userApiUrl(): string {
+    var port = environment.userPort;
+    return `${this.loadApiUrl()}:${port}/users`;
   }
 
   private loadApiUrl(): string {

@@ -24,7 +24,7 @@ export class ErrorInterceptor implements HttpInterceptor {
       // console.log(err);
 
       const error = err.error.errors || err.statusText;
-      return throwError(error);
+      return throwError(() => new Error(error));
     }));
   }
 
@@ -43,7 +43,7 @@ export class ErrorInterceptor implements HttpInterceptor {
       return this.accountService.refreshToken()
         .pipe(catchError(err => {
           this.accountService.logout();
-          return throwError('Error in token refresh');
+          return throwError(() => new Error('Error in token refresh'));
         }))
         .pipe(
           switchMap(t => {
