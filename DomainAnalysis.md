@@ -36,6 +36,9 @@
 
 - *Chat* can't be deleted.
 - *PrivateChat* can have only two partecipants, a owner and a partecipant.
+- A *User* can interact with a *Chat* only if it is a participant.
+- A *User* can send messages within a *Chat* only if it is a participant.
+- A *User* can only delete messages in a *Chat* if it's the original sender.
 
 ### User domain
 ```plantuml
@@ -45,6 +48,4 @@
 ```
 
 #### User Constraints
-- A *User* can interact with a chat only if it is a participant.
-- A *User* can send messages within a chat only if it is a participant.
-- A *User* can only delete messages in a chat if it's the original sender.
+
