@@ -78,14 +78,14 @@ services:
     #networks:
       #- *chat-net
       #- *global
-#  chatdb:
-#    <<: *mssql
-#    ports:
-#      - "8007-8012:1433" #workaround for replicas still not working
-#    volumes:
-#      - "chatdb_volume:/var/opt/mssql"
-#    networks:
-#      - *chat-net
+  chatdb:
+    <<: *mssql
+    ports:
+      - "8007:1433"
+    volumes:
+      - "chatdb_volume:/var/opt/mssql"
+    networks:
+      - chat-net
   rabbitmq: 
     image: rabbitmq:3.9 #-management
     environment:
