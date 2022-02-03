@@ -1,5 +1,7 @@
 export const environment = {
   production: true,
-  hubUrl: "",
-  apiUrl: 'http://localhost:8080' //'http://localhost:8080'
+  chatPort: 9002,
+  authPort: 8080,
+  userPort: 8082,
+  apiUrl: 'http://localhost' //'http://localhost:8080'
 };
