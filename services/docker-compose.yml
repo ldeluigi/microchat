@@ -12,7 +12,7 @@ services:
   auth:
     depends_on:
       - rabbitmq
-      - authdb
+      - dbs
       - redis
     build:
       context: "./auth/"
@@ -28,23 +28,18 @@ services:
       MICROCHAT_JwtScopes__Global__Key: ${JWT_SECRET?secret unset}
       MICROCHAT_JwtScopes__Global__Lifetime: 00:05:00
       MICROCHAT_Migrations__RunOnStartup: 'true'
-      MICROCHAT_ConnectionStrings__MainDb: Server=authdb,1433;Database=AuthDb;User Id=SA;Password=${DB_PASSWORD}
+      MICROCHAT_ConnectionStrings__MainDb: Server=dbs,1433;Database=AuthDb;User Id=SA;Password=${DB_PASSWORD}
       MICROCHAT_ConnectionStrings__RabbitMq: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
-    networks:
-      - auth-net
-      - global
-  authdb:
+  dbs:
     <<: *mssql
     ports:
       - 8005:1433
     volumes:
-      - "authdb_volume:/var/opt/mssql"
-    networks:
-      - auth-net
+      - "db_volume:/var/opt/mssql"
   user:
     depends_on:
       - rabbitmq
-      - userdb
+      - dbs
       - redis
     build:
       context: "./user/"
@@ -60,32 +55,29 @@ services:
       MICROCHAT_JwtScopes__Global__Key: ${JWT_SECRET?secret unset}
       MICROCHAT_JwtScopes__Global__Lifetime: 00:05:00
       MICROCHAT_Migrations__RunOnStartup: 'true'
-      MICROCHAT_ConnectionStrings__MainDb: Server=userdb,1433;Database=UserDb;User Id=SA;Password=${DB_PASSWORD}
+      MICROCHAT_ConnectionStrings__MainDb: Server=dbs,1433;Database=UserDb;User Id=SA;Password=${DB_PASSWORD}
       MICROCHAT_ConnectionStrings__RabbitMq: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
-    networks:
-      - user-net
-      - global
-  userdb:
-   <<: *mssql
-   ports:
-     - 8006:1433
-   volumes:
-     - "userdb_volume:/var/opt/mssql"
-   networks:
-     - user-net
-  #chat:
-    #build: "./chat/src/ChatService.Web/"
-    #networks:
-      #- *chat-net
-      #- *global
-  chatdb:
-    <<: *mssql
+  chat:
+    depends_on:
+      - rabbitmq
+      - dbs
+      - redis
+    build:
+      context: "./chat/"
+      dockerfile: "src/ChatService.Web/Dockerfile"
+      labels:
+        - com.microsoft.visual-studio.project-name=ChatService.Web
+    restart: on-failure
+    image: chatserviceweb:latest
     ports:
-      - "8007:1433"
-    volumes:
-      - "chatdb_volume:/var/opt/mssql"
-    networks:
-      - chat-net
+      - 8084:80
+      - 8085:443
+    environment:
+      MICROCHAT_JwtScopes__Global__Key: ${JWT_SECRET?secret unset}
+      MICROCHAT_JwtScopes__Global__Lifetime: 00:05:00
+      MICROCHAT_Migrations__RunOnStartup: 'true'
+      MICROCHAT_ConnectionStrings__MainDb: Server=dbs,1433;Database=ChatDb;User Id=SA;Password=${DB_PASSWORD}
+      MICROCHAT_ConnectionStrings__RabbitMq: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
   rabbitmq: 
     image: rabbitmq:3.9 #-management
     environment:
@@ -96,34 +88,15 @@ services:
       - 9001:15672
     volumes:
       - "rabbitmq_volume:/var/lib/rabbitmq"
-    networks:
-      - global
   redis:
     image: redis:6.2
     ports:
       - 9002:6379
     volumes:
       - "redis_volume:/data"
-    networks:
-      - global
 
 
 volumes:
-  authdb_volume:
-  userdb_volume:
-  chatdb_volume:
+  db_volume:
   rabbitmq_volume:
   redis_volume:
-
-x-db-driver-config: &db-driver
-  driver: bridge
-
-networks:
-  auth-net:
-    <<: *db-driver
-  user-net:
-    <<: *db-driver
-  chat-net:
-    <<: *db-driver
-  global:
-    driver: bridge
