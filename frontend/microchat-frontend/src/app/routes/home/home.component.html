@@ -22,7 +22,10 @@
       <div class="card">
         <div class="card-header msg_head">
           <app-contact [chat]="active"></app-contact>
-          <span id="action_menu_btn" (click)=showStats(active)><i class="far fa-chart-bar"></i></span>
+          <span id="action_menu_btn">
+            <i class="far fa-chart-bar" (click)=showStats(active)></i>
+            <i class="fas fa-times" (click)=logout()></i>
+          </span>
         </div>
         <app-chat class="app-chat" [chat]="active" [message]=newIncomingMessage #chatSelector></app-chat>
         <div class="card-footer">

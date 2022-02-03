@@ -5,10 +5,10 @@ interface UserRegistration {
 }
 
 interface UserRegistrationResponse {
-  id: string;
+  /*id: string;
   username: string;
   registration: Date;
-  email: string;
+  email: string;*/
 }
 
 export {

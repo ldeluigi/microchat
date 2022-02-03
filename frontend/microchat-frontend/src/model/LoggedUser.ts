@@ -1,6 +1,5 @@
 export interface LoggedUser {
-  id: string;
-  username: string;
-  token: string;
-  refresh: string;
+  userId: string;
+  accessToken: string;
+  refreshToken: string;
 }

@@ -20,7 +20,7 @@ import { AccountService } from './account.service';
 
   public connect() {
     this.connection = new signalR.HubConnectionBuilder()
-        .withUrl(environment.hubUrl, { accessTokenFactory: () => this.accountService.userValue?.token || "" })
+        .withUrl(environment.hubUrl, { accessTokenFactory: () => this.accountService.userValue?.accessToken || "" })
         .configureLogging(signalR.LogLevel.Trace)
         .build();
     this.connection.start().catch(err => console.log(err));
@@ -34,7 +34,7 @@ import { AccountService } from './account.service';
   }
 
   public sendMessage(chatId: string, message: string): void {
-    this.connection?.invoke("SendMessageToAll", chatId, this.accountService.userValue?.id, message)
+    this.connection?.invoke("SendMessageToAll", chatId, this.accountService.userValue?.userId, message)
   }
   
   public disconnect() {

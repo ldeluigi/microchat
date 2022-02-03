@@ -1,6 +1,7 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
+import { AccountService } from 'src/app/services/account.service';
 import { SignalRService } from 'src/app/services/signal-r.service';
 import { Chat } from 'src/model/Chat';
 import { Message } from 'src/model/Message';
@@ -27,6 +28,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   constructor(
     private signalrService: SignalRService,
+    private accountService: AccountService,
     public dialog: MatDialog
   ) {}
 
@@ -140,5 +142,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     console.log("TODO: get stats from chat :"+ active.id);
     const stats: Stats = { totalMessages: 1, avgWeekMsg: 2, avgDaysMsg: 3 }
     this.dialog.open(StatsComponent, {data : stats})
+  }
+
+  logout() {
+    this.accountService.logout();
   }
 }
