@@ -1,4 +1,4 @@
-﻿using ChatService.Domain.Aggregates.UserAggregate;
+﻿using ChatService.Domain;
 using EasyDesk.CleanArchitecture.Application.Messaging;
 using System;
 using System.Threading.Tasks;
@@ -9,15 +9,15 @@ public record AccountDeleted(Guid AccountId) : IMessage;
 
 public class AccountDeletedHandler : IMessageHandler<AccountDeleted>
 {
-    private readonly IUserRepository _userRepository;
+    private readonly UserLifecycleService _userLifecycleService;
 
-    public AccountDeletedHandler(IUserRepository userRepository)
+    public AccountDeletedHandler(UserLifecycleService userLifecycleService)
     {
-        _userRepository = userRepository;
+        _userLifecycleService = userLifecycleService;
     }
 
     public async Task Handle(AccountDeleted message)
     {
-        await _userRepository.RemoveById(message.AccountId);
+        await _userLifecycleService.DeleteUser(message.AccountId);
     }
 }

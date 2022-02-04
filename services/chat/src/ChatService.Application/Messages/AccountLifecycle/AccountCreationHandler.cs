@@ -1,5 +1,4 @@
-﻿using ChatService.Domain.Aggregates.MessageAggregate;
-using ChatService.Domain.Aggregates.UserAggregate;
+﻿using ChatService.Domain;
 using EasyDesk.CleanArchitecture.Application.Messaging;
 using System;
 using System.Threading.Tasks;
@@ -10,18 +9,15 @@ public record AccountCreated(Guid AccountId, string Username) : IMessage;
 
 public class AccountCreationHandler : IMessageHandler<AccountCreated>
 {
-    private readonly IUserRepository _userRepository;
+    private readonly UserLifecycleService _userLifecycleService;
 
-    public AccountCreationHandler(IUserRepository userRepository)
+    public AccountCreationHandler(UserLifecycleService userLifecycleService)
     {
-        _userRepository = userRepository;
+        _userLifecycleService = userLifecycleService;
     }
 
-    public Task Handle(AccountCreated message)
+    public async Task Handle(AccountCreated message)
     {
-        _userRepository.Save(
-            User.Create(
-                message.AccountId));
-        return Task.CompletedTask;
+        await _userLifecycleService.CreateUser(message.AccountId);
     }
 }

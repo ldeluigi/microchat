@@ -6,7 +6,7 @@ namespace ChatService.Application.Queries.PrivateChat;
 
 public record DetailedPrivateChatOutput(
     Guid Id,
-    Guid OwnerId,
+    Guid CreatorId,
     Guid PartecipantId,
     Timestamp CreationTimestamp,
     int NumberOfMessages,
