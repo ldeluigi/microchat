@@ -1,13 +1,13 @@
 ﻿using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
 using System;
 
-namespace ChatService.Domain.Aggregates.ChatAggregate;
+namespace ChatService.Domain.Chat;
 
 internal interface IChat
 {
     Guid Id { get; }
 
-    Guid Owner { get; }
+    Guid Creator { get; }
 
     Timestamp CreationTime { get; }
 }

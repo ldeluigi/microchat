@@ -13,12 +13,14 @@ using EasyDesk.CleanArchitecture.Infrastructure.Configuration;
 using EasyDesk.CleanArchitecture.Web.Authentication.Jwt;
 using EasyDesk.CleanArchitecture.Web.Startup;
 using EasyDesk.CleanArchitecture.Web.Startup.Modules;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Rebus.Config;
 using System;
+using System.Threading.Tasks;
 
 namespace ChatService.Web;
 
@@ -27,6 +29,8 @@ namespace ChatService.Web;
 /// </summary>
 public class Startup : BaseStartup
 {
+    private const string SignalRHubPath = "/signalr/chat";
+
     /// <summary>
     /// Creates a new instance of the <see cref="Startup"/> class.
     /// </summary>
@@ -58,26 +62,56 @@ public class Startup : BaseStartup
             .AddSwagger()
             .AddAuthentication(options =>
                 options.AddScheme(new JwtBearerScheme(options =>
+                {
                     options
                     .UseJwtSettingsFromConfiguration(
                         Configuration,
-                        "Global"))))
-            .AddModule(new PermissionsModule())
+                        "Global");
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+                            Console.WriteLine("EEEEEEEEEEEEE");
+
+                            // If the request is for our hub...
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) &&
+                                path.StartsWithSegments(SignalRHubPath))
+                            {
+                                // Read the token out of the query string
+                                context.Token = accessToken;
+                                Console.WriteLine(accessToken);
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
+                })))
+            .AddModule<PermissionsModule>()
             .AddAuthorization(configure => { })
             .AddRebusMessaging(configure =>
                 configure
                     .AddKnownMessageTypesFromAssembliesOf(typeof(ApplicationMarker))
                     .ConfigureTransport(t =>
                         t.UseRabbitMq(Configuration.GetConnectionString("RabbitMq"), ServiceName)))
+            .AddModule<TopicSubscriberModule>()
             .AddModule(new SignalRModule(Environment.IsDevelopment()));
     }
 
     public override void Configure(IApplicationBuilder app)
     {
+        app.UseCors(configurePolicy =>
+        {
+            configurePolicy
+            .SetIsOriginAllowed(_ => true)
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+        });
         base.Configure(app);
         app.UseEndpoints(endpoints =>
         {
-            endpoints.MapHub<ChatSignalRController>("/signalr/chat");
+            endpoints.MapHub<ChatSignalRController>(SignalRHubPath);
         });
     }
 }
