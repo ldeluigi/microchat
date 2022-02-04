@@ -3,7 +3,7 @@ using System;
 using System.Threading.Tasks;
 using UserService.Domain.Aggregates.UserAggregate;
 
-namespace UserService.Application.ExternalEventHandlers.AccountLifecycle;
+namespace UserService.Application.Messages.AccountLifecycle;
 
 public record AccountCreated(Guid AccountId, string Username) : IMessage;
 

@@ -4,7 +4,7 @@ using System;
 using System.Threading.Tasks;
 using UserService.Domain.Aggregates.UserAggregate;
 
-namespace UserService.Application.ExternalEventHandlers;
+namespace UserService.Application.Messages;
 
 public record UsernameChanged(Guid AccountId, string Username) : IMessage;
 

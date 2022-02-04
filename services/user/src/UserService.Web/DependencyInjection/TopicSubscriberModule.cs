@@ -4,8 +4,8 @@ using Microsoft.Extensions.Hosting;
 using Rebus.Bus;
 using System.Threading;
 using System.Threading.Tasks;
-using UserService.Application.ExternalEventHandlers;
-using UserService.Application.ExternalEventHandlers.AccountLifecycle;
+using UserService.Application.Messages;
+using UserService.Application.Messages.AccountLifecycle;
 
 namespace UserService.Web.DependencyInjection;
 
