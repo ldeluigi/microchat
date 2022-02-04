@@ -7,6 +7,7 @@ import { UserService } from 'src/app/services/user.service';
 import { Chat } from 'src/model/Chat';
 import { Message } from 'src/model/Message';
 import { Stats } from 'src/model/Stats';
+import { toUser } from 'src/model/UserInfo';
 import { StatsComponent } from '../stats/stats.component';
 
 @Component({
@@ -24,8 +25,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   search!: string;
   signalRSubscription!: Subscription;
   newIncomingMessage: Message | undefined;
+  scrollPerc = 0;
   @ViewChild('chatSelector') appChat!: ElementRef;
-
 
   constructor(
     private userService: UserService,
@@ -119,13 +120,16 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
   
   findChat() {
-    console.log("TODO: richiesta chats", this.search);
-    let foundChatList: Chat[] = []
-    this.userService.userValue(this.search).subscribe(users => {
-      console.log(users);
-      users.forEach(user => foundChatList.push({id:"", hasNewMessages:0, user:user}))
-    })
-    this.setActiveListToChatList(() => {this.activeList = foundChatList});
+    if (this.search) {
+      console.log("TODO: richiesta chats", this.search);
+      let foundChatList: Chat[] = []
+      this.userService.usersSearched(this.search).subscribe(users => {
+        users.forEach(user => foundChatList.push({id: "", hasNewMessages: 0, user: toUser(user)}))
+      })
+      this.setActiveListToChatList(() => {this.activeList = foundChatList});
+    } else {
+      this.initActiveList();
+    }
   }
 
   startTimeout() {
@@ -150,5 +154,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   logout() {
     this.accountService.logout();
+  }
+
+  scroll(event: number) {
+    this.scrollPerc = event;
+    //console.log(event);
   }
 }

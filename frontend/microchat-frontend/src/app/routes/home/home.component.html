@@ -27,7 +27,13 @@
             <div><i class="far fa-chart-bar" (click)=showStats(active)></i></div>
           </div>
         </div>
-        <app-chat class="app-chat" [chat]="active" [message]=newIncomingMessage #chatSelector></app-chat>
+        <app-chat class="app-chat" 
+                  [chat]=active
+                  [message]=newIncomingMessage
+                  [scrollPerc]=scrollPerc
+                  #chatSelector
+                  appElementScrollPercentage
+                  (scroll)="scroll($event)"></app-chat>
         <div class="card-footer">
           <div class="input-group">
             <textarea id="newMessage" name="msg" class="form-control type_msg" placeholder="Type your message..." [(ngModel)]="newMessage" (ngModelChange)="onChange()"></textarea>

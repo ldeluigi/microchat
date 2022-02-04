@@ -2,10 +2,10 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from "rxjs";
-import { User } from "src/model/Chat";
 import { Response } from "src/model/serverResponse";
 import { ApiURLService } from "./api-url.service";
 import { LogService } from "./log.service";
+import { UserInfo } from "src/model/UserInfo";
 
 
 @Injectable({
@@ -23,8 +23,8 @@ export class UserService {
   ) {
   }
 
-  userValue(searchString: string): Observable<User[]> {
-    return this.http.get<Response<User[]>>(`${this.apiURL.userApiUrl}${this.userVersion}`, {params: {search: searchString}})
+  usersSearched(searchString: string): Observable<UserInfo[]> {
+    return this.http.get<Response<UserInfo[]>>(`${this.apiURL.userApiUrl}${this.userVersion}`, {params: {search: searchString}})
       .pipe(map(u => u.data));
   }
 }
