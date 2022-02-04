@@ -15,7 +15,7 @@ public class User : AggregateRoot
 
     public Option<Name> Surname { get; private set; }
 
-    private User(Guid id, Username username, Option<Name> name, Option<Name> surname)
+    public User(Guid id, Username username, Option<Name> name, Option<Name> surname)
     {
         Id = id;
         Username = username;

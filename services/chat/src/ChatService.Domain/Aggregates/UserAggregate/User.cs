@@ -14,27 +14,28 @@ public record NewLoginPrecedesLastLogin(Timestamp LastLogin, Timestamp NewLogin)
 
 public class User : AggregateRoot
 {
-    private User(Guid id)
+    public User(Guid id, Option<Timestamp> lastSeenTimestamp)
     {
         Id = id;
+        LastSeenTimestamp = lastSeenTimestamp;
     }
 
-    public static User Create(Guid id) => new(id);
+    public static User Create(Guid id) => new(id, None);
 
     public Guid Id { get; }
 
-    public Option<Timestamp> LastLogin { get; private set; } = None;
+    public Option<Timestamp> LastSeenTimestamp { get; private set; } = None;
 
-    public Result<Nothing> UpdateLastLoginTo(Timestamp timestamp)
+    public Result<Nothing> UpdateLastSeenTo(Timestamp timestamp)
     {
-        if (LastLogin.All(t => t <= timestamp))
+        if (LastSeenTimestamp.All(t => t <= timestamp))
         {
-            LastLogin = Some(timestamp);
+            LastSeenTimestamp = Some(timestamp);
             return Ok;
         }
         else
         {
-            return new NewLoginPrecedesLastLogin(LastLogin.Value, timestamp);
+            return new NewLoginPrecedesLastLogin(LastSeenTimestamp.Value, timestamp);
         }
     }
 }

@@ -19,7 +19,7 @@ public class UserConverter : IModelConverter<User, UserModel>
 
     public User ToDomain(UserModel model)
     {
-        return User.Create(
+        return new User(
             id: model.Id,
             username: Username.From(model.Username),
             name: Name.From(model.Name),

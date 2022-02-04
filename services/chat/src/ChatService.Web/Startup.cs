@@ -89,6 +89,7 @@ public class Startup : BaseStartup
                 })))
             .AddModule<PermissionsModule>()
             .AddAuthorization(configure => { })
+            .AddModule<ChatDomainModule>()
             .AddRebusMessaging(configure =>
                 configure
                     .AddKnownMessageTypesFromAssembliesOf(typeof(ApplicationMarker))

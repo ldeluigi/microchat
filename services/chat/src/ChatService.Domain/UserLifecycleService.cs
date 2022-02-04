@@ -12,19 +12,21 @@ namespace ChatService.Domain;
 public class UserLifecycleService
 {
     private readonly IUserRepository _userRepository;
+    private readonly IPrivateChatRepository _privateChatRepository;
 
     public UserLifecycleService(
         IUserRepository userRepository,
-        IPrivateChatRepository privateChatRepository,
-        IPrivateMessageRepository privateMessageRepository)
+        IPrivateChatRepository privateChatRepository)
     {
         _userRepository = userRepository;
+        _privateChatRepository = privateChatRepository;
     }
 
-    public Task<Result<Nothing>> DeleteUser(Guid userId)
+    public async Task<Result<Nothing>> DeleteUser(Guid userId)
     {
-        // TODO: How to implement?
-        throw new NotImplementedException();
+        await _userRepository.RemoveById(userId);
+        _privateChatRepository.DeleteOrphanChats();
+        return Ok;
     }
 
     public Task<Result<User>> CreateUser(Guid accountId)

@@ -11,13 +11,15 @@ public record MessageText : ValueWrapper<string, MessageText>
 {
     public const int MaximumLength = 4000;
 
-    public MessageText(string value) : base(value)
+    private MessageText(string value) : base(value)
     {
         DomainConstraints.Check()
             .If(string.IsNullOrWhiteSpace(value), () => new EmptyMessageError())
             .If(value.Length > MaximumLength, () => new MessageTextTooLong(value.Length, MaximumLength))
             .ThrowException();
     }
+
+    public static MessageText From(string text) => new(text);
 
     protected override string StringRepresentation() => Value;
 }

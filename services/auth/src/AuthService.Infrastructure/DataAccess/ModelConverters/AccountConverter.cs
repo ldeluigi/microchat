@@ -15,7 +15,7 @@ public class AccountConverter : IModelConverter<Account, AccountModel>
     {
         var sessions = AccountSessions.Create(model.Sessions.Select(_sessionConverter.ToDomain));
 
-        return Account.CreateAlreadyActive(
+        return new Account(
             id: model.Id,
             username: Username.From(model.Username),
             creation: model.Creation,

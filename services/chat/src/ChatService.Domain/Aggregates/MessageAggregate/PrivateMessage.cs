@@ -8,11 +8,11 @@ namespace ChatService.Domain.Aggregates.MessageAggregate;
 
 public class PrivateMessage : AggregateRoot
 {
-    private PrivateMessage(
+    public PrivateMessage(
         Guid id,
         Guid chatId,
         MessageText text,
-        Guid senderId,
+        Option<Guid> senderId,
         Timestamp sendTime,
         Option<Timestamp> lastEditTime,
         bool viewed)
@@ -48,7 +48,7 @@ public class PrivateMessage : AggregateRoot
 
     public bool Viewed { get; private set; }
 
-    public Guid SenderId { get; }
+    public Option<Guid> SenderId { get; }
 
     public void EditText(MessageText newText)
     {

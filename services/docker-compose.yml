@@ -57,27 +57,27 @@ services:
       MICROCHAT_Migrations__RunOnStartup: 'true'
       MICROCHAT_ConnectionStrings__MainDb: Server=dbs,1433;Database=UserDb;User Id=SA;Password=${DB_PASSWORD}
       MICROCHAT_ConnectionStrings__RabbitMq: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
-  chat:
-    depends_on:
-      - rabbitmq
-      - dbs
-      - redis
-    build:
-      context: "./chat/"
-      dockerfile: "src/ChatService.Web/Dockerfile"
-      labels:
-        - com.microsoft.visual-studio.project-name=ChatService.Web
-    restart: on-failure
-    image: chatserviceweb:latest
-    ports:
-      - 8084:80
-      - 8085:443
-    environment:
-      MICROCHAT_JwtScopes__Global__Key: ${JWT_SECRET?secret unset}
-      MICROCHAT_JwtScopes__Global__Lifetime: 00:05:00
-      MICROCHAT_Migrations__RunOnStartup: 'true'
-      MICROCHAT_ConnectionStrings__MainDb: Server=dbs,1433;Database=ChatDb;User Id=SA;Password=${DB_PASSWORD}
-      MICROCHAT_ConnectionStrings__RabbitMq: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
+  # chat:
+  #   depends_on:
+  #     - rabbitmq
+  #     - dbs
+  #     - redis
+  #   build:
+  #     context: "./chat/"
+  #     dockerfile: "src/ChatService.Web/Dockerfile"
+  #     labels:
+  #       - com.microsoft.visual-studio.project-name=ChatService.Web
+  #   restart: on-failure
+  #   image: chatserviceweb:latest
+  #   ports:
+  #     - 8084:80
+  #     - 8085:443
+  #   environment:
+  #     MICROCHAT_JwtScopes__Global__Key: ${JWT_SECRET?secret unset}
+  #     MICROCHAT_JwtScopes__Global__Lifetime: 00:05:00
+  #     MICROCHAT_Migrations__RunOnStartup: 'true'
+  #     MICROCHAT_ConnectionStrings__MainDb: Server=dbs,1433;Database=ChatDb;User Id=SA;Password=${DB_PASSWORD}
+  #     MICROCHAT_ConnectionStrings__RabbitMq: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
   rabbitmq: 
     image: rabbitmq:3.9 #-management
     environment:

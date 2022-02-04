@@ -1,6 +1,4 @@
-﻿using ChatService.Application.Queries;
-using ChatService.Web.SignalR;
-using EasyDesk.CleanArchitecture.Web.Dto;
+﻿using ChatService.Web.SignalR;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 
@@ -10,9 +8,8 @@ public class ChatSignalRController : AbstractMediatrHub
 {
     public async Task HelloWorld()
     {
-        var res = await Mediator.Send(new TestQuery());
         await Clients.Caller.SendAsync(
             "hello-world",
-            res.IsSuccess ? ResponseDto.FromData(res.Value) : ResponseDto.FromError(ErrorDto.FromError(res.Error.Value)));
+            "kek");
     }
 }

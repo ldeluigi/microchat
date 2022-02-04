@@ -16,10 +16,8 @@
 
   <ItemGroup>
     <Folder Include="DataAccess\Migrations\" />
-    <Folder Include="DataAccess\Model\" />
-    <Folder Include="DataAccess\ModelConverters\" />
-    <Folder Include="DataAccess\Repositories\" />
-    <Folder Include="DataAccess\Queries\" />
+    <Folder Include="DataAccess\Migrations\" />
+    <Folder Include="DataAccess\Queries\PrivateMessages\" />
   </ItemGroup>
 
   <PropertyGroup>

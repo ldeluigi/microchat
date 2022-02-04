@@ -26,6 +26,10 @@ public class UserModel
             builder.HasIndex(x => x.Username)
                 .IsUnique();
 
+            builder.HasIndex(x => x.Name);
+
+            builder.HasIndex(x => x.Surname);
+
             builder.Property(x => x.Username)
                 .HasMaxLength(50);
 
