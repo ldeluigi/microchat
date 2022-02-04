@@ -1,5 +1,4 @@
-﻿using ChatService.Domain.Aggregates.MessageAggregate;
-using EasyDesk.Tools.Options;
+﻿using EasyDesk.Tools.Options;
 using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
 using System;
 
@@ -11,4 +10,4 @@ public record PrivateChatMessageOutput(
     Option<Timestamp> LastEditTime,
     Guid SenderId,
     bool Viewed,
-    MessageText Text);
+    string Text);
