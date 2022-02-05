@@ -48,8 +48,8 @@ export class ErrorInterceptor implements HttpInterceptor {
         .pipe(
           switchMap(t => {
             this.isRefreshing = false;
-            this.refreshTokenSubject.next(t.token);
-            return next.handle(this.addToken(request, t.token));
+            this.refreshTokenSubject.next(t.accessToken);
+            return next.handle(this.addToken(request, t.accessToken));
           })
         );
     } else {

@@ -116,11 +116,10 @@ export class AccountService {
       return throwError(() => new Error('No user logged'));
     }
     console.log("refreshing");
-    return this.http.post<Response<TokenRefresh>>(`${this.apiURL.tokenApiUrl}/refresh${this.authVersion}`, { token: user.accessToken, refresh: user.refreshToken })
+    return this.http.post<Response<TokenRefresh>>(`${this.apiURL.tokenApiUrl}/refresh${this.authVersion}`, { accessToken: user.accessToken, refreshToken: user.refreshToken })
       .pipe(map(a => {
-        console.log(a);
-        user.accessToken = a.data.token;
-        user.refreshToken = a.data.refresh;
+        user.accessToken = a.data.accessToken;
+        user.refreshToken = a.data.refreshToken;
         this.saveUser(user);
         return a.data;
       }));

@@ -20,6 +20,7 @@ import { HomeComponent } from './routes/home/home.component';
 import { MatInputModule } from '@angular/material/input';
 import { RegistrationComponent } from './routes/registration/registration.component';
 import { ElementScrollPercentageDirective } from './helper/directive/element-scroll-percentage.directive';
+import { UserInfoComponent } from './routes/user-info/user-info.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { ElementScrollPercentageDirective } from './helper/directive/element-scr
     LoginComponent,
     HomeComponent,
     RegistrationComponent,
-    ElementScrollPercentageDirective
+    ElementScrollPercentageDirective,
+    UserInfoComponent
   ],
   imports: [
     BrowserAnimationsModule,
