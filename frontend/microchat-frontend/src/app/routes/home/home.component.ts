@@ -25,6 +25,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   lastTimeWriting: number = Date.now();
   newMessage!: string;
   search!: string;
+  editingId: string | undefined;
   signalRSubscription!: Subscription;
   newIncomingMessage: Message | undefined;
   scrollPerc = 0;
@@ -114,9 +115,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (UserLeftChat(this.active)) {
       this.logService.errorSnackBar("unable to send messages to disabled chat");
     } else {
-      //this.chatService.sendMessage(this.active.id, this.newMessage, this.accountservice.user)
-      console.log("TODO: send " + this.newMessage);
-      this.signalrService.sendMessage(this.active.id, this.newMessage);
+      if (this.editingId) {
+        this.signalrService.editMessage(this.editingId, this.newMessage);
+      } else {
+        //this.chatService.sendMessage(this.active.id, this.newMessage, this.accountservice.user)
+        console.log("TODO: send " + this.newMessage);
+        this.signalrService.sendMessage(this.active.id, this.newMessage);
+      }
       this.newMessage = "";
     }
   }
@@ -178,5 +183,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   getUserInfo(event: Event) {
     this.dialog.open(UserInfoComponent, {data: {id: this.accountService.userValue?.userId || ""}});
+  }
+  sendOrEditClass() {
+    return this.editingId ? "fas fa-edit" : "fas fa-location-arrow";
   }
 }

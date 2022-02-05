@@ -34,6 +34,7 @@
                   [chat]=active
                   [message]=newIncomingMessage
                   [scrollPerc]=scrollPerc
+                  [(editingId)]=editingId
                   #chatSelector
                   appElementScrollPercentage
                   (scroll)="scroll($event)"></app-chat>
@@ -42,7 +43,7 @@
             <textarea id="newMessage" name="msg" class="form-control type_msg" placeholder="Type your message..." [(ngModel)]="newMessage" (ngModelChange)="onChange()"></textarea>
             <div class="input-group-append">
               <span class="input-group-text send_btn" (click)=sendMessage()>
-                <i class="fas fa-location-arrow"></i>
+                <i class='{{sendOrEditClass()}}'></i>
               </span>
             </div>
           </div>

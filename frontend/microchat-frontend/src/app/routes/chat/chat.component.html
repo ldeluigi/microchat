@@ -4,7 +4,7 @@
       [ngTemplateOutlet]="img" 
       [ngTemplateOutletContext]="{src:getSrcImg(message)}">
     </ng-container>
-    <div class="msg_cotainer">
+    <div class="msg_cotainer {{editingClass(message.id)}}" (click)="clickedMessage($event, message)">
       {{message.text}}
       <span class="msg_time">8:40 AM, Today
         <i *ngIf="message.edited" class="fas fa-edit"></i>

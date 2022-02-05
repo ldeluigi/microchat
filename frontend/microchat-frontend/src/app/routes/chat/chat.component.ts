@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { AccountService } from 'src/app/services/account.service';
+import { SignalRService } from 'src/app/services/signal-r.service';
 import { UserService } from 'src/app/services/user.service';
 import { Chat } from 'src/model/Chat';
 import { Message } from 'src/model/Message';
@@ -13,12 +14,25 @@ export class ChatComponent implements OnChanges, AfterViewInit {
   @Input() chat!: Chat;
   @Input() message!: Message | undefined;
   @Input() scrollPerc!: number;
+
+  _editingId: string | undefined;
+  @Input()
+  set editingId(val: string | undefined) {
+    this.editingIdChange.emit(val);
+    this._editingId = val;
+  }
+  get editingId() {
+    return this._editingId;
+  }
+  @Output() editingIdChange: EventEmitter<string | undefined> = new EventEmitter<string | undefined>();
+
   messages: Message[] = []; // messages
 
   constructor(
     private elementRef: ElementRef,
     private accountService: AccountService,
-    private userService: UserService
+    private userService: UserService,
+    private signalrService: SignalRService
   ) {}
 
   ngAfterViewInit(): void {
@@ -31,36 +45,45 @@ export class ChatComponent implements OnChanges, AfterViewInit {
       this.elementRef.nativeElement.scrollTop = this.elementRef.nativeElement.scrollHeight;
       this.messages = [];
       this.getOldMessages();
-      this.getOldMessages();
-      this.getOldMessages();
-      this.getOldMessages();
-    } 
+    }
+    this.addToMessages(
+      {id: "id1",
+        chatId: this.chat.id,
+        text:"Grazie, anche a me e famiglia!",
+        sendTime: new Date(2021,11,25,12,1),
+        edited:false,
+        sender:"Thommy"
+      }, true)
     if (changes['message'] && changes['message'].currentValue) {
       this.addToMessages(changes['message'].currentValue, true);
     }
     if (changes['scrollPerc'] && changes['scrollPerc'].currentValue < 15) {
+      console.log("TODO: carica altri messaggi");
       changes['scrollPerc'].currentValue;
     }
   }
 
   addToMessages(message:Message, asFirst: boolean) : boolean {
-    var haveToUpdate = !this.messages.includes(message)
-    if (haveToUpdate) {
+    const index = this.messages.findIndex(m => m.id === message.id);
+    const alreadyPresent = index !== -1;
+    if (!alreadyPresent) {
       if (asFirst) {
         this.messages.push(message);
       } else {
         this.messages.unshift(message);
       }
+    } else {
+      this.messages[index] = message;
     }
-    return haveToUpdate;
+    return alreadyPresent;
   }
 
   getOldMessages() {
     var receivedMessages = [
       {id: "id", chatId: this.chat.id, text:"Buon Natale", sendTime: new Date(2021,11,25,12),edited:true,sender:"Simo"},
-      {id: "id", chatId: this.chat.id, text:"Grazie, anche a te e famiglia!", sendTime: new Date(2021,11,25,12,1), edited:false,sender:"Thommy"},
-      {id: "id", chatId: this.chat.id, text:":)", sendTime: new Date(2021,11,25,12,2), edited:false,sender:"Simo"},
-      {id: "id", chatId: this.chat.id, text:"Dai ricominciamo a lavorare al proj", sendTime: new Date(2021,11,26,12), edited:true,sender:"Thommy"}
+      {id: "id1", chatId: this.chat.id, text:"Grazie, anche a te e famiglia!", sendTime: new Date(2021,11,25,12,1), edited:false,sender:"Thommy"},
+      {id: "id2", chatId: this.chat.id, text:":)", sendTime: new Date(2021,11,25,12,2), edited:false,sender:"Simo"},
+      {id: "id3", chatId: this.chat.id, text:"Dai ricominciamo a lavorare al proj", sendTime: new Date(2021,11,26,12), edited:true,sender:"Thommy"}
     ]
     var count = 0;
     receivedMessages.reverse().forEach(message => count += this.addToMessages(message, false) ? 1 : 0);
@@ -80,5 +103,25 @@ export class ChatComponent implements OnChanges, AfterViewInit {
 
   getSrcImg(message: Message) {
       return this.userService.getSrcImg(message.sender);
+  }
+
+  clickedMessage(event: MouseEvent, message: Message) {
+    if (message.sender === this.accountService.userValue?.userId && event.ctrlKey) {
+      if (event.altKey) {
+        console.log("DELETE MESSAGE " + message.text);
+        this.signalrService.deleteMessage(message.id);
+        return;
+      }
+      console.log("update message " + message.text);
+      if (this.editingId === message.id) {
+        this.editingId = undefined;
+      } else {
+        this.editingId = message.id;
+      }
+    }
+  }
+
+  editingClass(id: string): string {
+    return this.editingId === id ? "editing" : ""
   }
 }
