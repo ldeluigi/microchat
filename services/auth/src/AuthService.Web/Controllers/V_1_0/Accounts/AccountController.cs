@@ -6,6 +6,7 @@ using AuthService.Application.Queries.Accounts;
 using AuthService.Web.Controllers.V_1_0.Accounts.DTO;
 using AuthService.Web.Controllers.V_1_0.Accounts.DTO.Outputs;
 using EasyDesk.CleanArchitecture.Web.Controllers;
+using EasyDesk.Tools.Options;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthService.Web.Controllers.V_1_0.Accounts;
@@ -45,7 +46,7 @@ public class AccountController : AbstractMediatrController
     [HttpPut(AccountsRoutes.ModifyAccount)]
     public async Task<IActionResult> ModifyAccount([FromRoute] Guid accountId, [FromBody] ModifyAccountBodyDto body)
     {
-        var command = new UpdateAccount.Command(accountId, body.Username, body.Email);
+        var command = new UpdateAccount.Command(accountId, body.Username.AsOption(), body.Email.AsOption());
         return await Command(command)
             .ReturnOk();
     }
