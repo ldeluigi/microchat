@@ -164,6 +164,7 @@ $mobile: 768px;
 
 .app-chat {
   overflow-y: auto;
+  height: -webkit-fill-available;
 }
 
 .logout {
