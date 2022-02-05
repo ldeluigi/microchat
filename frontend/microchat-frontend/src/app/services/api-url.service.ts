@@ -24,6 +24,11 @@ export class ApiURLService {
     return `${this.loadApiUrl()}:${port}/accounts`;
   }
 
+  get passwordApiUrl(): string {
+    var port = environment.authPort;
+    return `${this.loadApiUrl()}:${port}/passwords`;
+  }
+
   get tokenApiUrl(): string {
     var port = environment.authPort;
     return `${this.loadApiUrl()}:${port}/token`;
