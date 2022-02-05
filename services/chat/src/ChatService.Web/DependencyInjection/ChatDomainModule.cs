@@ -21,7 +21,8 @@ public class ChatDomainModule : IAppModule
             .AddScoped<IUserRepository, UserRepository>()
             .AddScoped<IPrivateChatRepository, PrivateChatRepository>()
             .AddScoped<IPrivateMessageRepository, PrivateMessageRepository>()
-            .AddScoped<UserLifecycleService>();
+            .AddScoped<UserLifecycleService>()
+            .AddScoped<PrivateChatLifecycleService>();
         services
             .AddSingleton<IModelConverter<User, UserModel>, UserModelConverter>()
             .AddSingleton<IModelConverter<PrivateChat, PrivateChatModel>, PrivateChatModelConverter>()

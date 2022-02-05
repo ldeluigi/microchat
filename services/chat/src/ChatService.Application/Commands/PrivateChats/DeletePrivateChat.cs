@@ -1,5 +1,5 @@
 ﻿using ChatService.Application.Queries.PrivateChats.Outputs;
-using ChatService.Domain.Aggregates.PrivateChatAggregate;
+using ChatService.Domain;
 using EasyDesk.CleanArchitecture.Application.ErrorManagement;
 using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Application.Responses;
@@ -15,16 +15,17 @@ public class DeletePrivateChat
 
     public class Handler : RequestHandlerBase<Command, PrivateChatOutput>
     {
-        private readonly IPrivateChatRepository _privateChatRepository;
+        private readonly PrivateChatLifecycleService _privateChatLifecycleService;
 
-        public Handler(
-            IPrivateChatRepository privateChatRepository) => _privateChatRepository = privateChatRepository;
+        public Handler(PrivateChatLifecycleService privateChatLifecycleService)
+        {
+            _privateChatLifecycleService = privateChatLifecycleService;
+        }
 
-        protected override async Task<Response<PrivateChatOutput>> Handle(Command request) =>
-                await _privateChatRepository
-                .GetById(request.ChatId)
-                .ThenIfSuccess(chat => _privateChatRepository.Remove(chat))
-                .ThenMap(PrivateChatOutput.From)
-                .ThenToResponse();
+        protected override Task<Response<PrivateChatOutput>> Handle(Command request) =>
+                _privateChatLifecycleService
+                    .DeletePrivateChat(request.ChatId)
+                    .ThenToResponse()
+                    .ThenMap(PrivateChatOutput.From);
     }
 }

@@ -1,6 +1,6 @@
 ﻿using ChatService.Domain.Aggregates.MessageAggregate;
-using ChatService.Domain.Aggregates.PrivateChatAggregate;
 using ChatService.Domain.Aggregates.UserAggregate;
+using EasyDesk.CleanArchitecture.Domain.Metamodel;
 using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
 using EasyDesk.Tools;
 using System;
@@ -9,24 +9,27 @@ using static EasyDesk.CleanArchitecture.Domain.Metamodel.Results.ResultImports;
 
 namespace ChatService.Domain;
 
+public record UserDeleted(Guid Id) : DomainEvent;
+
 public class UserLifecycleService
 {
     private readonly IUserRepository _userRepository;
-    private readonly IPrivateChatRepository _privateChatRepository;
+    private readonly IDomainEventNotifier _domainEventNotifier;
 
     public UserLifecycleService(
         IUserRepository userRepository,
-        IPrivateChatRepository privateChatRepository)
+        IDomainEventNotifier domainEventNotifier)
     {
         _userRepository = userRepository;
-        _privateChatRepository = privateChatRepository;
+        _domainEventNotifier = domainEventNotifier;
     }
 
     public async Task<Result<Nothing>> DeleteUser(Guid userId)
     {
-        await _userRepository.RemoveById(userId);
-        _privateChatRepository.DeleteOrphanChats();
-        return Ok;
+        return await _userRepository
+            .RemoveById(userId)
+            .ThenIfSuccess(u =>
+                _domainEventNotifier.Notify(new UserDeleted(u.Id)));
     }
 
     public Task<Result<User>> CreateUser(Guid accountId)

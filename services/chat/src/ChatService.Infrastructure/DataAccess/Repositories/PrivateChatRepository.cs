@@ -21,6 +21,12 @@ public class PrivateChatRepository : EfCoreRepository<PrivateChat, PrivateChatMo
     {
     }
 
+    public async Task<bool> ChatAlreadyExistBetween(Guid user1, Guid user2) =>
+        await DbSet.Where(c =>
+            (c.PartecipantId == user1 && c.CreatorId == user2)
+            || (c.PartecipantId == user2 && c.CreatorId == user1))
+        .AnyAsync();
+
     public void DeleteOrphanChats()
     {
         var orphanChats = DbSet.Where(c => c.PartecipantId == null && c.CreatorId == null);

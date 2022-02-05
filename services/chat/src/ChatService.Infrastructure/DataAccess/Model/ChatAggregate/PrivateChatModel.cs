@@ -30,6 +30,14 @@ public class PrivateChatModel
         {
             builder.HasKey(x => x.Id);
 
+            builder
+                .HasIndex(chat => new { chat.CreatorId, chat.PartecipantId })
+                .IsUnique();
+
+            builder
+                .HasIndex(chat => new { chat.PartecipantId, chat.CreatorId })
+                .IsUnique();
+
             builder.HasOne(x => x.Creator)
                 .WithMany(u => u.PrivateChatCreated)
                 .HasForeignKey(u => u.CreatorId)

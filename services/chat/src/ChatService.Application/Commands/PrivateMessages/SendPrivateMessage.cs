@@ -1,5 +1,6 @@
 ﻿using ChatService.Application.Queries.PrivateMessages.Outputs;
 using ChatService.Domain.Aggregates.MessageAggregate;
+using EasyDesk.CleanArchitecture.Application.Authorization;
 using EasyDesk.CleanArchitecture.Application.ErrorManagement;
 using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Application.Responses;
@@ -34,13 +35,16 @@ public class SendPrivateMessage
     {
         private readonly IPrivateMessageRepository _privateMessageRepository;
         private readonly ITimestampProvider _timestampProvider;
+        private readonly IUserInfoProvider _userInfoProvider;
 
         public Handler(
             IPrivateMessageRepository privateMessageRepository,
-            ITimestampProvider timestampProvider)
+            ITimestampProvider timestampProvider,
+            IUserInfoProvider userInfoProvider)
         {
             _privateMessageRepository = privateMessageRepository;
             _timestampProvider = timestampProvider;
+            _userInfoProvider = userInfoProvider;
         }
 
         protected override Task<Response<PrivateChatMessageOutput>> Handle(Command request)
@@ -53,7 +57,7 @@ public class SendPrivateMessage
                 sendTime: _timestampProvider.Now);
             _privateMessageRepository.Save(message);
             return Task.FromResult(Success(message))
-                .ThenMap(PrivateChatMessageOutput.From)
+                .ThenMap(m => PrivateChatMessageOutput.From(m, _userInfoProvider.RequireUserId()))
                 .ThenToResponse();
         }
     }

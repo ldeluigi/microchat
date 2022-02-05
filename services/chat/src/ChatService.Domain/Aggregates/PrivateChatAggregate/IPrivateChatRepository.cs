@@ -1,5 +1,6 @@
 ﻿using EasyDesk.CleanArchitecture.Domain.Metamodel.Repositories;
 using System;
+using System.Threading.Tasks;
 
 namespace ChatService.Domain.Aggregates.PrivateChatAggregate;
 
@@ -9,4 +10,6 @@ public interface IPrivateChatRepository :
     IRemoveRepository<PrivateChat>
 {
     void DeleteOrphanChats();
+
+    Task<bool> ChatAlreadyExistBetween(Guid creatorId, Guid participantId);
 }
