@@ -68,9 +68,9 @@ export class LoginComponent implements OnInit {
         next: (data) => {
           this.router.navigate([this.returnUrl]);
         },
-        error: (error) => {
+        error: (error: Error) => {
           // console.log(error);
-          this.logService.errorSnackBar('Wrong Username or Password');
+          this.logService.errorSnackBar(error.message);
         },
       });
   }
