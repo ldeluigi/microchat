@@ -21,6 +21,7 @@ import { MatInputModule } from '@angular/material/input';
 import { RegistrationComponent } from './routes/registration/registration.component';
 import { ElementScrollPercentageDirective } from './helper/directive/element-scroll-percentage.directive';
 import { UserInfoComponent } from './routes/user-info/user-info.component';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { UserInfoComponent } from './routes/user-info/user-info.component';
   imports: [
     BrowserAnimationsModule,
     MatInputModule,
+    MatButtonModule,
     HttpClientModule,
     BrowserModule,
     FormsModule,

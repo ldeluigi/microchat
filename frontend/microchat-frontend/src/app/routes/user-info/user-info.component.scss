@@ -5,3 +5,16 @@
 .hide_it {
   display: none;
 }
+
+.delete {
+  background-color: red;
+}
+
+.button {
+  direction: rtl;
+}
+
+.buttons {
+  justify-content: flex-end;
+  margin: 3%;
+}
