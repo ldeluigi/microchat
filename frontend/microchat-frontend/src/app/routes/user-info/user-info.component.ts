@@ -77,8 +77,8 @@ export class UserInfoComponent implements OnInit {
 
   delete() {
     this.accountService.deleteUser().subscribe(_ => {
-      this.logService.messageSnackBar("account deleted");
       this.dialogRef.close();
+      this.accountService.logout("account deleted");
     });
   }
 
