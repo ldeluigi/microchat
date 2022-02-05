@@ -13,7 +13,7 @@ public record PrivateChatMessageOutput(
     Option<Timestamp> LastEditTime,
     Option<Guid> SenderId,
     bool Viewed,
-    MessageText Text)
+    string Text)
 {
     public static PrivateChatMessageOutput From(PrivateMessage privateMessage, Guid asSeenBy) => new(
         Id: privateMessage.Id,

@@ -1,9 +1,5 @@
-﻿using ChatService.Application.Queries.PrivateMessages.Outputs;
-using ChatService.Domain.Aggregates.MessageAggregate;
-using ChatService.Infrastructure.DataAccess.Model.ChatAggregate;
+﻿using ChatService.Infrastructure.DataAccess.Model.ChatAggregate;
 using ChatService.Infrastructure.DataAccess.Model.UserAggregate;
-using EasyDesk.CleanArchitecture.Application.Mapping;
-using EasyDesk.Tools.Options;
 using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -52,21 +48,6 @@ public class PrivateMessageModel
                 .WithMany(c => c.Messages)
                 .HasForeignKey(x => x.ChatId)
                 .OnDelete(DeleteBehavior.Cascade);
-        }
-    }
-
-    public class MappingToPrivateMessageOutput : DirectMapping<PrivateMessageModel, PrivateChatMessageOutput>
-    {
-        public MappingToPrivateMessageOutput()
-            : base(model => new PrivateChatMessageOutput(
-                model.Id,
-                model.ChatId,
-                model.SendTime,
-                model.LastEditTime,
-                model.SenderId.AsOption(),
-                model.Viewed,
-                MessageText.From(model.Text)))
-        {
         }
     }
 }
