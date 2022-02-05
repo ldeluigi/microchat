@@ -90,14 +90,17 @@ export class AccountService {
 
   async updateEmail(newEmail: string): Promise<void> {
     const data = { email: newEmail };
-    await this.update(data);
-    return;
+    return await this.update(data);
+  }
+
+  async updateUsername(newusername: string): Promise<void> {
+    const data = { username: newusername };
+    return await this.update(data);
   }
 
   async updatePassword(oldPassword: string, newPassword: string): Promise<void> {
     const data = { oldPassword, password: newPassword };
-    await this.update(data);
-    return;
+    return await this.update(data);
   }
 
   // tslint:disable-next-line: no-any

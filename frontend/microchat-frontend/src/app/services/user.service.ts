@@ -36,4 +36,12 @@ export class UserService {
   getSrcImg(userId: string): string {
     return "https://therichpost.com/wp-content/uploads/2020/06/avatar2.png";
   }
+
+  updateName(name: string): Promise<any> {
+    throw new Error('Method not implemented.');
+  }
+
+  updateSurname(surname: string): Promise<any> {
+    throw new Error('Method not implemented.');
+  }
 }
