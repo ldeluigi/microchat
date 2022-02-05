@@ -3,3 +3,9 @@ export interface LoggedUser {
   accessToken: string;
   refreshToken: string;
 }
+
+export interface AuthUserInfo {
+  id: string,
+  email: string,
+  username: string
+}
