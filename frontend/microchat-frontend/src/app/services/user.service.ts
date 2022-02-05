@@ -27,4 +27,9 @@ export class UserService {
     return this.http.get<Response<UserInfo[]>>(`${this.apiURL.userApiUrl}${this.userVersion}`, {params: {search: searchString}})
       .pipe(map(u => u.data));
   }
+
+  usersInfo(userId: string): Observable<UserInfo> {
+    return this.http.get<Response<UserInfo>>(`${this.apiURL.userApiUrl}/${userId}${this.userVersion}`)
+      .pipe(map(u => u.data));
+  }
 }

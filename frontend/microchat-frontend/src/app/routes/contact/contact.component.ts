@@ -1,5 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { UserService } from 'src/app/services/user.service';
 import { Chat } from 'src/model/Chat';
+import { UserInfoComponent } from '../user-info/user-info.component';
 
 @Component({
   selector: 'app-contact',
@@ -10,7 +13,9 @@ export class ContactComponent implements OnInit {
 
   @Input() chat: Chat | undefined
 
-  constructor() { }
+  constructor(
+    private userService: UserService,
+    public dialog: MatDialog) { }
 
   ngOnInit(): void {
   }
@@ -23,6 +28,14 @@ export class ContactComponent implements OnInit {
 
   contactInfo(): string {
     return this.chat && this.chat.user ? this.chat.user.name + " is online" : "";
+  }
+
+  getUserInfo(event: Event) {
+    event.stopPropagation();
+    if (this.chat?.user) {
+    this.userService.usersInfo(this.chat.user.id).subscribe(info => 
+      this.dialog.open(UserInfoComponent, {data: info}))
+    }
   }
 
 }
