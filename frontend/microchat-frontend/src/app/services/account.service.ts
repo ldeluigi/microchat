@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { first, map } from 'rxjs/operators';
-import { LoggedUser } from 'src/model/LoggedUser';
+import { AuthUserInfo, LoggedUser } from 'src/model/LoggedUser';
 import { LogLevel } from 'src/model/logLevel';
 import { Response } from 'src/model/serverResponse';
 import { TokenRefresh } from 'src/model/tokenRefresh';
@@ -80,6 +80,11 @@ export class AccountService {
 
   register(user: UserRegistration): Observable<UserRegistrationResponse> {
     return this.http.post<Response<UserRegistrationResponse>>(`${this.apiURL.authApiUrl}${this.authVersion}`, user)
+      .pipe(map(u => u.data));
+  }
+
+  getInfo(userId: string): Observable<AuthUserInfo> {
+    return this.http.get<Response<AuthUserInfo>>(`${this.apiURL.authApiUrl}/${userId}${this.authVersion}`)
       .pipe(map(u => u.data));
   }
 
