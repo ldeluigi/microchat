@@ -43,7 +43,6 @@ export class UserInfoComponent implements OnInit {
   constructor(
     private userService: UserService,
     private accountService: AccountService,
-    private logService: LogService,
     public dialogRef: MatDialogRef<UserInfoComponent>,
     @Inject(MAT_DIALOG_DATA) public data: {id: string}) { }
 
