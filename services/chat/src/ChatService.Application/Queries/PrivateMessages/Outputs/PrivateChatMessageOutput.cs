@@ -2,6 +2,7 @@
 using EasyDesk.Tools.Options;
 using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
 using System;
+using System.Linq;
 
 namespace ChatService.Application.Queries.PrivateMessages.Outputs;
 
@@ -14,12 +15,12 @@ public record PrivateChatMessageOutput(
     bool Viewed,
     MessageText Text)
 {
-    public static PrivateChatMessageOutput From(PrivateMessage privateMessage) => new(
+    public static PrivateChatMessageOutput From(PrivateMessage privateMessage, Guid asSeenBy) => new(
         Id: privateMessage.Id,
         ChatId: privateMessage.ChatId,
         SendTime: privateMessage.SendTime,
         LastEditTime: privateMessage.LastEditTime,
         SenderId: privateMessage.SenderId,
-        Viewed: privateMessage.Viewed,
+        Viewed: privateMessage.SenderId.Contains(asSeenBy) ? true : privateMessage.Viewed,
         Text: privateMessage.Text);
 }
