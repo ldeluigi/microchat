@@ -32,4 +32,8 @@ export class UserService {
     return this.http.get<Response<UserInfo>>(`${this.apiURL.userApiUrl}/${userId}${this.userVersion}`)
       .pipe(map(u => u.data));
   }
+
+  getSrcImg(userId: string): string {
+    return "https://therichpost.com/wp-content/uploads/2020/06/avatar2.png";
+  }
 }

@@ -21,6 +21,7 @@ $mobile: 768px;
   white-space: nowrap;
 }
 .card-header{
+  display: flex;
   border-radius: 15px 15px 0 0 !important;
   border-bottom: 0 !important;
 }
@@ -128,6 +129,11 @@ $mobile: 768px;
 .action_menu ul li:hover{
   cursor: pointer;
   background-color: rgba(0,0,0,0.2);
+}
+.user_img{
+  height: 45px;
+  width: 45px;
+  border:1.5px solid #f5f6fa;
 }
 @media(max-width: 576px){
   .contacts_card{

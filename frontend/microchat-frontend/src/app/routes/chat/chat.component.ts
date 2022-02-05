@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { AccountService } from 'src/app/services/account.service';
+import { UserService } from 'src/app/services/user.service';
 import { Chat } from 'src/model/Chat';
 import { Message } from 'src/model/Message';
 
@@ -16,7 +17,8 @@ export class ChatComponent implements OnChanges, AfterViewInit {
 
   constructor(
     private elementRef: ElementRef,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private userService: UserService
   ) {}
 
   ngAfterViewInit(): void {
@@ -77,6 +79,6 @@ export class ChatComponent implements OnChanges, AfterViewInit {
   }
 
   getSrcImg(message: Message) {
-    return "https://therichpost.com/wp-content/uploads/2020/06/avatar2.png";
+      return this.userService.getSrcImg(message.sender);
   }
 }
