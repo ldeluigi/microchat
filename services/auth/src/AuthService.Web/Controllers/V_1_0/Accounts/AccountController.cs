@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AuthService.Application.Commands.Emails;
+using AuthService.Application.Commands.Accounts;
 using AuthService.Application.Commands.Registration;
 using AuthService.Application.Queries.Accounts;
 using AuthService.Web.Controllers.V_1_0.Accounts.DTO;
@@ -45,7 +45,7 @@ public class AccountController : AbstractMediatrController
     [HttpPut(AccountsRoutes.ModifyAccount)]
     public async Task<IActionResult> ModifyAccount([FromRoute] Guid userId, [FromBody] ModifyAccountBodyDto body)
     {
-        var command = new ChangeEmail.Command(userId, body.Email);
+        var command = new UpdateUser.Command(userId, body.Email, body.Username);
         return await Command(command)
             .ReturnOk();
     }
