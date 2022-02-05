@@ -110,7 +110,7 @@ export class AccountService {
       this.logService.log('No user logged while try to update user info', LogLevel.Error);
       throw Error('Invalid user');
     }
-    this.http.put(`${this.apiURL.authApiUrl}${user.userId}${this.authVersion}`, data)
+    this.http.put(`${this.apiURL.authApiUrl}/${user.userId}${this.authVersion}`, data)
       .pipe(map(_ => {
         this.logService.messageSnackBar('Data updated correctly');
         return;

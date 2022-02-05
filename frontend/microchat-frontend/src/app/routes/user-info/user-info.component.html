@@ -21,6 +21,22 @@
     <input type="text" [(ngModel)]="username" value="{{usernameInitValue()}}" [class]="showElem('username', true)">
     <i class="fas fa-pen {{modifiable()}}" (click)="changeVisibility('username')"></i>
   </p>
+  <p class="{{modifiable()}}"><span>password</span>
+    <span>
+      <input placeholder="old password" [(ngModel)]="oldPass" [type]="hideOld ? 'password' : 'text'" />
+      <button mat-icon-button matSuffix (click)="hideOld = !hideOld" [attr.aria-label]="'Hide password'" tabindex="-1"
+        [attr.aria-pressed]="hideOld">
+        <i class="fa fa-low-vision" aria-hidden="true"></i>
+      </button>
+    </span>
+    <span>
+      <input placeholder="new password" [(ngModel)]="newPass" [type]="hide ? 'password' : 'text'" />
+      <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" tabindex="-1"
+        [attr.aria-pressed]="hide">
+        <i class="fa fa-low-vision" aria-hidden="true"></i>
+      </button>
+    </span>
+  </p>
   <div class="buttons">
     <div class="button"><button class="{{modifiable()}}" mat-raised-button (click)="update()">update</button></div>
     <div class="button"><button class="{{modifiable()}} delete" mat-raised-button (click)="delete()">Delete user</button></div>

@@ -28,6 +28,10 @@ export class UserInfoComponent implements OnInit {
   name: string = '';
   surname: string = '';
   username: string = '';
+  oldPass: string = '';
+  newPass: string = '';
+  hide = true;
+  hideOld = true;
   visibility: Visibility = {
     email: false,
     name: false,
@@ -81,6 +85,9 @@ export class UserInfoComponent implements OnInit {
     }
     if (this.username !== this.usernameInitValue()) {
       this.accountService.updateUsername(this.username);
+    }
+    if (this.oldPass && this.newPass) {
+      this.accountService.updatePassword(this.oldPass, this.newPass);
     }
     this.dialogRef.close();
   }
