@@ -8,3 +8,7 @@ export interface Chat {
   hasNewMessages: number,
   user?: User
 }
+
+export function UserLeftChat(chat: Chat) {
+  return chat.user ? true : false;
+}

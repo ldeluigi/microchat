@@ -2,13 +2,15 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { AccountService } from 'src/app/services/account.service';
+import { LogService } from 'src/app/services/log.service';
 import { SignalRService } from 'src/app/services/signal-r.service';
 import { UserService } from 'src/app/services/user.service';
-import { Chat } from 'src/model/Chat';
+import { Chat, UserLeftChat } from 'src/model/Chat';
 import { Message } from 'src/model/Message';
 import { Stats } from 'src/model/Stats';
 import { toUser } from 'src/model/UserInfo';
 import { StatsComponent } from '../stats/stats.component';
+import { UserInfoComponent } from '../user-info/user-info.component';
 
 @Component({
   selector: 'app-home',
@@ -31,6 +33,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private userService: UserService,
     private signalrService: SignalRService,
+    private logService: LogService,
     private accountService: AccountService,
     public dialog: MatDialog
   ) {}
@@ -90,7 +93,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.chatList.find(c => chat.id == c.id)) {
       this.active = chat;
     } else if (this.search) { //searched but not already existing
-      console.log("TODO: create with " + chat.user);
+      console.log("TODO: create with " + chat.user?.id);
       this.search = "";
       //this.chatService.createChat(chat.user).subscribe(newChat => this.active = newChat); // chat.user list or not?
     }
@@ -108,10 +111,14 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   sendMessage() {
-    //this.chatService.sendMessage(this.active.id, this.newMessage, this.accountservice.user)
-    console.log("TODO: send " + this.newMessage);
-    this.signalrService.sendMessage(this.active.id, this.newMessage);
-    this.newMessage = "";
+    if (UserLeftChat(this.active)) {
+      this.logService.errorSnackBar("unable to send messages to disabled chat");
+    } else {
+      //this.chatService.sendMessage(this.active.id, this.newMessage, this.accountservice.user)
+      console.log("TODO: send " + this.newMessage);
+      this.signalrService.sendMessage(this.active.id, this.newMessage);
+      this.newMessage = "";
+    }
   }
   
   findChat() {
@@ -163,5 +170,13 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   scroll(event: number) {
     this.scrollPerc = event;
+  }
+
+  getSrcImg() {
+    return this.userService.getSrcImg(this.accountService.userValue?.userId || "");
+  }
+
+  getUserInfo(event: Event) {
+    this.dialog.open(UserInfoComponent, {data: {id: this.accountService.userValue?.userId || ""}});
   }
 }
