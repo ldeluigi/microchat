@@ -4,5 +4,7 @@ public static class UserRoutes
 {
     public const string GetUser = "users/{userId}";
 
+    public const string UpdateUser = "users/{userId}";
+
     public const string GetUsers = "users";
 }
