@@ -184,7 +184,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   getUserInfo(event: Event) {
     this.dialog.open(UserInfoComponent, {data: {id: this.accountService.userValue?.userId || ""}});
   }
+
   sendOrEditClass() {
     return this.editingId ? "fas fa-edit" : "fas fa-location-arrow";
+  }
+
+  deleteChat() {
+    console.log("TODO: delete chat");
   }
 }
