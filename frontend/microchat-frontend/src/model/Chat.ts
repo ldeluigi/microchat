@@ -10,5 +10,5 @@ export interface Chat {
 }
 
 export function UserLeftChat(chat: Chat) {
-  return chat.user ? true : false;
+  return chat.user ? false : true;
 }
