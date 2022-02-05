@@ -15,7 +15,7 @@ using static EasyDesk.CleanArchitecture.Domain.Metamodel.Results.ResultImports;
 
 namespace AuthService.Application.Commands.Accounts;
 
-public static class UpdateUser
+public static class UpdateAccount
 {
     public record Command(Guid AccountId, Option<string> Username, Option<string> Email) : CommandBase<AccountOutput>;
 

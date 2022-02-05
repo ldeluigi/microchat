@@ -45,7 +45,7 @@ public class AccountController : AbstractMediatrController
     [HttpPut(AccountsRoutes.ModifyAccount)]
     public async Task<IActionResult> ModifyAccount([FromRoute] Guid userId, [FromBody] ModifyAccountBodyDto body)
     {
-        var command = new UpdateUser.Command(userId, body.Email, body.Username);
+        var command = new UpdateAccount.Command(userId, body.Email, body.Username);
         return await Command(command)
             .ReturnOk();
     }
