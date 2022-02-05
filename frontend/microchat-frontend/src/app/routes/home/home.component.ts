@@ -35,11 +35,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     public dialog: MatDialog
   ) {}
 
-  /*ngAfterViewInit(): void {
-    console.log(this.appChat);
-    this.appChat.nativeElement.scrolltop = this.appChat.nativeElement.scrollHeight;
-  }*/
-
   ngOnInit() {
     this.signalrService.connect();
     this.signalRSubscription = this.signalrService.getMessage().subscribe(
@@ -92,7 +87,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   setActive(chat: Chat) {
-    if (this.activeList.find(c => chat.id == c.id)) {
+    if (this.chatList.find(c => chat.id == c.id)) {
       this.active = chat;
     } else if (this.search) { //searched but not already existing
       console.log("TODO: create with " + chat.user);
@@ -148,7 +143,17 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   showStats(active: Chat) {
     console.log("TODO: get stats from chat :"+ active.id);
-    const stats: Stats = { totalMessages: 1, avgWeekMsg: 2, avgDaysMsg: 3 }
+    const detailedChat = {
+      Id: active.id,
+      CreationTimestamp: "05/02/2022",
+      NumberOfMessages: 10}
+    const creationDate = new Date();
+    console.log("TODO date from utc");
+    const days = Math.ceil(creationDate.getTime() - Date.now() / (1000 * 3600 * 24));
+    const stats: Stats = { 
+      totalMessages: detailedChat.NumberOfMessages,
+      avgWeekMsg: detailedChat.NumberOfMessages / Math.ceil(days / 7),
+      avgDaysMsg: detailedChat.NumberOfMessages / days }
     this.dialog.open(StatsComponent, {data : stats})
   }
 
@@ -158,6 +163,5 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   scroll(event: number) {
     this.scrollPerc = event;
-    //console.log(event);
   }
 }
