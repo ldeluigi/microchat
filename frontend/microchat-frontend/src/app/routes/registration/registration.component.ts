@@ -125,16 +125,7 @@ export class RegistrationComponent implements OnInit {
             this.router.navigate([this.returnUrl]);
           },
           error:(error) => {
-            this.logService.log('registration error:', LogLevel.Debug, error);
-            if (error.constructor.name === 'Array') {
-              if (typeof error[0] === 'object' && error[0] !== null) {
-                error = error.map((obj: { msg: string, detail: string, param: string; }) => `${obj.detail}`);//`${obj.msg} in ${obj.param}`);
-              }
-              const inputError = error.join(' ,');
-              if (inputError.length > 0) {
-                this.logService.errorSnackBar(inputError);
-              }
-            }
+            this.logService.errorSnackBar(error);
           }
         }
       );
