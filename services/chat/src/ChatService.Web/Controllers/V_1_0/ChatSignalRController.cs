@@ -8,32 +8,32 @@ namespace ChatService.Web.Controllers.V_1_0;
 public class ChatSignalRController : AbstractMediatrHub
 {
     [HubMethodName("chat.createWith")]
-    public async Task CreateChatWith(Guid userId)
+    public Task CreateChatWith(Guid userId)
     {
-
+        throw new NotImplementedException();
     }
 
     [HubMethodName("chat.delete")]
-    public async Task DeleteChat(Guid chatId)
+    public Task DeleteChat(Guid chatId)
     {
-
+        throw new NotImplementedException();
     }
 
     [HubMethodName("message.send")]
-    public async Task SendMessage(Guid chatId, string text)
+    public Task SendMessage(Guid chatId, string text)
     {
-
+        throw new NotImplementedException();
     }
 
     [HubMethodName("message.edit")]
-    public async Task EditMessage(Guid messageId, string text)
+    public Task EditMessage(Guid messageId, string text)
     {
-
+        throw new NotImplementedException();
     }
 
     [HubMethodName("message.delete")]
-    public async Task DeleteMessage(Guid messageId)
+    public Task DeleteMessage(Guid messageId)
     {
-
+        throw new NotImplementedException();
     }
 }
