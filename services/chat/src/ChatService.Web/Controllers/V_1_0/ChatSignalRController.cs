@@ -7,6 +7,18 @@ namespace ChatService.Web.Controllers.V_1_0;
 
 public class ChatSignalRController : AbstractMediatrHub
 {
+    public override Task OnConnectedAsync()
+    {
+        // (getChatIds for Context.ConnectionId).ForEach( chatId =>
+        return Groups.AddToGroupAsync(Context.ConnectionId, "chatId").ContinueWith(_ => base.OnConnectedAsync());
+    }
+
+    public override Task OnDisconnectedAsync(Exception exception)
+    {
+        // (getChatIds for Context.ConnectionId).ForEach( chatId =>
+        return Groups.RemoveFromGroupAsync(Context.ConnectionId, "chatId").ContinueWith(_ => base.OnDisconnectedAsync(exception));
+    }
+
     [HubMethodName("chat.createWith")]
     public Task CreateChatWith(Guid userId)
     {
@@ -22,7 +34,8 @@ public class ChatSignalRController : AbstractMediatrHub
     [HubMethodName("message.send")]
     public Task SendMessage(Guid chatId, string text)
     {
-        throw new NotImplementedException();
+        // chatId.ToString()
+        return Clients.Group("chatId").SendAsync(text);
     }
 
     [HubMethodName("message.edit")]
