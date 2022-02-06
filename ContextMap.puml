@@ -1,11 +1,17 @@
 @startuml Domain
 !include meta/ContextMap.metamodel.iuml
 
-$subdomain "Chat" {
-    $context "Chat" as chat
-    $context "User" as user
+$subdomain "User Subdomain" {
+    $context "User Context" as user
+    $context "Auth Context" as auth
 
-    $conformist(chat, user)
+    $conformist(user, auth)
+}
+
+$subdomain "Chat Subdomain" {
+    $context "Chat Context" as chat
+
+    $conformist(chat, auth)
 }
 
 @enduml
