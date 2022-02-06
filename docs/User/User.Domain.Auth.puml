@@ -1,0 +1,39 @@
+@startuml User Domain Auth Context
+!include meta/Domain.Analysis.metamodel.iuml
+
+$aggregate(Account) {
+    $aggregate_root(Account) {
+        + id: Guid
+        + creation: Timestamp
+    }
+
+    $value(Username) {
+        + value: String
+    }
+
+    $value(Email) {
+        + value: String
+    }
+
+    $value(PasswordHash) {
+        + password: String
+        + salt: String
+    }
+
+    $value(AccountSessions) {
+        + sessions: Set<Session> 
+    }
+
+    $value(Session) {
+        + accessTokenId: Guid
+        + expiration: Timestamp
+        + refreshToken: Token
+    }
+
+    Username -o Account
+    Email -o Account
+    PasswordHash -o Account
+    AccountSessions -o Account
+    Session -o AccountSessions
+}
+@enduml
