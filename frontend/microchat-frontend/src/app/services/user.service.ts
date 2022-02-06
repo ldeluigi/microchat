@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { HttpClient } from '@angular/common/http';
-import { map, Observable } from "rxjs";
+import { first, map, Observable } from "rxjs";
 import { Response } from "src/model/serverResponse";
 import { ApiURLService } from "./api-url.service";
 import { LogService } from "./log.service";
@@ -37,11 +37,26 @@ export class UserService {
     return "https://therichpost.com/wp-content/uploads/2020/06/avatar2.png";
   }
 
-  updateName(name: string): Promise<any> {
-    throw new Error('Method not implemented.');
+  updateName(userId: string, name: string): Promise<void> {
+    const data = {name: name};
+    return this.update(userId, data);
   }
 
-  updateSurname(surname: string): Promise<any> {
-    throw new Error('Method not implemented.');
+  updateSurname(userId: string, surname: string): Promise<void> {
+    const data = {surname: surname};
+    return this.update(userId, data);
+  }
+
+  async update(userId: string, data: any): Promise<void> {
+    this.http.put<Response<UserInfo>>(`${this.apiURL.userApiUrl}/${userId}${this.userVersion}`, data)
+      .pipe(first()).subscribe({
+        next: data => {
+          console.log(data);
+          this.logService.messageSnackBar('Data updated correctly');
+        },
+        error: (err: Error) => {
+          this.logService.errorSnackBar(err.message)
+        }
+      });
   }
 }
