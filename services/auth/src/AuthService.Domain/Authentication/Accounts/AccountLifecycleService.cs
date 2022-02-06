@@ -52,28 +52,28 @@ public class AccountLifecycleService
             .ThenIfSuccess(account => _eventNotifier.Notify(new AccountRegisteredEvent(account))));
     }
 
-    public async Task<Result<Account>> UpdateEmail(Guid guid, Email newEmail)
+    public async Task<Result<Account>> UpdateEmail(Account account, Email newEmail)
     {
         return await VerifyEmailIsNotTaken(newEmail)
-            .ThenFlatMapAsync(_ => _accountRepository.GetById(guid))
-            .ThenIfSuccess(account =>
+            .ThenFlatMap<Nothing, Account>(_ =>
             {
                 var oldEmail = account.Email;
                 account.UpdateEmail(newEmail);
                 _accountRepository.Save(account);
                 _eventNotifier.Notify(new EmailChangedEvent(account, oldEmail));
+                return account;
             });
     }
 
-    public async Task<Result<Account>> UpdateUsername(Guid guid, Username newUsername)
+    public async Task<Result<Account>> UpdateUsername(Account account, Username newUsername)
     {
         return await VerifyUsernameIsNotTaken(newUsername)
-            .ThenFlatMapAsync(_ => _accountRepository.GetById(guid))
-            .ThenIfSuccess(account =>
+            .ThenFlatMap<Nothing, Account>(_ =>
             {
                 account.UpdateUsername(newUsername);
                 _accountRepository.Save(account);
                 _eventNotifier.Notify(new UsernameChangedEvent(account));
+                return account;
             });
     }
 

@@ -8,7 +8,6 @@ using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
 using EasyDesk.CleanArchitecture.Domain.Model;
-using EasyDesk.Tools;
 using EasyDesk.Tools.Options;
 using FluentValidation;
 using static EasyDesk.CleanArchitecture.Domain.Metamodel.Results.ResultImports;
@@ -39,25 +38,33 @@ public static class UpdateAccount
 
     public class Handler : RequestHandlerBase<Command, AccountOutput>
     {
+        private readonly IAccountRepository _accountRepository;
         private readonly AccountLifecycleService _accountLifecycle;
 
         public Handler(
+            IAccountRepository accountRepository,
             AccountLifecycleService accountLifecycle)
         {
+            _accountRepository = accountRepository;
             _accountLifecycle = accountLifecycle;
         }
 
         protected override async Task<Response<AccountOutput>> Handle(Command request)
         {
             // TODO: add check for authorization
-            await request.Username.IfPresentAsync(async username =>
-                    await _accountLifecycle
-                        .UpdateUsername(request.AccountId, Username.From(username)));
-            return await Task.FromResult(request.Email)
-                .ThenFlatMapAsync<string, Result<Account>>(async email =>
-                    await _accountLifecycle
-                        .UpdateEmail(request.AccountId, Email.From(email)))
-                .Map(x => x.Value)
+            return await _accountRepository.GetById(request.AccountId)
+                .ThenMapAsync(async account =>
+                {
+                    await request.Username.IfPresentAsync(async username =>
+                        await _accountLifecycle.UpdateUsername(account, Username.From(username)));
+                    return account;
+                })
+                .ThenMapAsync(async account =>
+                {
+                    await request.Email.IfPresentAsync(async email =>
+                        await _accountLifecycle.UpdateEmail(account, Email.From(email)));
+                    return account;
+                })
                 .ThenMap(AccountOutput.From)
                 .ThenToResponse();
         }
