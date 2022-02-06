@@ -1,5 +1,6 @@
 ﻿using EasyDesk.CleanArchitecture.Web.Controllers;
 using EasyDesk.CleanArchitecture.Web.Dto;
+using EasyDesk.Tools.Options;
 using Microchat.UserService.Application.Queries;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -33,7 +34,7 @@ public class UserController : AbstractMediatrController
     [HttpPut(UserRoutes.UpdateUser)]
     public async Task<IActionResult> UpdateUser([FromRoute] Guid userId, [FromBody] UpdateUserBodyDTO body)
     {
-        var command = new UpdateUser.Command(userId, body.Name, body.Surname);
+        var command = new UpdateUser.Command(userId, body.Name.AsOption(), body.Surname.AsOption());
         return await Command(command)
             .MappingContent(Mapper.Map<UserDto>)
             .ReturnOk();
