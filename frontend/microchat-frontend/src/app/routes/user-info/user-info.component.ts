@@ -86,10 +86,10 @@ export class UserInfoComponent implements OnInit {
       this.accountService.updateEmail(this.email);
     }
     if (this.name && this.name !== this.nameInitValue()) {
-      this.userService.updateName(this.name);
+      this.userService.updateName(this.data.id, this.name);
     }
     if (this.surname && this.surname !== this.surnameInitValue()) {
-      this.userService.updateSurname(this.surname);
+      this.userService.updateSurname(this.data.id, this.surname);
     }
     if (this.username && this.username !== this.usernameInitValue()) {
       this.accountService.updateUsername(this.username);
