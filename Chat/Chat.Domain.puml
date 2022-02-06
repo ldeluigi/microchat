@@ -4,7 +4,35 @@
 $entity(Chat) {
     + id: Guid
     + creationTime: DateTime
-    + owner: Guid
+    + creator: Guid
 }
+
+$aggregate(Message) {
+    $aggregate_root(Message) {
+        + id: Guid
+        + chatId: Guid
+        + sendTime: DateTime
+        + lastEditTime: Option[DateTime]
+        + sender: Guid
+        + editText(newText: String): void
+    }
+
+    $value(MessageText) {
+        + text: String
+    }
+
+    MessageText -o Message
+}
+
+$aggregate(User) {
+    $aggregate_root(User) {
+        + id: Guid
+        + lastSeenTimestamp: Timestamp
+    }
+}
+
+Message "0..*" --* "1" Chat: isSentOn
+User "1" <.left. "0..*" Message: sender
+User "1" <.. "0..*" Chat: creator
 
 @enduml
