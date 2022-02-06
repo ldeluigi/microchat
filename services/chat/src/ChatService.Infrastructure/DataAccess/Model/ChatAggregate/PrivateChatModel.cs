@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using static EasyDesk.Tools.Options.OptionImports;
 
 namespace ChatService.Infrastructure.DataAccess.Model.ChatAggregate;
@@ -57,17 +56,14 @@ public class PrivateChatModel
 
     public class MappingToDetailedChatOutput : DirectMapping<PrivateChatModel, DetailedPrivateChatOutput>
     {
-        // TODO testare se il campo Viewed è letto correttamente
         public MappingToDetailedChatOutput()
             : base(c => new DetailedPrivateChatOutput(
                 c.Id,
                 c.CreatorId.AsOption(),
                 c.PartecipantId.AsOption(),
                 c.CreationTime,
-                c.Messages.Count,
-                c.Messages.Where(m => m.Viewed).Count() > 0 ? Some(c.Messages.Where(m => m.Viewed).Count()) : None))
+                c.Messages.Count))
         {
         }
-
     }
 }

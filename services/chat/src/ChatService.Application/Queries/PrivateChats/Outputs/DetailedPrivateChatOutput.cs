@@ -9,8 +9,7 @@ public record DetailedPrivateChatOutput(
     Option<Guid> CreatorId,
     Option<Guid> PartecipantId,
     Timestamp CreationTimestamp,
-    int NumberOfMessages,
-    Option<int> NumberOfUnreadMessages) : PrivateChatOutput(
+    int NumberOfMessages) : PrivateChatOutput(
         Id,
         CreatorId,
         PartecipantId,
