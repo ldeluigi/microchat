@@ -2,22 +2,10 @@
 !include meta/Domain.Analysis.metamodel.iuml
 !include Chat/Chat.Domain.puml
 
-
-$aggregate(Message) {
-    $aggregate_root(Message) {
-        + id: Guid
-        + chatId: Guid
-        + text: String
-        + sendTime: DateTime
-        + lastEditTime: Option[DateTime]
-        + sender: Guid
-        + editText(newText: String): void 
-    }
-}
-
-$aggregate(User) {
-    $entity(User) {
-        + id: Guid
+$aggregate(PrivateMessage) {
+    $aggregate_root(PrivateMessage) extends Message{
+        + viewed: Bool
+        + setViewed(): Void
     }
 }
 
@@ -34,10 +22,6 @@ $service(ChatService) {
     + deleteMessage(messageId: Guid, userId: Guid): Message
 }
 
-Message "0..*" --* "1" Chat: isSentOn
-User "1" <.left. "0..*" Message: sender
-User "1" <.. "0..*" Chat: owner
 User "1" <.. "0..*" PrivateChat: partecipant
-
 
 @enduml
