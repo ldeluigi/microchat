@@ -13,7 +13,6 @@ services:
     depends_on:
       - rabbitmq
       - dbs
-      - redis
     build:
       context: "./auth/"
       dockerfile: "src/AuthService.Web/Dockerfile"
@@ -40,7 +39,6 @@ services:
     depends_on:
       - rabbitmq
       - dbs
-      - redis
     build:
       context: "./user/"
       dockerfile: "src/UserService.Web/Dockerfile"
