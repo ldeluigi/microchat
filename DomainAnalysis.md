@@ -41,9 +41,18 @@
 - A *User* can only delete messages in a *Chat* if it's the original sender.
 
 ### User domain
+
+#### User context
 ```plantuml
 @startuml User Domain Map
-!include User/User.Domain.puml
+!include User/User.Domain.User.puml
+@enduml
+```
+
+#### Chat context
+```plantuml
+@startuml User Domain Map
+!include User/User.Domain.Auth.puml
 @enduml
 ```
 

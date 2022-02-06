@@ -1,4 +1,4 @@
-@startuml User Domain
+@startuml User Domain User Context
 !include meta/Domain.Analysis.metamodel.iuml
 
 $aggregate(User) {
@@ -30,4 +30,6 @@ $aggregate(User) {
     Username -o User
     Email -o User
 }
+
+
 @enduml
