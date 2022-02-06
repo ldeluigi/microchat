@@ -15,14 +15,20 @@ namespace AuthService.Infrastructure.Authentication;
 
 public class JwtAccessTokenService : IAccessTokenService
 {
-    private readonly JwtService _jwtService;
-    private readonly JwtSettings _jwtSettings;
+    private readonly JwtFacade _jwtService;
+    private readonly JwtTokenConfiguration _jwtTokenConfiguration;
+    private readonly JwtValidationConfiguration _jwtValidationConfiguration;
     private readonly ILogger<JwtAccessTokenService> _logger;
 
-    public JwtAccessTokenService(JwtService jwtService, JwtSettings jwtSettings, ILogger<JwtAccessTokenService> logger)
+    public JwtAccessTokenService(
+        JwtFacade jwtService,
+        JwtTokenConfiguration jwtTokenConfiguration,
+        JwtValidationConfiguration jwtValidationConfiguration,
+        ILogger<JwtAccessTokenService> logger)
     {
         _jwtService = jwtService;
-        _jwtSettings = jwtSettings;
+        _jwtTokenConfiguration = jwtTokenConfiguration;
+        _jwtValidationConfiguration = jwtValidationConfiguration;
         _logger = logger;
     }
 
@@ -33,7 +39,10 @@ public class JwtAccessTokenService : IAccessTokenService
         var claimsIdentity = new ClaimsIdentity(CreateClaimsList(account).Append(idClaim));
         try
         {
-            var tokenString = _jwtService.CreateToken(claimsIdentity, _jwtSettings, out var token);
+            var tokenString = _jwtService.Create(
+                _jwtTokenConfiguration,
+                claimsIdentity,
+                out var token);
             return new(id, Token.From(tokenString), Timestamp.FromUtcDateTime(token.ValidTo));
         }
         catch (Exception ex)
@@ -56,8 +65,10 @@ public class JwtAccessTokenService : IAccessTokenService
                select parsedId;
     }
 
-    private Option<ClaimsIdentity> ValidateAccessTokenWithoutLifetime(Token accessToken)
+    private Option<ClaimsPrincipal> ValidateAccessTokenWithoutLifetime(Token accessToken)
     {
-        return _jwtService.Validate(accessToken.ToString(), _jwtSettings, out var _, validateLifetime: false);
+        return _jwtService.Validate(accessToken.ToString(), configure =>
+            _jwtValidationConfiguration(configure)
+            .WithoutLifetimeValidation());
     }
 }

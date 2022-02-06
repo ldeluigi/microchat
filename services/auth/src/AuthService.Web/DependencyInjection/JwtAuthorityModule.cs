@@ -4,6 +4,7 @@ using AuthService.Domain.Authentication.Passwords;
 using AuthService.Infrastructure.Authentication;
 using AuthService.Infrastructure.PasswordHashing;
 using EasyDesk.CleanArchitecture.Application.Modules;
+using EasyDesk.CleanArchitecture.Domain.Time;
 using EasyDesk.CleanArchitecture.Infrastructure.Configuration;
 using EasyDesk.CleanArchitecture.Infrastructure.Jwt;
 using Microsoft.Extensions.Configuration;
@@ -14,7 +15,6 @@ namespace AuthService.Web.DependencyInjection;
 
 public class JwtAuthorityModule : IAppModule
 {
-    public static readonly string JwtScopeName = "Global";
     private readonly IConfiguration _configuration;
 
     public JwtAuthorityModule(IConfiguration configuration)
@@ -26,15 +26,20 @@ public class JwtAuthorityModule : IAppModule
     {
         services
             .AddSingleton(_configuration.RequireValue<TokensSettings>("TokensSettings"))
-            .AddSingleton(_configuration.ReadJwtSettings(JwtScopeName))
+            .AddSingleton<JwtTokenConfiguration>()
             .AddScoped<IHashingService, HashingService>()
             .AddScoped<ISaltGenerator, RandomSaltGenerator>()
             .AddScoped<IHashCalculator, Pbkdf2Hashing>()
-            .AddScoped(CreateAccessTokenService);
+            .AddScoped(s => CreateAccessTokenService(s, app));
     }
 
-    private IAccessTokenService CreateAccessTokenService(IServiceProvider provider)
+    private IAccessTokenService CreateAccessTokenService(IServiceProvider provider, AppDescription appDescription)
     {
-        return new JwtAccessTokenService(provider.GetRequiredService<JwtService>(), provider.GetRequiredService<JwtSettings>(), provider.GetRequiredService<ILogger<JwtAccessTokenService>>());
+        var timestampProvider = provider.GetRequiredService<ITimestampProvider>();
+        return new JwtAccessTokenService(
+            new JwtFacade(timestampProvider),
+            JwtConfigurationUtils.GetJwtTokenConfiguration(_configuration, appDescription.Name, timestampProvider),
+            JwtConfigurationUtils.GetJwtValidationConfiguration(_configuration, appDescription.Name),
+            provider.GetRequiredService<ILogger<JwtAccessTokenService>>());
     }
 }

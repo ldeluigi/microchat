@@ -25,7 +25,11 @@ public class User : AggregateRoot
 
     public void UpdateName(Name name) => Name = name;
 
+    public void RemoveName() => Name = None;
+
     public void UpdateSurname(Name surname) => Surname = surname;
+
+    public void RemoveSurname() => Surname = None;
 
     public void UpdateUsername(Username username) => Username = username;
 

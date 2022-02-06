@@ -6,6 +6,7 @@ using EasyDesk.Tools.Options;
 using FluentValidation;
 using Microchat.UserService.Application.Queries;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using UserService.Domain.Aggregates.UserAggregate;
 
@@ -18,7 +19,7 @@ public static class UpdateUser
     public class Validator : AbstractValidator<Command>
     {
         private void ValidateName(Func<Command, Option<string>> field) =>
-            When(c => field(c).IsPresent, () =>
+            When(c => field(c).Any(s => !string.IsNullOrWhiteSpace(s)), () =>
                 RuleFor(c => field(c).Value)
                     .Length(Name.MinimumLength, Name.MaximumLength));
 
@@ -28,6 +29,19 @@ public static class UpdateUser
             ValidateName(c => c.Surname);
         }
     }
+
+    private static Action<string> UpdateOrRemoveName(Action<Name> update, Action remove) =>
+        name =>
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                remove();
+            }
+            else
+            {
+                update(Name.From(name));
+            }
+        };
 
     public class Handler : RequestHandlerBase<Command, UserOutput>
     {
@@ -43,14 +57,8 @@ public static class UpdateUser
             return await _userRepository.GetById(request.UserId)
                 .ThenIfSuccess(user =>
                 {
-                    if (request.Name.IsPresent)
-                    {
-                        user.UpdateName(Name.From(request.Name.Value));
-                    }
-                    if (request.Surname.IsPresent)
-                    {
-                        user.UpdateSurname(Name.From(request.Surname.Value));
-                    }
+                    request.Name.IfPresent(UpdateOrRemoveName(n => user.UpdateName(n), () => user.RemoveName()));
+                    request.Surname.IfPresent(UpdateOrRemoveName(n => user.UpdateSurname(n), () => user.RemoveSurname()));
                 })
                 .ThenIfSuccess(user => _userRepository.Save(user))
                 .ThenMap(UserOutput.From)

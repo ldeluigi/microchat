@@ -53,11 +53,9 @@ public class Startup : BaseStartup
                 applyMigrations: Environment.IsDevelopment() || shouldApplyMigrations))
             .AddSwagger()
             .AddAuthentication(options =>
-                options.AddScheme(new JwtBearerScheme(options =>
-                    options
-                    .UseJwtSettingsFromConfiguration(
-                        Configuration,
-                        JwtAuthorityModule.JwtScopeName))))
+                options.AddScheme(nameof(JwtBearerScheme), new JwtBearerScheme(options =>
+                    options.ConfigureValidationParameters(
+                        JwtConfigurationUtils.GetJwtValidationConfiguration(Configuration, ServiceName)))))
             .AddModule(new PermissionsModule())
             .AddAuthorization(configure => { })
             .AddModule(new JwtAuthorityModule(Configuration))
