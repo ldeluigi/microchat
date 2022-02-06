@@ -2,7 +2,6 @@
 using AuthService.Domain.Aggregates.AccountAggregate;
 using EasyDesk.CleanArchitecture.Domain.Metamodel;
 using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
-using EasyDesk.Tools;
 using static EasyDesk.CleanArchitecture.Domain.Metamodel.Results.ResultImports;
 
 namespace AuthService.Domain.Authentication.Accounts;
@@ -24,10 +23,6 @@ public class LoginService
     {
         return await loginMethod.VerifyCredentials(credentials)
             .ThenFlatMapAsync(userId => _accountRepository.GetById(userId))
-            .ThenRequire(account => VerifyEmailIsActive(account))
             .ThenMap(account => (_authenticationService.GenerateAuthenticationResult(account), account));
     }
-
-    private Result<Nothing> VerifyEmailIsActive(Account account) =>
-        RequireTrue(account.IsActive, () => new EmailNotConfirmed());
 }

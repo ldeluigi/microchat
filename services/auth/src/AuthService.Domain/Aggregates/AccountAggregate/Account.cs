@@ -14,14 +14,12 @@ public class Account : AggregateRoot
         Email email,
         Username username,
         Timestamp creation,
-        bool isActive,
         AccountSessions sessions,
         PasswordHash passwordHash)
     {
         Id = id;
         Email = email;
         PasswordHash = passwordHash;
-        IsActive = isActive;
         Username = username;
         Creation = creation;
         Sessions = sessions;
@@ -37,8 +35,6 @@ public class Account : AggregateRoot
 
     public AccountSessions Sessions { get; private set; }
 
-    public bool IsActive { get; private set; }
-
     public PasswordHash PasswordHash { get; private set; }
 
     public static Account Create(
@@ -52,29 +48,8 @@ public class Account : AggregateRoot
             email: email,
             username: username,
             creation: creation,
-            isActive: false,
             sessions: AccountSessions.Empty,
             passwordHash: passwordHash);
-    }
-
-    public static Account CreateAlreadyActive(
-        Guid id,
-        Email email,
-        Username username,
-        Timestamp creation,
-        AccountSessions sessions,
-        PasswordHash passwordHash)
-    {
-        var acc = new Account(
-            id,
-            email,
-            username,
-            creation,
-            true,
-            sessions,
-            passwordHash);
-        acc.IsActive = true;
-        return acc;
     }
 
     public void UpdateEmail(Email email) => Email = email;

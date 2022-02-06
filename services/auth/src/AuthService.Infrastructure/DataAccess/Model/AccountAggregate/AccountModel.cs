@@ -27,8 +27,6 @@ public class AccountModel
 
     public string Salt { get; set; }
 
-    public bool IsActive { get; set; }
-
     public virtual ICollection<SessionModel> Sessions { get; set; }
 
     public class Configuration : IEntityTypeConfiguration<AccountModel>

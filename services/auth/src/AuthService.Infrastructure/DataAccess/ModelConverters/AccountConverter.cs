@@ -20,7 +20,6 @@ public class AccountConverter : IModelConverter<Account, AccountModel>
             username: Username.From(model.Username),
             creation: model.Creation,
             email: Email.From(model.Email),
-            isActive: model.IsActive,
             sessions: sessions,
             passwordHash: new PasswordHash(model.Password, model.Salt));
     }
@@ -30,7 +29,6 @@ public class AccountConverter : IModelConverter<Account, AccountModel>
         destination.Id = origin.Id;
         destination.Username = origin.Username;
         destination.Email = origin.Email;
-        destination.IsActive = origin.IsActive;
         (destination.Password, destination.Salt) = origin.PasswordHash;
         destination.Creation = origin.Creation;
         destination.Sessions.Clear();
