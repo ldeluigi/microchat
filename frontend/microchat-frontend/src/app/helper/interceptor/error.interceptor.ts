@@ -23,7 +23,9 @@ export class ErrorInterceptor implements HttpInterceptor {
       }
       // console.log(err);
 
-      const error = err.error.errors || err.statusText;
+      const error =
+        err.error.errors[0] ?
+          err.error.errors[0].detail : (err.statusText ? err.statusText : "Generic Error");
       return throwError(() => new Error(error));
     }));
   }

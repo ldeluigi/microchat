@@ -90,31 +90,33 @@ export class AccountService {
 
   async updateEmail(newEmail: string): Promise<void> {
     const data = { email: newEmail };
-    return await this.update(data);
+    return await this.update(data, this.apiURL.authApiUrl);
   }
 
   async updateUsername(newusername: string): Promise<void> {
     const data = { username: newusername };
-    return await this.update(data);
+    return await this.update(data, this.apiURL.authApiUrl);
   }
 
   async updatePassword(oldPassword: string, newPassword: string): Promise<void> {
-    const data = { oldPassword, password: newPassword };
-    return await this.update(data);
+    const data = { oldPassword: oldPassword, newPassword: newPassword };
+    return await this.update(data, this.apiURL.passwordApiUrl);
   }
 
   // tslint:disable-next-line: no-any
-  private async update(data: any): Promise<void> {
+  private async update(data: any, url: string): Promise<void> {
     const user = this.extractUser();
     if (user === null) {
       this.logService.log('No user logged while try to update user info', LogLevel.Error);
       throw Error('Invalid user');
     }
-    this.http.put(`${this.apiURL.authApiUrl}/${user.userId}${this.authVersion}`, data)
-      .pipe(map(_ => {
-        this.logService.messageSnackBar('Data updated correctly');
-        return;
-      })).pipe(first()).subscribe();
+    this.http.put(`${url}/${user.userId}${this.authVersion}`, data)
+    .pipe(first()).subscribe({
+      next: _ => this.logService.messageSnackBar('Data updated correctly'),
+      error: (err: Error) => {
+        this.logService.errorSnackBar(err.message)
+      }
+    });
   }
 
   refreshToken(): Observable<TokenRefresh> {

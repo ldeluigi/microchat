@@ -1,10 +1,15 @@
-﻿using ChatService.Infrastructure.DataAccess.Model.MessageAggregate;
+﻿using ChatService.Application.Queries.PrivateChats.Outputs;
+using ChatService.Infrastructure.DataAccess.Model.MessageAggregate;
 using ChatService.Infrastructure.DataAccess.Model.UserAggregate;
+using EasyDesk.CleanArchitecture.Application.Mapping;
+using EasyDesk.Tools.Options;
 using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using static EasyDesk.Tools.Options.OptionImports;
 
 namespace ChatService.Infrastructure.DataAccess.Model.ChatAggregate;
 
@@ -48,5 +53,21 @@ public class PrivateChatModel
                 .HasForeignKey(x => x.PartecipantId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
         }
+    }
+
+    public class MappingToDetailedChatOutput : DirectMapping<PrivateChatModel, DetailedPrivateChatOutput>
+    {
+        // TODO testare se il campo Viewed è letto correttamente
+        public MappingToDetailedChatOutput()
+            : base(c => new DetailedPrivateChatOutput(
+                c.Id,
+                c.CreatorId.AsOption(),
+                c.PartecipantId.AsOption(),
+                c.CreationTime,
+                c.Messages.Count,
+                c.Messages.Where(m => m.Viewed).Count() > 0 ? Some(c.Messages.Where(m => m.Viewed).Count()) : None))
+        {
+        }
+
     }
 }

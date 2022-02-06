@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using ChatService.Domain.Aggregates.PrivateChatAggregate;
 using EasyDesk.Tools.Options;
 using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
@@ -10,13 +8,15 @@ namespace ChatService.Application.Queries.PrivateChats.Outputs;
 
 public record PrivateChatOfUserOutput(
     Guid Id,
-    IEnumerable<Guid> OtherParticipantIds,
+    Option<Guid> CreatorId,
+    Option<Guid> PartecipantId,
     Timestamp CreationTimestamp,
     Option<int> NumberOfUnreadMessages)
 {
     public static PrivateChatOfUserOutput From(PrivateChat privateChat, Guid asSeenBy) => new(
         Id: privateChat.Id,
-        OtherParticipantIds: privateChat.PartecipantId.Union(privateChat.CreatorId).Where(g => g != asSeenBy),
+        CreatorId: privateChat.CreatorId,
+        PartecipantId: privateChat.PartecipantId,
         CreationTimestamp: privateChat.CreationTime,
         NumberOfUnreadMessages: None);
 }

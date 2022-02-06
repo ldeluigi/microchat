@@ -22,7 +22,7 @@ export class ContactComponent implements OnInit {
 
   title(): string {
     return this.chat ? 
-            UserLeftChat(this.chat) ? 
+            !UserLeftChat(this.chat) ? 
                 this.chat.user?.name + " - " + this.chat.user?.id 
               : "User left chat"
             : "Waiting for chat"

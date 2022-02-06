@@ -3,22 +3,22 @@
   <p><span>id:</span><span> {{userInfo?.id || user?.id}}</span></p>
   <p><span>email:</span>
     <span [class]="showElem('email', false)">{{emailInitValue()}}</span>
-    <input type="email" [(ngModel)]="email" value="{{emailInitValue()}}" [class]="showElem('email', true)">
+    <input type="email" [(ngModel)]="email" [class]="showElem('email', true)">
     <i class="fas fa-pen {{modifiable()}}" (click)="changeVisibility('email')"></i>
   </p>
   <p><span>name:</span>
     <span [class]="showElem('name', false)">{{nameInitValue()}}</span>
-    <input type="text" [(ngModel)]="name" value="{{nameInitValue()}}" [class]="showElem('name', true)">
+    <input type="text" [(ngModel)]="name" [class]="showElem('name', true)">
     <i class="fas fa-pen {{modifiable()}}" (click)="changeVisibility('name')"></i>
   </p>
   <p><span>surname:</span>
     <span [class]="showElem('surname', false)">{{surnameInitValue()}}</span>
-    <input type="text" [(ngModel)]="surname" value="{{surnameInitValue()}}" [class]="showElem('surname', true)">
+    <input type="text" [(ngModel)]="surname" [class]="showElem('surname', true)">
     <i class="fas fa-pen {{modifiable()}}" (click)="changeVisibility('surname')"></i>
   </p>
   <p><span>username:</span>
     <span [class]="showElem('username', false)">{{usernameInitValue()}}</span>
-    <input type="text" [(ngModel)]="username" value="{{usernameInitValue()}}" [class]="showElem('username', true)">
+    <input type="text" [(ngModel)]="username" [class]="showElem('username', true)">
     <i class="fas fa-pen {{modifiable()}}" (click)="changeVisibility('username')"></i>
   </p>
   <p class="{{modifiable()}}"><span>password</span>

@@ -24,12 +24,12 @@ export class UserInfoComponent implements OnInit {
   userInfo: UserInfo | undefined;
   user: AuthUserInfo | undefined;
   
-  email: string = '';
-  name: string = '';
-  surname: string = '';
-  username: string = '';
-  oldPass: string = '';
-  newPass: string = '';
+  email: string | undefined;
+  name: string | undefined;
+  surname: string | undefined;
+  username: string | undefined;
+  oldPass: string | undefined;
+  newPass: string | undefined;
   hide = true;
   hideOld = true;
   visibility: Visibility = {
@@ -43,13 +43,21 @@ export class UserInfoComponent implements OnInit {
   constructor(
     private userService: UserService,
     private accountService: AccountService,
-    private logService: LogService,
     public dialogRef: MatDialogRef<UserInfoComponent>,
     @Inject(MAT_DIALOG_DATA) public data: {id: string}) { }
 
   ngOnInit(): void {
-    this.userService.usersInfo(this.data.id).subscribe(info => this.userInfo = info);
-    this.accountService.getInfo(this.data.id).subscribe(authInfo => this.user = authInfo);
+    this.userService.usersInfo(this.data.id).subscribe(info => {
+      this.userInfo = info;
+      this.name = this.nameInitValue();
+      this.surname = this.surnameInitValue();
+      this.username = this.usernameInitValue();
+    });
+    this.accountService.getInfo(this.data.id).subscribe(authInfo => {
+      this.user = authInfo;
+      this.username = this.usernameInitValue();
+      this.email = this.emailInitValue();
+    });
   }
 
   modifiable(): string {
@@ -68,22 +76,22 @@ export class UserInfoComponent implements OnInit {
 
   delete() {
     this.accountService.deleteUser().subscribe(_ => {
-      this.logService.messageSnackBar("account deleted");
       this.dialogRef.close();
+      this.accountService.logout("account deleted");
     });
   }
 
   update() {
-    if (this.email !== this.emailInitValue()) {
+    if (this.email && this.email !== this.emailInitValue()) {
       this.accountService.updateEmail(this.email);
     }
-    if (this.name !== this.nameInitValue()) {
+    if (this.name && this.name !== this.nameInitValue()) {
       this.userService.updateName(this.name);
     }
-    if (this.surname !== this.surnameInitValue()) {
+    if (this.surname && this.surname !== this.surnameInitValue()) {
       this.userService.updateSurname(this.surname);
     }
-    if (this.username !== this.usernameInitValue()) {
+    if (this.username && this.username !== this.usernameInitValue()) {
       this.accountService.updateUsername(this.username);
     }
     if (this.oldPass && this.newPass) {

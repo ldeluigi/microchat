@@ -35,7 +35,15 @@ import { ApiURLService } from './api-url.service';
   }
 
   public sendMessage(chatId: string, message: string): void {
-    this.connection?.invoke("SendMessageToAll", chatId, this.accountService.userValue?.userId, message)
+    this.connection?.invoke("message.send", chatId, message);
+  }
+
+  public editMessage(messageId: string, message: string): void {
+    this.connection?.invoke("message.edit", messageId, message);
+  }
+
+  public deleteMessage(messageId: string): void {
+    this.connection?.invoke("message.delete", messageId);
   }
   
   public disconnect() {
