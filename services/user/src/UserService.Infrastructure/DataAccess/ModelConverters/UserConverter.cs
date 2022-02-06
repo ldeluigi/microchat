@@ -10,10 +10,8 @@ public class UserConverter : IModelConverter<User, UserModel>
     public void ApplyChanges(User origin, UserModel destination)
     {
         destination.Id = origin.Id;
-        destination.Name = origin.Name
-            .Map(x => x.Value) | string.Empty;
-        destination.Surname = origin.Surname
-            .Map(x => x.Value) | string.Empty;
+        destination.Name = origin.Name.OrElseNull();
+        destination.Surname = origin.Surname.OrElseNull();
         destination.Username = origin.Username;
     }
 
@@ -22,7 +20,7 @@ public class UserConverter : IModelConverter<User, UserModel>
         return new User(
             id: model.Id,
             username: Username.From(model.Username),
-            name: Name.From(model.Name),
-            surname: Name.From(model.Surname));
+            name: model.Name.AsOption().Map(Name.From),
+            surname: model.Surname.AsOption().Map(Name.From));
     }
 }
