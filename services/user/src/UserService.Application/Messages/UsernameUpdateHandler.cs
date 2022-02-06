@@ -21,6 +21,9 @@ public class UsernameUpdateHandler : IMessageHandler<UsernameChanged>
     {
         await _userRepository.GetById(message.AccountId)
             .ThenIfSuccess(user =>
-                user.UpdateUsername(Username.From(message.Username)));
+            {
+                user.UpdateUsername(Username.From(message.Username));
+                _userRepository.Save(user);
+            });
     }
 }

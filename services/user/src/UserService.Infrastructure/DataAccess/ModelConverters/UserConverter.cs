@@ -10,8 +10,8 @@ public class UserConverter : IModelConverter<User, UserModel>
     public void ApplyChanges(User origin, UserModel destination)
     {
         destination.Id = origin.Id;
-        destination.Name = origin.Name.OrElseNull();
-        destination.Surname = origin.Surname.OrElseNull();
+        destination.Name = origin.Name.Map(n => n.Value).OrElseNull();
+        destination.Surname = origin.Surname.Map(n => n.Value).OrElseNull();
         destination.Username = origin.Username;
     }
 
