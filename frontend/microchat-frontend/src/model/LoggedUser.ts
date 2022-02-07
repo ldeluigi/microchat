@@ -1,7 +1,8 @@
 export interface LoggedUser {
-  userId: string;
-  accessToken: string;
-  refreshToken: string;
+  userId: string,
+  accessToken: string,
+  refreshToken: string,
+  expirationDate: string
 }
 
 export interface AuthUserInfo {
