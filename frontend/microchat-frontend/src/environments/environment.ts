@@ -4,10 +4,10 @@
 
 export const environment = {
   production: false,
-  chatPort: 8085,
-  authPort: 8081,
-  userPort: 8083,
-  apiUrl: 'https://localhost' //'http://localhost:8080'
+  chatPort: 8084,
+  authPort: 8080,
+  userPort: 8082,
+  apiUrl: 'http://localhost' //'http://localhost:8080'
 };
 
 /*
