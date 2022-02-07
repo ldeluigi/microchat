@@ -125,7 +125,6 @@ export class AccountService {
       this.logService.log('No user logged while try to refresh token', LogLevel.Error);
       return throwError(() => new Error('No user logged'));
     }
-    console.log("refreshing");
     return this.http.post<Response<TokenRefresh>>(`${this.apiURL.tokenApiUrl}/refresh${this.authVersion}`, { accessToken: user.accessToken, refreshToken: user.refreshToken })
       .pipe(map(a => {
         user.accessToken = a.data.accessToken;
