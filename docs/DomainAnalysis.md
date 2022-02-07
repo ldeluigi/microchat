@@ -8,6 +8,14 @@
 |Chat | Entity that contains messages and other metadata. A chat can involve at least one user.|
 |User | Entity that uses the chat.|
 
+## Use Case Scenario
+
+```plantuml
+@startuml Use Case Diagram
+!include UseCaseScenario.puml
+@enduml
+```
+
 ## Context Map
 
 ```plantuml
@@ -49,12 +57,11 @@
 @enduml
 ```
 
-#### Chat context
+#### Auth context
 ```plantuml
-@startuml User Domain Map
+@startuml Auth Domain Map
 !include User/User.Domain.Auth.puml
 @enduml
 ```
 
-#### User Constraints
 

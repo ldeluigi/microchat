@@ -1,0 +1,19 @@
+@startuml Use Case Diagram
+
+left to right direction
+:User: --> (create account)
+:User: --> (modify profile)
+
+(modify username) -up-|> (modify profile)
+(modify email) -up-|> (modify profile)
+(modify password) -up-|> (modify profile)
+(modify name) -up-|> (modify profile)
+(modify surname) -up-|> (modify profile)
+
+:User: -up-> (create chat)
+:User: -up-> (delete chat)
+:User: -up-> (send messagge)
+:User: -up-> (modify messagge)
+:User: -up-> (delete messagge)
+
+@enduml
