@@ -4,5 +4,6 @@ export interface Message {
   text: string,
   sendTime: Date,
   edited: boolean,
+  viewed: boolean,
   sender: string,
 }

@@ -6,6 +6,7 @@ export interface User {
 export interface Chat {
   id: string,
   hasNewMessages: number,
+  lastMessageTime: Date,
   user?: User
 }
 

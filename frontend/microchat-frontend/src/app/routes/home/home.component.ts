@@ -27,9 +27,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   search!: string;
   editingId: string | undefined;
   signalRSubscription!: Subscription;
+  newChatSubscription!: Subscription;
+  deletedChatSubscription!: Subscription;
   newIncomingMessage: Message | undefined;
   scrollPerc = 0;
   @ViewChild('chatSelector') appChat!: ElementRef;
+  createdWith: string | undefined;
 
   constructor(
     private userService: UserService,
@@ -55,23 +58,33 @@ export class HomeComponent implements OnInit, OnDestroy {
           }
         }
     });
+    this.deletedChatSubscription = this.signalrService.deletedChat().subscribe(chatId => {
+      this.chatList = this.chatList.filter(chat => chat.id !== chatId);
+      this.setActiveListToChatList(() => this.activeList =  this.activeList.filter(chat => chat.id !== chatId));
+    });
+    this.newChatSubscription = this.signalrService.newChat().subscribe(chat => {
+      this.chatList.unshift(chat);
+      if (chat.user?.id === this.createdWith) {
+        this.active = chat;
+      }
+      this.setActiveListToChatList(() => this.findChat());
+    });
     //$('#action_menu_btn').on("click", function(){ $('.action_menu').toggle(); });
 
     //getChatList
-    this.chatList.push({id:"a6e155fa-3651-4358-97d3-6394942c2daa", hasNewMessages:8, user: {id: "c6ddc9d5-6a84-4fc1-972f-57b2d866aadb", name: "ThommyN1"}});
-    this.chatList.push({id:"f04cc7ad-008c-4662-a581-e0c53aa53167", hasNewMessages:5});
-    this.chatList.push({id:"3", hasNewMessages:0});
-    this.chatList.push({id:"4", hasNewMessages:2});
+    this.chatList.push({id:"a6e155fa-3651-4358-97d3-6394942c2daa", hasNewMessages:8, lastMessageTime: new Date(2021, 11, 1, 16), user: {id: "c6ddc9d5-6a84-4fc1-972f-57b2d866aadb", name: "ThommyN1"}});
+    this.chatList.push({id:"f04cc7ad-008c-4662-a581-e0c53aa53167", hasNewMessages:5, lastMessageTime: new Date(2021, 11, 1, 13)});
+    this.chatList.push({id:"3", hasNewMessages:0, lastMessageTime: new Date(2021, 11, 1, 14)});
+    this.chatList.push({id:"4", hasNewMessages:2, lastMessageTime: new Date(2021, 11, 1, 15)});
+    this.chatList.sort((chat1, chat2) => chat2.lastMessageTime.getTime() - chat1.lastMessageTime.getTime());
     this.initActiveList();
   }
       
   ngOnDestroy(): void {
-    if (this.signalRSubscription) {
-      this.signalRSubscription.unsubscribe();
-    }
-    if (this.signalrService) {
-      this.signalrService.disconnect();
-    }
+    this.signalRSubscription.unsubscribe();
+    this.deletedChatSubscription.unsubscribe();
+    this.newChatSubscription.unsubscribe();
+    this.signalrService.disconnect();
   }
 
   initActiveList(): void {
@@ -98,7 +111,12 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.active = chat;
     } else if (this.search) { //searched but not already existing
       console.log("TODO: create with " + chat.user?.id);
-      this.search = "";
+      if (chat.user) {
+        this.signalrService.createChat(chat.user?.id).then(_ => {
+          this.createdWith = chat.user?.id;
+          this.search = "";
+        });
+      }
       //this.chatService.createChat(chat.user).subscribe(newChat => this.active = newChat); // chat.user list or not?
     }
     this.initActiveList();
@@ -119,13 +137,10 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.logService.errorSnackBar("unable to send messages to disabled chat");
     } else {
       if (this.editingId) {
-        this.signalrService.editMessage(this.editingId, this.newMessage);
+        this.signalrService.editMessage(this.editingId, this.newMessage).then(_ => this.newMessage = "");
       } else {
-        //this.chatService.sendMessage(this.active.id, this.newMessage, this.accountservice.user)
-        console.log("TODO: send " + this.newMessage);
-        this.signalrService.sendMessage(this.active.id, this.newMessage);
+        this.signalrService.sendMessage(this.active.id, this.newMessage).then(_ => this.newMessage = "");
       }
-      this.newMessage = "";
     }
   }
   
@@ -134,9 +149,10 @@ export class HomeComponent implements OnInit, OnDestroy {
       console.log("TODO: richiesta chats", this.search);
       let foundChatList: Chat[] = []
       this.userService.usersSearched(this.search).subscribe(users => {
-        users.forEach(user => foundChatList.push({id: "", hasNewMessages: 0, user: toUser(user)}))
+        users.forEach(user => 
+          foundChatList.push({id: "", hasNewMessages: 0, lastMessageTime: new Date, user: toUser(user)}))
       })
-      this.setActiveListToChatList(() => {this.activeList = foundChatList});
+      this.setActiveListToChatList(() => this.activeList = foundChatList);
     } else {
       this.initActiveList();
     }
@@ -193,6 +209,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   deleteChat() {
+    this.signalrService.deleteChat(this.active.id).then(_ => this.initActiveList());
     console.log("TODO: delete chat");
   }
 }

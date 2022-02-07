@@ -23,10 +23,14 @@ export class ErrorInterceptor implements HttpInterceptor {
       }
       // console.log(err);
 
+      try {
       const error =
         err.error.errors[0] ?
-          err.error.errors[0].detail : (err.statusText ? err.statusText : "Generic Error");
-      return throwError(() => new Error(error));
+          err.error.errors[0].detail : (err.statusText ? err.statusText : "Unknown Error");
+        return throwError(() => new Error(error));
+      } catch (ex) {
+        return throwError(() => new Error("Unknown error occured"));
+      }
     }));
   }
 
