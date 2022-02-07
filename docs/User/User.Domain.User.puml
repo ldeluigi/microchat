@@ -21,14 +21,10 @@ $aggregate(User) {
         + value: String
     }
 
-    $value(Email) {
-        + value: String
-    }
     
     Name -o User
     Surname -o User
     Username -o User
-    Email -o User
 }
 
 
