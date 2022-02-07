@@ -9,76 +9,80 @@ x-mssql-config: &mssql
     SA_PASSWORD: ${DB_PASSWORD:?password not set}
     
 services:
-  # auth:
-  #   depends_on:
-  #     - rabbitmq
-  #     - dbs
-  #     - redis
-  #   build:
-  #     context: "./auth/"
-  #     dockerfile: "src/AuthService.Web/Dockerfile"
-  #     labels:
-  #       - com.microsoft.visual-studio.project-name=AuthService.Web
-  #   restart: on-failure
-  #   image: authserviceweb:latest
-  #   ports:
-  #     - 8080:80
-  #     - 8081:443
-  #   environment:
-  #     MICROCHAT_JwtScopes__Global__Key: ${JWT_SECRET?secret unset}
-  #     MICROCHAT_JwtScopes__Global__Lifetime: 00:05:00
-  #     MICROCHAT_Migrations__RunOnStartup: 'true'
-  #     MICROCHAT_ConnectionStrings__MainDb: Server=dbs,1433;Database=AuthDb;User Id=SA;Password=${DB_PASSWORD}
-  #     MICROCHAT_ConnectionStrings__RabbitMq: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
+  auth:
+    depends_on:
+      - rabbitmq
+      - dbs
+    build:
+      context: "./auth/"
+      dockerfile: "src/AuthService.Web/Dockerfile"
+      labels:
+        - com.microsoft.visual-studio.project-name=AuthService.Web
+    restart: on-failure
+    image: authserviceweb:latest
+    ports:
+      - 8080:80
+      - 8081:443
+    environment:
+      MICROCHAT_JwtScopes__Global__SecretKey: ${JWT_SECRET?secret unset}
+      MICROCHAT_JwtScopes__Global__Authority__Lifetime: 00:05:00
+      MICROCHAT_JwtScopes__Global__Authority__Issuer: ${ISSUER? Issuer unset}
+      MICROCHAT_JwtScopes__Global__Authority__Audience: ${AUDIENCE? Audience unset}
+      MICROCHAT_JwtScopes__Global__Validation__ValidIssuers__0: ${ISSUER? Issuer unset}
+      MICROCHAT_JwtScopes__Global__Validation__ValidAudiences__0: ${AUDIENCE? Audience unset}
+      MICROCHAT_Migrations__RunOnStartup: 'true'
+      MICROCHAT_ConnectionStrings__MainDb: Server=dbs,1433;Database=AuthDb;User Id=SA;Password=${DB_PASSWORD}
+      MICROCHAT_ConnectionStrings__RabbitMq: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
   dbs:
     <<: *mssql
     ports:
       - 8005:1433
     volumes:
       - "db_volume:/var/opt/mssql"
-  # user:
-  #   depends_on:
-  #     - rabbitmq
-  #     - dbs
-  #     - redis
-  #   build:
-  #     context: "./user/"
-  #     dockerfile: "src/UserService.Web/Dockerfile"
-  #     labels:
-  #       - com.microsoft.visual-studio.project-name=UserService.Web
-  #   restart: on-failure
-  #   image: userserviceweb:latest
-  #   ports:
-  #     - 8082:80
-  #     - 8083:443
-  #   environment:
-  #     MICROCHAT_JwtScopes__Global__Key: ${JWT_SECRET?secret unset}
-  #     MICROCHAT_JwtScopes__Global__Lifetime: 00:05:00
-  #     MICROCHAT_Migrations__RunOnStartup: 'true'
-  #     MICROCHAT_ConnectionStrings__MainDb: Server=dbs,1433;Database=UserDb;User Id=SA;Password=${DB_PASSWORD}
-  #     MICROCHAT_ConnectionStrings__RabbitMq: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
-  # chat:
-  #   depends_on:
-  #     - rabbitmq
-  #     - dbs
-  #     - redis
-  #   build:
-  #     context: "./chat/"
-  #     dockerfile: "src/ChatService.Web/Dockerfile"
-  #     labels:
-  #       - com.microsoft.visual-studio.project-name=ChatService.Web
-  #   restart: on-failure
-  #   image: chatserviceweb:latest
-  #   ports:
-  #     - 8084:80
-  #     - 8085:443
-  #   environment:
-  #     MICROCHAT_JwtScopes__Global__Key: ${JWT_SECRET?secret unset}
-  #     MICROCHAT_JwtScopes__Global__Lifetime: 00:05:00
-  #     MICROCHAT_Migrations__RunOnStartup: 'true'
-  #     MICROCHAT_ConnectionStrings__MainDb: Server=dbs,1433;Database=ChatDb;User Id=SA;Password=${DB_PASSWORD}
-  #     MICROCHAT_ConnectionStrings__RabbitMq: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
-  #     MICROCHAT_ConnectionStrings__Redis: redis:6379
+  user:
+    depends_on:
+      - rabbitmq
+      - dbs
+    build:
+      context: "./user/"
+      dockerfile: "src/UserService.Web/Dockerfile"
+      labels:
+        - com.microsoft.visual-studio.project-name=UserService.Web
+    restart: on-failure
+    image: userserviceweb:latest
+    ports:
+      - 8082:80
+      - 8083:443
+    environment:
+      MICROCHAT_JwtScopes__Global__SecretKey: ${JWT_SECRET?secret unset}
+      MICROCHAT_JwtScopes__Global__Validation__ValidIssuers__0: ${ISSUER? Issuer unset}
+      MICROCHAT_JwtScopes__Global__Validation__ValidAudiences__0: ${AUDIENCE? Audience unset}
+      MICROCHAT_Migrations__RunOnStartup: 'true'
+      MICROCHAT_ConnectionStrings__MainDb: Server=dbs,1433;Database=UserDb;User Id=SA;Password=${DB_PASSWORD}
+      MICROCHAT_ConnectionStrings__RabbitMq: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
+  chat:
+    depends_on:
+      - rabbitmq
+      - dbs
+      - redis
+    build:
+      context: "./chat/"
+      dockerfile: "src/ChatService.Web/Dockerfile"
+      labels:
+        - com.microsoft.visual-studio.project-name=ChatService.Web
+    restart: on-failure
+    image: chatserviceweb:latest
+    ports:
+      - 8084:80
+      - 8085:443
+    environment:
+      MICROCHAT_JwtScopes__Global__SecretKey: ${JWT_SECRET?secret unset}
+      MICROCHAT_JwtScopes__Global__Validation__ValidIssuers__0: ${ISSUER? Issuer unset}
+      MICROCHAT_JwtScopes__Global__Validation__ValidAudiences__0: ${AUDIENCE? Audience unset}
+      MICROCHAT_Migrations__RunOnStartup: 'true'
+      MICROCHAT_ConnectionStrings__MainDb: Server=dbs,1433;Database=ChatDb;User Id=SA;Password=${DB_PASSWORD}
+      MICROCHAT_ConnectionStrings__RabbitMq: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
+      MICROCHAT_ConnectionStrings__Redis: redis:6379
   rabbitmq: 
     image: rabbitmq:3.9 #-management
     environment:
