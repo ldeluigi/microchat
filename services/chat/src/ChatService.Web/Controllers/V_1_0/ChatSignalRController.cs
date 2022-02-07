@@ -35,21 +35,24 @@ public class ChatSignalRController : AbstractMediatrHub
     public Task SendMessage(Guid chatId, string text)
     {
         throw new NotImplementedException();
+
         // chatId.ToString()
-        return Clients.Group("chatId").SendAsync("ReceiveMessage", text); // TODO: create object MessageOutput
+        // return Clients.Group("chatId").SendAsync("ReceiveMessage", text); // TODO: create object MessageOutput
     }
 
     [HubMethodName("message.edit")]
     public Task EditMessage(Guid messageId, string text)
     {
         throw new NotImplementedException();
-        return Clients.Group("chatId").SendAsync("UpdateMessage", text); // TODO: create object MessageOutput
+
+        // return Clients.Group("chatId").SendAsync("UpdateMessage", text); // TODO: create object MessageOutput
     }
 
     [HubMethodName("message.delete")]
     public Task DeleteMessage(Guid messageId)
     {
         throw new NotImplementedException();
-        return Clients.Group("chatId").SendAsync("DeleteMessage", messageId.ToString()); // TODO: create object MessageOutput
+
+        // return Clients.Group("chatId").SendAsync("DeleteMessage", messageId.ToString()); // TODO: create object MessageOutput
     }
 }

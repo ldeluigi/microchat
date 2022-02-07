@@ -17,8 +17,10 @@ describe('HomeComponent', () => {
   let mockSignalR;
 
   beforeEach(async () => {
-    mockSignalR = jasmine.createSpyObj(['connect', 'getMessage', 'disconnect']);
-    mockSignalR.getMessage.and.returnValue(new Observable<Message>());
+    mockSignalR = jasmine.createSpyObj(['connect', 'newMessage', 'editedMessage', 'deletedMessage', 'disconnect']);
+    mockSignalR.newMessage.and.returnValue(new Observable<Message>());
+    mockSignalR.editedMessage.and.returnValue(new Observable<Message>());
+    mockSignalR.deletedMessage.and.returnValue(new Observable<string>());
     await TestBed.configureTestingModule({
       imports: [
         MatDialogModule,
