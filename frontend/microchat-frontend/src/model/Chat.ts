@@ -10,6 +10,15 @@ export interface Chat {
   user?: User
 }
 
+export interface ChatDto {
+  creation: string,
+  creator: string,
+  id: string,
+  partecipant: string
+}
+
+
+
 export function UserLeftChat(chat: Chat) {
   return chat.user ? false : true;
 }
