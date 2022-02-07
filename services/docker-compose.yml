@@ -78,6 +78,7 @@ services:
   #     MICROCHAT_Migrations__RunOnStartup: 'true'
   #     MICROCHAT_ConnectionStrings__MainDb: Server=dbs,1433;Database=ChatDb;User Id=SA;Password=${DB_PASSWORD}
   #     MICROCHAT_ConnectionStrings__RabbitMq: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
+  #     MICROCHAT_ConnectionStrings__Redis: redis:6379
   rabbitmq: 
     image: rabbitmq:3.9 #-management
     environment:

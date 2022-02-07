@@ -89,7 +89,7 @@ public class Startup : BaseStartup
                     .ConfigureTransport(t =>
                         t.UseRabbitMq(Configuration.GetConnectionString("RabbitMq"), ServiceName)))
             .AddModule<TopicSubscriberModule>()
-            .AddModule(new SignalRModule(Environment.IsDevelopment()));
+            .AddModule(new SignalRModule(Configuration.GetConnectionString("Redis"), Environment.IsDevelopment()));
     }
 
     public override void Configure(IApplicationBuilder app)
