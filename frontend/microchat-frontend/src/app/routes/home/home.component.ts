@@ -131,7 +131,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.startTimeout();
     if (!this.isWriting) {
       this.isWriting = true;
-      console.log("TODO: sta scrivendo");
+      //console.log("TODO: sta scrivendo");
     }
   }
 
@@ -166,7 +166,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     window.setTimeout(() => {
       if (this.isWriting) {
         if (Date.now() - this.lastTimeWriting > isWritingTime) {
-          console.log("TODO: non sta scrivendo");
+          //console.log("TODO: non sta scrivendo");
           this.isWriting = false;
         } else {
           this.startTimeout();
@@ -182,9 +182,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         Id: this.active?.id,
         CreationTimestamp: "05/02/2022",
         NumberOfMessages: 10};
-      const creationDate = new Date();
-      console.log("TODO date from utc");
-      const days = Math.ceil(creationDate.getTime() - Date.now() / (1000 * 3600 * 24));
+      const days = Math.ceil(Date.parse(detailedChat.CreationTimestamp) - new Date().getTimezoneOffset() - Date.now() / (1000 * 3600 * 24));
       const stats: Stats = { 
         totalMessages: detailedChat.NumberOfMessages,
         avgWeekMsg: detailedChat.NumberOfMessages / Math.ceil(days / 7),
@@ -217,12 +215,12 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   deleteChat() {
     if (this.active) {
+      console.log("TODO: delete chat");
       this.signalrService.deleteChat(this.active.id)
         .then(_ => this.initActiveList())
         .catch(_ => window.location.reload());
     } else {
       this.logService.messageSnackBar("Unable to delete missing chat");
     }
-    console.log("TODO: delete chat");
   }
 }
