@@ -29,7 +29,7 @@ export class ContactComponent implements OnInit {
   }
 
   contactInfo(): string {
-    return this.chat && this.chat.user ? this.chat.user.name + " is online" : "";
+    return this.chat && this.chat.hasNewMessages > 0 ? this.chat.hasNewMessages + " new messages" : " No new messages";
   }
 
   getUserInfo(event: Event) {
