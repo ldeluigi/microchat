@@ -12,7 +12,7 @@ import { Message } from 'src/model/Message';
   styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
-  @Input() chat!: Chat;
+  @Input() chat: Chat | undefined;
   @Input() message!: Message | undefined;
   @Input() scrollPerc!: number;
 
@@ -64,30 +64,33 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['chat']) {
-      console.log("TODO: changed Chat");
-      this.elementRef.nativeElement.scrollTop = this.elementRef.nativeElement.scrollHeight;
       this.messages = [];
-      this.getOldMessages();
-      this.messages.filter(m => m.viewed && m.sender !== this.accountService.userValue?.userId).forEach(m => {
-        this.signalrService.viewedMessage(m.id);
-      })
+      if (changes['chat'].currentValue) {
+        console.log("TODO: changed Chat");
+        this.elementRef.nativeElement.scrollTop = this.elementRef.nativeElement.scrollHeight;
+        this.getOldMessages();
+        this.messages.filter(m => m.viewed && m.sender !== this.accountService.userValue?.userId).forEach(m => {
+          this.signalrService.viewedMessage(m.id);
+        });
+        this.chat!.hasNewMessages = 0;
+        this.addToMessages(
+          {id: "id1",
+            chatId: changes['chat'].currentValue.id,
+            text:"Grazie, anche a me e famiglia!",
+            sendTime: new Date(2021,11,25,12,4),
+            edited:false,
+            viewed:true,
+            sender:"Thommy"
+          }, true)
+      }
     }
-    this.addToMessages(
-      {id: "id1",
-        chatId: this.chat.id,
-        text:"Grazie, anche a me e famiglia!",
-        sendTime: new Date(2021,11,25,12,4),
-        edited:false,
-        viewed:true,
-        sender:"Thommy"
-      }, true)
     if (changes['message'] && changes['message'].currentValue) {
       this.addToMessages(changes['message'].currentValue, true);
       if (changes['message'].currentValue.sender !== this.accountService.userValue?.userId) {
         this.signalrService.viewedMessage(changes['message'].currentValue.id);
       }
     }
-    if (changes['scrollPerc'] && changes['scrollPerc'].currentValue < 15) {
+    if (changes['scrollPerc'] && changes['scrollPerc'].currentValue < 15 && this.chat) {
       console.log("TODO: carica altri messaggi");
       changes['scrollPerc'].currentValue;
     }
@@ -114,14 +117,16 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
   }
 
   getOldMessages() {
-    var receivedMessages = [
-      {id: "id", chatId: this.chat.id, text:"Buon Natale", sendTime: new Date(2021,11,25,12),edited:true,viewed:true,sender:"Simo"},
-      {id: "id1", chatId: this.chat.id, text:"Grazie, anche a te e famiglia!", sendTime: new Date(2021,11,25,12,1), edited:false,viewed:false,sender:"Thommy"},
-      {id: "id2", chatId: this.chat.id, text:":)", sendTime: new Date(2021,11,25,12,2), edited:false,viewed:true,sender:"Simo"},
-      {id: "id3", chatId: this.chat.id, text:"Dai ricominciamo a lavorare al proj", sendTime: new Date(2021,11,26,12,3), edited:true,viewed:true,sender:"Thommy"}
-    ]
-    var count = 0;
-    receivedMessages.reverse().forEach(message => count += this.addToMessages(message, false) ? 1 : 0);
+    if (this.chat) {
+      var receivedMessages = [
+        {id: "id", chatId: this.chat.id, text:"Buon Natale", sendTime: new Date(2021,11,25,12),edited:true,viewed:true,sender:"Simo"},
+        {id: "id1", chatId: this.chat.id, text:"Grazie, anche a te e famiglia!", sendTime: new Date(2021,11,25,12,1), edited:false,viewed:false,sender:"Thommy"},
+        {id: "id2", chatId: this.chat.id, text:":)", sendTime: new Date(2021,11,25,12,2), edited:false,viewed:true,sender:"Simo"},
+        {id: "id3", chatId: this.chat.id, text:"Dai ricominciamo a lavorare al proj", sendTime: new Date(2021,11,26,12,3), edited:true,viewed:true,sender:"Thommy"}
+      ]
+      var count = 0;
+      receivedMessages.reverse().forEach(message => count += this.addToMessages(message, false) ? 1 : 0);
+    }
   }
 
   getId(message: Message) {

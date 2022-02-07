@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { Message } from 'src/model/Message';
+import { first, Observable, Subject } from 'rxjs';
+import { Message, MessageDto, toMessage } from 'src/model/Message';
 import * as signalR from "@microsoft/signalr";
 import { AccountService } from './account.service';
 import { ApiURLService } from './api-url.service';
 import { LogService } from './log.service';
-import { Chat } from 'src/model/Chat';
+import { Chat, ChatDto } from 'src/model/Chat';
+import { UserService } from './user.service';
+import { toUser } from 'src/model/UserInfo';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +22,7 @@ import { Chat } from 'src/model/Chat';
    
   constructor(
     private accountService: AccountService,
+    private userService: UserService,
     private logService: LogService,
     private apiUrlService: ApiURLService
   ) {
@@ -31,27 +34,55 @@ import { Chat } from 'src/model/Chat';
   }
 
   public connect(): Promise<void> {
-    this.connection = new signalR.HubConnectionBuilder()
-        .withUrl(this.apiUrlService.chatApiUrl, { accessTokenFactory: () => this.accountService.userValue?.accessToken || "" })
-        .configureLogging(signalR.LogLevel.Trace)
-        .build();
-    var started = this.connection.start().catch(err => console.log(err));
-    this.connection.on('ReceiveMessage', (message) => {
-      this.newMessage$.next(JSON.parse(message));
-    });
-    this.connection.on('UpdateMessage', (message) => {
-      this.editMessage$.next(JSON.parse(message));
-    });
-    this.connection.on('DeleteMessage', (messageId) =>{
-      this.messageDeleted$.next(messageId);
-    });
-    this.connection.on('DeleteChat', (chatId) =>{
-      this.chatDeleted$.next(chatId);
-    });
-    this.connection.on('CreateChat', (chat) =>{
-      this.chatCreated$.next(JSON.parse(chat));
-    });
-    return started;
+    var started = Promise.resolve();
+      if (this.isConnected()) {
+        console.log(this.accountService.userValue?.accessToken);
+        this.connection = new signalR.HubConnectionBuilder()
+            .withUrl(this.apiUrlService.chatApiUrl, { accessTokenFactory: () => this.accountService.userValue?.accessToken || "" })
+            .configureLogging(signalR.LogLevel.Trace)
+            .withAutomaticReconnect()
+            .build();
+        started = this.connection.start().catch(err => {
+          if (this.accountService.userValue) {
+            if (Date.parse(this.accountService.userValue?.expirationDate) - new Date().getTimezoneOffset() * 60 * 1000 > Date.now()) {
+              this.accountService.refreshToken().pipe(first()).subscribe(_ => this.connect());
+            }
+            console.log(err);
+          }
+        });
+      }
+      this.connection!.on('message.received', (message : MessageDto) => {
+        console.log(message);
+        this.newMessage$.next(toMessage(message));
+      });
+      this.connection!.on('message.received', (message : MessageDto) => {
+        console.log(message);
+        this.newMessage$.next(toMessage(message));
+      });
+      this.connection!.on('message.edited', (message) => {
+        console.log(message);
+        this.editMessage$.next(toMessage(message));
+      });
+      this.connection!.on('message.deleted', (messageId) => {
+        console.log(messageId);
+        this.messageDeleted$.next(messageId);
+      });
+      this.connection!.on('message.viewed', _ => {}); // ignore viewed message
+      this.connection!.on('chat.deleted', (chat: ChatDto) => {
+        this.chatDeleted$.next(chat.id);
+      });
+      this.connection!.on('chat.created', (chatDto : ChatDto) => {
+        var userId = chatDto.creator;
+        if (this.accountService.userValue?.userId === chatDto.creator) {
+          userId = chatDto.partecipant;
+        }
+        this.userService.usersInfo(userId).pipe(first()).subscribe(info => {
+          var newChat: Chat = {id: chatDto.id, hasNewMessages: 0, lastMessageTime: new Date, user: toUser(info)}
+          this.chatCreated$.next(newChat);
+        })
+      });
+      this.connection!.on('error', _ => this.logService.errorSnackBar("an error has occured"));
+      return started;
   }
 
   public newMessage(): Observable<Message> {
@@ -75,11 +106,17 @@ import { Chat } from 'src/model/Chat';
   }
 
   private reconnectIfNecessary(): Promise<void> {
-    return this.connection?.state !== "Connected" ? this.connect() : Promise.resolve()
+    return this.isConnected() ? this.connect() : Promise.resolve()
+  }
+
+  public isConnected(): boolean {
+    return this.connection?.state !== "Connected";
   }
 
   private useConnection(action: (_: any) => Promise<void>): Promise<void> {
-    return this.reconnectIfNecessary().then(action).catch(err => this.logService.errorSnackBar(err));
+    return this.reconnectIfNecessary()
+      .then(action)
+      .catch(err => this.logService.errorSnackBar(err.message ? err.message : err));
   }
 
   public sendMessage(chatId: string, message: string): Promise<void> {
