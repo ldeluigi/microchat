@@ -25,10 +25,13 @@ public class GetPrivateChatsOfUserHandler : PaginatedQueryHandlerBase<GetPrivate
         _userInfoProvider = userInfoProvider;
     }
 
-    protected override async Task<Response<Page<PrivateChatOfUserOutput>>> Handle(GetPrivateChatsOfUser request) =>
-        await _chatContext.PrivateChats
-            .Where(c => c.CreatorId == request.UserId || c.PartecipantId == request.UserId)
-            .OrderBy(c => c.Id)
-            .Select(c => PrivateChatModelMapper.ConvertModelToOutput(c, _userInfoProvider.RequireUserId()))
-            .GetPageAsync(request.Pagination);
+    protected override async Task<Response<Page<PrivateChatOfUserOutput>>> Handle(GetPrivateChatsOfUser request)
+    {
+        var userId = _userInfoProvider.RequireUserId();
+        return await _chatContext.PrivateChats
+        .Where(c => c.CreatorId == request.UserId || c.PartecipantId == request.UserId)
+        .OrderBy(c => c.Id)
+        .GroupJoin(_chatContext.PrivateMessages, on => on.Id, on => on.ChatId, (chat, messages) => PrivateChatModelMapper.ConvertModelToOutput(chat, messages, userId))
+        .GetPageAsync(request.Pagination);
+    }
 }

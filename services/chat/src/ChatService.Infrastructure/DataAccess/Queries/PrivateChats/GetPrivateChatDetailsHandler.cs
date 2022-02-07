@@ -22,12 +22,13 @@ public class GetPrivateChatDetailsHandler : RequestHandlerBase<GetPrivateChatDet
     protected override async Task<Response<DetailedPrivateChatOutput>> Handle(GetPrivateChatDetails request) =>
         await _chatContext.PrivateChats
             .Where(c => c.Id == request.Id)
-            .Select(privateChat => new DetailedPrivateChatOutput(
-                privateChat.Id,
-                privateChat.CreatorId.AsOption(),
-                privateChat.PartecipantId.AsOption(),
-                privateChat.CreationTime,
-                privateChat.Messages.Count()))
+            .GroupJoin(_chatContext.PrivateMessages, on => on.Id, on => on.ChatId, (chat, messages) =>
+                new DetailedPrivateChatOutput(
+                    chat.Id,
+                    chat.CreatorId.AsOption(),
+                    chat.PartecipantId.AsOption(),
+                    chat.CreationTime,
+                    messages.Count()))
             .FirstOptionAsync()
             .ThenOrElseError(Errors.NotFound);
 }

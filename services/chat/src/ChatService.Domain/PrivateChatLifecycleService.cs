@@ -11,16 +11,21 @@ namespace ChatService.Domain;
 
 public record PrivateChatAlreadyExistsBetween(Guid User1, Guid User2) : DomainError;
 
+public record PrivateChatDeleted(Guid ChatId) : DomainEvent;
+
 public class PrivateChatLifecycleService
 {
     private readonly IPrivateChatRepository _privateChatRepository;
+    private readonly IDomainEventNotifier _domainEventNotifier;
     private readonly ITimestampProvider _timestampProvider;
 
     public PrivateChatLifecycleService(
         IPrivateChatRepository privateChatRepository,
+        IDomainEventNotifier domainEventNotifier,
         ITimestampProvider timestampProvider)
     {
         _privateChatRepository = privateChatRepository;
+        _domainEventNotifier = domainEventNotifier;
         _timestampProvider = timestampProvider;
     }
 
@@ -47,6 +52,7 @@ public class PrivateChatLifecycleService
     {
         return await _privateChatRepository
                 .GetById(id)
-                .ThenIfSuccess(chat => _privateChatRepository.Remove(chat));
+                .ThenIfSuccess(chat => _privateChatRepository.Remove(chat))
+                .ThenIfSuccess(chat => _domainEventNotifier.Notify(new PrivateChatDeleted(chat.Id)));
     }
 }

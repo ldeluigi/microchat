@@ -1,6 +1,4 @@
-﻿using ChatService.Infrastructure.DataAccess.Model.ChatAggregate;
-using ChatService.Infrastructure.DataAccess.Model.UserAggregate;
-using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
+﻿using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -23,10 +21,6 @@ public class PrivateMessageModel
 
     public bool Viewed { get; set; }
 
-    public UserModel Sender { get; set; }
-
-    public PrivateChatModel Chat { get; set; }
-
     public class Configuration : IEntityTypeConfiguration<PrivateMessageModel>
     {
         public void Configure(EntityTypeBuilder<PrivateMessageModel> builder)
@@ -38,16 +32,6 @@ public class PrivateMessageModel
                 .IsClustered();
 
             builder.HasIndex(x => x.ChatId);
-
-            builder.HasOne(x => x.Sender)
-                .WithMany()
-                .HasForeignKey(x => x.SenderId)
-                .OnDelete(DeleteBehavior.SetNull);
-
-            builder.HasOne(x => x.Chat)
-                .WithMany(c => c.Messages)
-                .HasForeignKey(x => x.ChatId)
-                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

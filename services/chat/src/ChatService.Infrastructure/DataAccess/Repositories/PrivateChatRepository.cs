@@ -6,6 +6,7 @@ using EasyDesk.CleanArchitecture.Domain.Metamodel;
 using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,12 +14,15 @@ namespace ChatService.Infrastructure.DataAccess.Repositories;
 
 public class PrivateChatRepository : EfCoreRepository<PrivateChat, PrivateChatModel, ChatContext>, IPrivateChatRepository
 {
+    private readonly ChatContext _context;
+
     public PrivateChatRepository(
         ChatContext context,
         IModelConverter<PrivateChat, PrivateChatModel> modelConverter,
         IDomainEventNotifier domainEventNotifier)
         : base(context, modelConverter, domainEventNotifier)
     {
+        _context = context;
     }
 
     public async Task<bool> ChatAlreadyExistBetween(Guid user1, Guid user2) =>
@@ -27,9 +31,9 @@ public class PrivateChatRepository : EfCoreRepository<PrivateChat, PrivateChatMo
             || (c.PartecipantId == user2 && c.CreatorId == user1))
         .AnyAsync();
 
-    public void DeleteOrphanChats()
+    private void DeleteOrphanChats(IQueryable<PrivateChatModel> orphanChats)
     {
-        var orphanChats = DbSet.Where(c => c.PartecipantId == null && c.CreatorId == null);
+        _context.PrivateMessages.RemoveRange(_context.PrivateMessages.Join(orphanChats, on => on.ChatId, on => on.Id, (m, c) => m));
         DbSet.RemoveRange(orphanChats);
     }
 

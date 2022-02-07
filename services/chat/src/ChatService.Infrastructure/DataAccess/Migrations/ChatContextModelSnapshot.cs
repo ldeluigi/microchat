@@ -85,8 +85,6 @@ namespace ChatService.Infrastructure.DataAccess.Migrations
 
                     SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("SendTime"));
 
-                    b.HasIndex("SenderId");
-
                     b.ToTable("PrivateMessages", "domain");
                 });
 
@@ -96,58 +94,9 @@ namespace ChatService.Infrastructure.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("LastSeenTime")
-                        .HasColumnType("datetime");
-
                     b.HasKey("Id");
 
                     b.ToTable("Users", "domain");
-                });
-
-            modelBuilder.Entity("ChatService.Infrastructure.DataAccess.Model.ChatAggregate.PrivateChatModel", b =>
-                {
-                    b.HasOne("ChatService.Infrastructure.DataAccess.Model.UserAggregate.UserModel", "Creator")
-                        .WithMany("PrivateChatCreated")
-                        .HasForeignKey("CreatorId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("ChatService.Infrastructure.DataAccess.Model.UserAggregate.UserModel", "Participant")
-                        .WithMany("PrivateChatJoined")
-                        .HasForeignKey("PartecipantId");
-
-                    b.Navigation("Creator");
-
-                    b.Navigation("Participant");
-                });
-
-            modelBuilder.Entity("ChatService.Infrastructure.DataAccess.Model.MessageAggregate.PrivateMessageModel", b =>
-                {
-                    b.HasOne("ChatService.Infrastructure.DataAccess.Model.ChatAggregate.PrivateChatModel", "Chat")
-                        .WithMany("Messages")
-                        .HasForeignKey("ChatId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ChatService.Infrastructure.DataAccess.Model.UserAggregate.UserModel", "Sender")
-                        .WithMany()
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.Navigation("Chat");
-
-                    b.Navigation("Sender");
-                });
-
-            modelBuilder.Entity("ChatService.Infrastructure.DataAccess.Model.ChatAggregate.PrivateChatModel", b =>
-                {
-                    b.Navigation("Messages");
-                });
-
-            modelBuilder.Entity("ChatService.Infrastructure.DataAccess.Model.UserAggregate.UserModel", b =>
-                {
-                    b.Navigation("PrivateChatCreated");
-
-                    b.Navigation("PrivateChatJoined");
                 });
 #pragma warning restore 612, 618
         }

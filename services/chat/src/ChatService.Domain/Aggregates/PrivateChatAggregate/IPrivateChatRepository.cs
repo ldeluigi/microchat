@@ -9,7 +9,5 @@ public interface IPrivateChatRepository :
     ISaveRepository<PrivateChat>,
     IRemoveRepository<PrivateChat>
 {
-    void DeleteOrphanChats();
-
     Task<bool> ChatAlreadyExistBetween(Guid creatorId, Guid participantId);
 }

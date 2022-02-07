@@ -9,7 +9,7 @@ using static EasyDesk.CleanArchitecture.Domain.Metamodel.Results.ResultImports;
 
 namespace ChatService.Domain;
 
-public record UserDeleted(Guid Id) : DomainEvent;
+public record UserDeleted(Guid UserId) : DomainEvent;
 
 public class UserLifecycleService
 {

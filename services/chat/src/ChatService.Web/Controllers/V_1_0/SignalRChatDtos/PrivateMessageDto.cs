@@ -9,7 +9,8 @@ namespace ChatService.Web.Controllers.V_1_0.SignalRChatDtos;
 public record PrivateMessageDto(
     Guid Id,
     string Text,
-    Guid ChatId,
+    Guid Chat,
+    Guid? Sender,
     Timestamp SendTime,
     Timestamp LastEditTime,
     bool Viewed);
@@ -20,6 +21,7 @@ public class PrivateMessageDtoMapping : DirectMapping<PrivateChatMessageOutput, 
         msg.Id,
         msg.Text,
         msg.ChatId,
+        msg.SenderId.AsNullable(),
         msg.SendTime,
         msg.LastEditTime.OrElseNull(),
         msg.Viewed))

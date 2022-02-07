@@ -19,7 +19,6 @@ public class UserDeletedHandler : DomainEventHandlerBase<UserDeleted>
 
     protected override Task<Response<Nothing>> Handle(UserDeleted ev)
     {
-        _privateChatRepository.DeleteOrphanChats();
         return OkAsync;
     }
 }
