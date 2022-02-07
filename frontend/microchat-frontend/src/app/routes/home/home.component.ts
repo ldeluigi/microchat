@@ -41,7 +41,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.signalrService.connect();
-    this.signalRSubscription = this.signalrService.getMessage().subscribe(
+    this.signalRSubscription = this.signalrService.newMessage().subscribe(
       (message) => {
         if (message.chatId == this.active.id) {
           this.newIncomingMessage = message;

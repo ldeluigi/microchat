@@ -9,14 +9,18 @@ import { ApiURLService } from './api-url.service';
   providedIn: 'root'
  })
  export class SignalRService {
-  private message$: Subject<Message>;
+  private newMessage$: Subject<Message>;
+  private editMessage$: Subject<Message>;
+  private messageDeleted$: Subject<string>;
   private connection: signalR.HubConnection | undefined;
    
   constructor(
     private accountService: AccountService,
     private apiUrlService: ApiURLService
   ) {
-    this.message$ = new Subject<Message>();
+    this.newMessage$ = new Subject<Message>();
+    this.editMessage$ = new Subject<Message>();
+    this.messageDeleted$ = new Subject<string>();
   }
 
   public connect() {
@@ -26,12 +30,26 @@ import { ApiURLService } from './api-url.service';
         .build();
     this.connection.start().catch(err => console.log(err));
     this.connection.on('ReceiveMessage', (message) => {
-      this.message$.next(JSON.parse(message));
+      this.newMessage$.next(JSON.parse(message));
     });
+    this.connection.on('UpdateMessage', (message) => {
+      this.editMessage$.next(JSON.parse(message));
+    });
+    this.connection.on('DeleteMessage', (messageId) =>{
+      this.messageDeleted$.next(messageId);
+    })
   }
 
-  public getMessage(): Observable<Message> {
-    return this.message$.asObservable();
+  public newMessage(): Observable<Message> {
+    return this.newMessage$.asObservable();
+  }
+
+  public editedMessage(): Observable<Message> {
+    return this.editMessage$.asObservable();
+  }
+
+  public deletedMessage(): Observable<string> {
+    return this.messageDeleted$.asObservable();
   }
 
   public sendMessage(chatId: string, message: string): void {
