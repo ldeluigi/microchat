@@ -1,31 +1,41 @@
 ﻿using AutoMapper;
+using EasyDesk.CleanArchitecture.Application.ErrorManagement;
 using EasyDesk.CleanArchitecture.Application.Mediator;
-using EasyDesk.CleanArchitecture.Web.Controllers;
+using EasyDesk.CleanArchitecture.Application.Responses;
+using EasyDesk.CleanArchitecture.Web.Dto;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
+using System.Threading.Tasks;
 
 namespace ChatService.Web.SignalR;
 
 public class AbstractMediatrHub : Hub
 {
-    private IMediator _mediator;
     private IMapper _mapper;
-
-    protected IMediator Mediator => _mediator ??= GetService<IMediator>();
+    private IServiceScopeFactory _scopeFactory;
 
     protected IMapper Mapper => _mapper ??= GetService<IMapper>();
 
     private T GetService<T>() => Context.GetHttpContext().RequestServices.GetRequiredService<T>();
 
-    protected ActionResultBuilder<TResponse> Command<TResponse>(CommandBase<TResponse> command) =>
+    protected Task<Response<TResponse>> Command<TResponse>(CommandBase<TResponse> command) =>
         MakeRequest(command);
 
-    protected ActionResultBuilder<TResponse> Query<TResponse>(QueryBase<TResponse> query) =>
+    protected Task<Response<TResponse>> Query<TResponse>(QueryBase<TResponse> query) =>
         MakeRequest(query);
 
-    private ActionResultBuilder<TResponse> MakeRequest<TResponse>(RequestBase<TResponse> request)
+    protected IServiceScopeFactory ScopeFactory => _scopeFactory ??= GetService<IServiceScopeFactory>();
+
+    protected IClientProxy Caller => Clients.Caller;
+
+    private async Task<Response<TResponse>> MakeRequest<TResponse>(RequestBase<TResponse> request)
     {
-        return null; // new(() => Mediator.Send(request), this);
+        using (var scope = ScopeFactory.CreateScope())
+        {
+            return await scope.ServiceProvider.GetRequiredService<IMediator>().Send(request);
+        }
     }
+
+    protected Task SendError(Error error) => Caller.SendAsync("error", ErrorDto.FromError(error));
 }

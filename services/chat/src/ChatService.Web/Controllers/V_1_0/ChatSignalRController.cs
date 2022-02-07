@@ -1,8 +1,9 @@
 ﻿using ChatService.Application.Commands.PrivateChats;
 using ChatService.Application.Commands.PrivateMessages;
-using ChatService.Application.Queries.PrivateChats;
+using ChatService.Web.Controllers.V_1_0.SignalRChatDtos;
 using ChatService.Web.SignalR;
 using EasyDesk.CleanArchitecture.Application.Responses;
+using EasyDesk.Tools.Options;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Linq;
@@ -12,19 +13,9 @@ namespace ChatService.Web.Controllers.V_1_0;
 
 public class ChatSignalRController : AbstractMediatrHub
 {
-    public override async Task OnConnectedAsync()
+    public override Task OnConnectedAsync()
     {
-        var query = new GetAllPrivateChatsOfUser();
-        var chats = await Query(query);
-        chats.IfFailure(error => throw new HubException(error.ToString()));
-        await chats.IfSuccessAsync(async chats =>
-        {
-            foreach (var chat in chats)
-            {
-                await Groups.AddToGroupAsync(Context.ConnectionId, chat.Id.ToString());
-            }
-        });
-        await base.OnConnectedAsync();
+        return base.OnConnectedAsync();
     }
 
     public override Task OnDisconnectedAsync(Exception exception)
@@ -40,15 +31,8 @@ public class ChatSignalRController : AbstractMediatrHub
         await res.IfFailureAsync(SendError);
         await res.IfSuccessAsync(async chat =>
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, chat.Id.ToString());
             await Clients.Users(chat.Members.Select(g => g.ToString())).SendAsync("chat.created", Mapper.Map<PrivateChatDto>(chat));
         });
-    }
-
-    [HubMethodName("chat.join")]
-    public async Task JoinChat(Guid chatId)
-    {
-        await Groups.AddToGroupAsync(Context.ConnectionId, chatId.ToString());
     }
 
     [HubMethodName("chat.delete")]
@@ -59,7 +43,7 @@ public class ChatSignalRController : AbstractMediatrHub
         await res.IfFailureAsync(SendError);
         await res.IfSuccessAsync(async chat =>
         {
-            // TODO: remove each member from group
+            await Clients.Users(chat.Members.Select(g => g.ToString())).SendAsync("chat.deleted", Mapper.Map<PrivateChatDto>(chat));
         });
     }
 
@@ -71,7 +55,7 @@ public class ChatSignalRController : AbstractMediatrHub
         await res.IfFailureAsync(SendError);
         await res.IfSuccessAsync(async message =>
         {
-            await Clients.OthersInGroup(message.ChatId.ToString()).SendAsync("message.received", Mapper.Map<PrivateMessageDto>(message));
+            await Clients.Users(message.Chat.MembersIds()).SendAsync("message.received", Mapper.Map<PrivateMessageDto>(message));
         });
     }
 
@@ -83,7 +67,7 @@ public class ChatSignalRController : AbstractMediatrHub
         await res.IfFailureAsync(SendError);
         await res.IfSuccessAsync(async message =>
         {
-            await Clients.OthersInGroup(message.ChatId.ToString()).SendAsync("message.edited", Mapper.Map<PrivateMessageDto>(message));
+            await Clients.Users(message.Chat.MembersIds()).SendAsync("message.edited", Mapper.Map<PrivateMessageDto>(message));
         });
     }
 
@@ -95,7 +79,7 @@ public class ChatSignalRController : AbstractMediatrHub
         await res.IfFailureAsync(SendError);
         await res.IfSuccessAsync(async message =>
         {
-            await Clients.OthersInGroup(message.ChatId.ToString()).SendAsync("message.viewed", Mapper.Map<PrivateMessageDto>(message));
+            await Clients.Users(message.Chat.MembersIds()).SendAsync("message.viewed", Mapper.Map<PrivateMessageDto>(message));
         });
     }
 
@@ -107,7 +91,7 @@ public class ChatSignalRController : AbstractMediatrHub
         await res.IfFailureAsync(SendError);
         await res.IfSuccessAsync(async message =>
         {
-            await Clients.OthersInGroup(message.ChatId.ToString()).SendAsync("message.deleted", Mapper.Map<PrivateMessageDto>(message));
+            await Clients.Users(message.Chat.MembersIds()).SendAsync("message.deleted", Mapper.Map<PrivateMessageDto>(message));
         });
     }
 }

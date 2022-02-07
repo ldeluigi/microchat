@@ -1,6 +1,9 @@
-﻿using ChatService.Application;
+﻿using AutoMapper;
+using ChatService.Application;
+using ChatService.Application.Queries.PrivateChats.Outputs;
 using ChatService.Application.Queries.PrivateMessages;
 using ChatService.Application.Queries.PrivateMessages.Outputs;
+using ChatService.Infrastructure.DataAccess.Model.ChatAggregate;
 using ChatService.Infrastructure.DataAccess.Model.MessageAggregate;
 using EasyDesk.CleanArchitecture.Application.Authorization;
 using EasyDesk.CleanArchitecture.Application.Mediator;
@@ -19,26 +22,29 @@ public class GetMessagesOfPrivateChatHandler : PaginatedQueryHandlerBase<GetMess
 {
     private readonly ChatContext _chatContext;
     private readonly IUserInfoProvider _userInfoProvider;
+    private readonly IMapper _mapper;
 
-    public GetMessagesOfPrivateChatHandler(ChatContext chatContext, IUserInfoProvider userInfoProvider)
+    public GetMessagesOfPrivateChatHandler(ChatContext chatContext, IUserInfoProvider userInfoProvider, IMapper mapper)
     {
         _chatContext = chatContext;
         _userInfoProvider = userInfoProvider;
+        _mapper = mapper;
     }
 
-    private PrivateChatMessageOutput ConvertModelToOutput(PrivateMessageModel privateMessage, Guid asSeenBy) => new(
+    private PrivateChatMessageOutput ConvertModelToOutput(PrivateMessageModel privateMessage, PrivateChatModel chatModel, Guid asSeenBy) => new(
         Id: privateMessage.Id,
         ChatId: privateMessage.ChatId,
         SendTime: privateMessage.SendTime,
         LastEditTime: privateMessage.LastEditTime.AsOption(),
         SenderId: privateMessage.SenderId.AsOption(),
         Viewed: privateMessage.SenderId.AsOption().Contains(asSeenBy) ? true : privateMessage.Viewed,
-        Text: privateMessage.Text);
+        Text: privateMessage.Text,
+        Chat: _mapper.Map<DetailedPrivateChatOutput>(chatModel));
 
     protected override async Task<Response<Page<PrivateChatMessageOutput>>> Handle(GetMessagesOfPrivateChat request) =>
         await _chatContext.PrivateMessages
             .Where(m => m.ChatId == request.ChatId)
             .OrderByDescending(m => m.SendTime)
-            .Select(m => ConvertModelToOutput(m, _userInfoProvider.RequireUserId()))
+            .Select(m => ConvertModelToOutput(m, m.Chat, _userInfoProvider.RequireUserId()))
             .GetPageAsync(request.Pagination);
 }

@@ -1,5 +1,8 @@
-﻿using EasyDesk.CleanArchitecture.Application.Modules;
+﻿using ChatService.Application;
+using EasyDesk.CleanArchitecture.Application.Authorization;
+using EasyDesk.CleanArchitecture.Application.Modules;
 using EasyDesk.CleanArchitecture.Infrastructure.Json;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ChatService.Web.SignalR;
@@ -28,7 +31,14 @@ public class SignalRModule : IAppModule
             })
             .AddStackExchangeRedis(_redisConnectionString, configure =>
             {
-                configure.Configuration.ClientName = "MicrochatSignalR";
+                configure.Configuration.ClientName = app.Name;
             });
+
+        services.AddSingleton<IUserIdProvider, DefaultUserIdProvider>();
+    }
+
+    private class DefaultUserIdProvider : IUserIdProvider
+    {
+        public string GetUserId(HubConnectionContext connection) => connection.GetHttpContext().RequestServices.GetRequiredService<IUserInfoProvider>().RequireUserId().ToString();
     }
 }

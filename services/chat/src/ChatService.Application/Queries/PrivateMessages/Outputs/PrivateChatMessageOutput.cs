@@ -1,4 +1,6 @@
-﻿using ChatService.Domain.Aggregates.MessageAggregate;
+﻿using ChatService.Application.Queries.PrivateChats.Outputs;
+using ChatService.Domain.Aggregates.MessageAggregate;
+using ChatService.Domain.Aggregates.PrivateChatAggregate;
 using EasyDesk.Tools.Options;
 using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
 using System;
@@ -13,14 +15,16 @@ public record PrivateChatMessageOutput(
     Option<Timestamp> LastEditTime,
     Option<Guid> SenderId,
     bool Viewed,
-    string Text)
+    string Text,
+    PrivateChatOutput Chat)
 {
-    public static PrivateChatMessageOutput From(PrivateMessage privateMessage, Guid asSeenBy) => new(
+    public static PrivateChatMessageOutput From(PrivateMessage privateMessage, PrivateChat chat, Guid asSeenBy) => new(
         Id: privateMessage.Id,
         ChatId: privateMessage.ChatId,
         SendTime: privateMessage.SendTime,
         LastEditTime: privateMessage.LastEditTime,
         SenderId: privateMessage.SenderId,
         Viewed: privateMessage.SenderId.Contains(asSeenBy) ? true : privateMessage.Viewed,
-        Text: privateMessage.Text);
+        Text: privateMessage.Text,
+        Chat: PrivateChatOutput.From(chat));
 }

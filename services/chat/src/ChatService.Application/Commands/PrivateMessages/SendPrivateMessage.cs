@@ -1,5 +1,6 @@
 ﻿using ChatService.Application.Queries.PrivateMessages.Outputs;
 using ChatService.Domain.Aggregates.MessageAggregate;
+using ChatService.Domain.Aggregates.PrivateChatAggregate;
 using EasyDesk.CleanArchitecture.Application.Authorization;
 using EasyDesk.CleanArchitecture.Application.ErrorManagement;
 using EasyDesk.CleanArchitecture.Application.Mediator;
@@ -17,8 +18,6 @@ public class SendPrivateMessage
 {
     public record Command(
         Guid ChatId,
-        Guid SenderId,
-        bool Viewed,
         string Text) : CommandBase<PrivateChatMessageOutput>;
 
     public class Validator : AbstractValidator<Command>
@@ -34,30 +33,34 @@ public class SendPrivateMessage
     public class Handler : RequestHandlerBase<Command, PrivateChatMessageOutput>
     {
         private readonly IPrivateMessageRepository _privateMessageRepository;
+        private readonly IPrivateChatRepository _privateChatRepository;
         private readonly ITimestampProvider _timestampProvider;
         private readonly IUserInfoProvider _userInfoProvider;
 
         public Handler(
             IPrivateMessageRepository privateMessageRepository,
+            IPrivateChatRepository privateChatRepository,
             ITimestampProvider timestampProvider,
             IUserInfoProvider userInfoProvider)
         {
             _privateMessageRepository = privateMessageRepository;
+            _privateChatRepository = privateChatRepository;
             _timestampProvider = timestampProvider;
             _userInfoProvider = userInfoProvider;
         }
 
         protected override Task<Response<PrivateChatMessageOutput>> Handle(Command request)
         {
+            var userId = _userInfoProvider.RequireUserId();
             var message = PrivateMessage.Create(
                 id: Guid.NewGuid(),
                 chatId: request.ChatId,
                 text: MessageText.From(request.Text),
-                senderId: request.SenderId,
+                senderId: userId,
                 sendTime: _timestampProvider.Now);
-            _privateMessageRepository.Save(message);
-            return Task.FromResult(Success(message))
-                .ThenMap(m => PrivateChatMessageOutput.From(m, _userInfoProvider.RequireUserId()))
+            return _privateChatRepository.GetById(message.ChatId)
+                .ThenIfSuccess(_ => _privateMessageRepository.Save(message))
+                .ThenMap(c => PrivateChatMessageOutput.From(message, c, userId))
                 .ThenToResponse();
         }
     }

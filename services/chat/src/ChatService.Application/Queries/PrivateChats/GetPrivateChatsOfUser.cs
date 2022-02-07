@@ -2,8 +2,12 @@
 using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Application.Pages;
 using System;
+using System.Collections.Generic;
 
 namespace ChatService.Application.Queries.PrivateChats;
 
 public record GetPrivateChatsOfUser(Guid UserId, Pagination Pagination) :
     PaginatedQueryBase<PrivateChatOfUserOutput>(Pagination);
+
+public record GetAllPrivateChatsOfUser() :
+    QueryBase<IEnumerable<PrivateChatOfUserOutput>>();
