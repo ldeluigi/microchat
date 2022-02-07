@@ -20,7 +20,7 @@ import { UserInfoComponent } from '../user-info/user-info.component';
 export class HomeComponent implements OnInit, OnDestroy {
   activeList: Chat[] = [];
   chatList: Chat[] = [];
-  active!: Chat;
+  active: Chat | undefined;
   isWriting: boolean = false
   lastTimeWriting: number = Date.now();
   newMessage!: string;
@@ -46,7 +46,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.signalrService.connect();
     this.signalRSubscription = this.signalrService.newMessage().subscribe(
       (message) => {
-        if (message.chatId == this.active.id) {
+        if (message.chatId === this.active?.id) {
           this.newIncomingMessage = message;
         } else {
           const index = this.chatList.findIndex(chat => chat.id === message.chatId);
@@ -59,10 +59,13 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
     });
     this.deletedChatSubscription = this.signalrService.deletedChat().subscribe(chatId => {
+      console.log(chatId)
+      this.active = this.active?.id === chatId ? undefined : this.active;
       this.chatList = this.chatList.filter(chat => chat.id !== chatId);
       this.setActiveListToChatList(() => this.activeList =  this.activeList.filter(chat => chat.id !== chatId));
     });
     this.newChatSubscription = this.signalrService.newChat().subscribe(chat => {
+      this.chatList = this.chatList.filter(c => chat.id !== c.id);
       this.chatList.unshift(chat);
       if (chat.user?.id === this.createdWith) {
         this.active = chat;
@@ -72,11 +75,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     //$('#action_menu_btn').on("click", function(){ $('.action_menu').toggle(); });
 
     //getChatList
-    this.chatList.push({id:"a6e155fa-3651-4358-97d3-6394942c2daa", hasNewMessages:8, lastMessageTime: new Date(2021, 11, 1, 16), user: {id: "c6ddc9d5-6a84-4fc1-972f-57b2d866aadb", name: "ThommyN1"}});
-    this.chatList.push({id:"f04cc7ad-008c-4662-a581-e0c53aa53167", hasNewMessages:5, lastMessageTime: new Date(2021, 11, 1, 13)});
-    this.chatList.push({id:"3", hasNewMessages:0, lastMessageTime: new Date(2021, 11, 1, 14)});
-    this.chatList.push({id:"4", hasNewMessages:2, lastMessageTime: new Date(2021, 11, 1, 15)});
-    this.chatList.sort((chat1, chat2) => chat2.lastMessageTime.getTime() - chat1.lastMessageTime.getTime());
+    //this.chatList.push({id:"a6e155fa-3651-4358-97d3-6394942c2daa", hasNewMessages:8, lastMessageTime: new Date(2021, 11, 1, 16), user: {id: "c6ddc9d5-6a84-4fc1-972f-57b2d866aadb", name: "ThommyN1"}});
+    //this.chatList.push({id:"f04cc7ad-008c-4662-a581-e0c53aa53167", hasNewMessages:5, lastMessageTime: new Date(2021, 11, 1, 13)});
+    //this.chatList.push({id:"3", hasNewMessages:0, lastMessageTime: new Date(2021, 11, 1, 14)});
+    //this.chatList.push({id:"4", hasNewMessages:2, lastMessageTime: new Date(2021, 11, 1, 15)});
+    //this.chatList.sort((chat1, chat2) => chat2.lastMessageTime.getTime() - chat1.lastMessageTime.getTime());
     this.initActiveList();
   }
       
@@ -103,7 +106,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   getClass(chat: Chat) {
-    return this.active.id == chat.id ? "active" : "";
+    return this.active?.id === chat.id ? "active" : "";
   }
 
   setActive(chat: Chat) {
@@ -133,13 +136,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   sendMessage() {
-    if (UserLeftChat(this.active)) {
+    if (this.active && UserLeftChat(this.active)) {
       this.logService.errorSnackBar("unable to send messages to disabled chat");
-    } else {
+    } else if (this.active) {
       if (this.editingId) {
         this.signalrService.editMessage(this.editingId, this.newMessage).then(_ => this.newMessage = "");
       } else {
-        this.signalrService.sendMessage(this.active.id, this.newMessage).then(_ => this.newMessage = "");
+        this.signalrService.sendMessage(this.active?.id, this.newMessage).then(_ => this.newMessage = "");
       }
     }
   }
@@ -172,20 +175,24 @@ export class HomeComponent implements OnInit, OnDestroy {
     }, isWritingTime)
   }
 
-  showStats(active: Chat) {
-    console.log("TODO: get stats from chat :"+ active.id);
-    const detailedChat = {
-      Id: active.id,
-      CreationTimestamp: "05/02/2022",
-      NumberOfMessages: 10}
-    const creationDate = new Date();
-    console.log("TODO date from utc");
-    const days = Math.ceil(creationDate.getTime() - Date.now() / (1000 * 3600 * 24));
-    const stats: Stats = { 
-      totalMessages: detailedChat.NumberOfMessages,
-      avgWeekMsg: detailedChat.NumberOfMessages / Math.ceil(days / 7),
-      avgDaysMsg: detailedChat.NumberOfMessages / days }
-    this.dialog.open(StatsComponent, {data : stats})
+  showStats() {
+    if (this.active) {
+      console.log("TODO: get stats from chat :"+ this.active?.id);
+      const detailedChat = {
+        Id: this.active?.id,
+        CreationTimestamp: "05/02/2022",
+        NumberOfMessages: 10};
+      const creationDate = new Date();
+      console.log("TODO date from utc");
+      const days = Math.ceil(creationDate.getTime() - Date.now() / (1000 * 3600 * 24));
+      const stats: Stats = { 
+        totalMessages: detailedChat.NumberOfMessages,
+        avgWeekMsg: detailedChat.NumberOfMessages / Math.ceil(days / 7),
+        avgDaysMsg: detailedChat.NumberOfMessages / days };
+      this.dialog.open(StatsComponent, {data : stats});
+    } else {
+      this.logService.messageSnackBar("Unable to get stats for missing chat");
+    }
   }
 
   logout() {
@@ -209,7 +216,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   deleteChat() {
-    this.signalrService.deleteChat(this.active.id).then(_ => this.initActiveList());
+    if (this.active) {
+      this.signalrService.deleteChat(this.active.id)
+        .then(_ => this.initActiveList())
+        .catch(_ => window.location.reload());
+    } else {
+      this.logService.messageSnackBar("Unable to delete missing chat");
+    }
     console.log("TODO: delete chat");
   }
 }
