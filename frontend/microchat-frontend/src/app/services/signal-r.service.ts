@@ -4,6 +4,7 @@ import { Message } from 'src/model/Message';
 import * as signalR from "@microsoft/signalr";
 import { AccountService } from './account.service';
 import { ApiURLService } from './api-url.service';
+import { LogService } from './log.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,7 @@ import { ApiURLService } from './api-url.service';
    
   constructor(
     private accountService: AccountService,
+    private logService: LogService,
     private apiUrlService: ApiURLService
   ) {
     this.newMessage$ = new Subject<Message>();
@@ -23,12 +25,12 @@ import { ApiURLService } from './api-url.service';
     this.messageDeleted$ = new Subject<string>();
   }
 
-  public connect() {
+  public connect(): Promise<void> {
     this.connection = new signalR.HubConnectionBuilder()
         .withUrl(this.apiUrlService.chatApiUrl, { accessTokenFactory: () => this.accountService.userValue?.accessToken || "" })
         .configureLogging(signalR.LogLevel.Trace)
         .build();
-    this.connection.start().catch(err => console.log(err));
+    var started = this.connection.start().catch(err => console.log(err));
     this.connection.on('ReceiveMessage', (message) => {
       this.newMessage$.next(JSON.parse(message));
     });
@@ -37,7 +39,8 @@ import { ApiURLService } from './api-url.service';
     });
     this.connection.on('DeleteMessage', (messageId) =>{
       this.messageDeleted$.next(messageId);
-    })
+    });
+    return started;
   }
 
   public newMessage(): Observable<Message> {
@@ -52,16 +55,33 @@ import { ApiURLService } from './api-url.service';
     return this.messageDeleted$.asObservable();
   }
 
-  public sendMessage(chatId: string, message: string): void {
-    this.connection?.invoke("message.send", chatId, message);
+  private reconnectIfNecessary(): Promise<void> {
+    return this.connection?.state !== "Connected" ? this.connect() : Promise.resolve()
   }
 
-  public editMessage(messageId: string, message: string): void {
-    this.connection?.invoke("message.edit", messageId, message);
+  private useConnection(action: (_: any) => Promise<void>): Promise<void> {
+    return this.reconnectIfNecessary().then(action).catch(err => this.logService.errorSnackBar("An error has occured with message"));
   }
 
-  public deleteMessage(messageId: string): void {
-    this.connection?.invoke("message.delete", messageId);
+  public sendMessage(chatId: string, message: string): Promise<void> {
+    return this.useConnection(_ => 
+      this.connection ? 
+        this.connection.invoke("message.send", chatId, message) :
+        Promise.reject("Unable to establish connection"));
+  }
+
+  public editMessage(messageId: string, message: string): Promise<void> {
+    return this.useConnection(_ => 
+      this.connection ? 
+        this.connection?.invoke("message.edit", messageId, message) :
+        Promise.reject("Unable to establish connection"));
+  }
+
+  public deleteMessage(messageId: string): Promise<void> {
+    return this.useConnection(_ => 
+      this.connection ? 
+        this.connection?.invoke("message.delete", messageId) :
+        Promise.reject("Unable to establish connection"));
   }
   
   public disconnect() {
