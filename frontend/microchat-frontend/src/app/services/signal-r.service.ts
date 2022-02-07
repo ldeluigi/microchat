@@ -5,6 +5,7 @@ import * as signalR from "@microsoft/signalr";
 import { AccountService } from './account.service';
 import { ApiURLService } from './api-url.service';
 import { LogService } from './log.service';
+import { Chat } from 'src/model/Chat';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,8 @@ import { LogService } from './log.service';
   private newMessage$: Subject<Message>;
   private editMessage$: Subject<Message>;
   private messageDeleted$: Subject<string>;
+  private chatDeleted$: Subject<string>;
+  private chatCreated$: Subject<Chat>;
   private connection: signalR.HubConnection | undefined;
    
   constructor(
@@ -23,6 +26,8 @@ import { LogService } from './log.service';
     this.newMessage$ = new Subject<Message>();
     this.editMessage$ = new Subject<Message>();
     this.messageDeleted$ = new Subject<string>();
+    this.chatDeleted$ = new Subject<string>();
+    this.chatCreated$ = new Subject<Chat>();
   }
 
   public connect(): Promise<void> {
@@ -40,6 +45,12 @@ import { LogService } from './log.service';
     this.connection.on('DeleteMessage', (messageId) =>{
       this.messageDeleted$.next(messageId);
     });
+    this.connection.on('DeleteChat', (chatId) =>{
+      this.chatDeleted$.next(chatId);
+    });
+    this.connection.on('CreateChat', (chat) =>{
+      this.chatCreated$.next(JSON.parse(chat));
+    });
     return started;
   }
 
@@ -55,33 +66,55 @@ import { LogService } from './log.service';
     return this.messageDeleted$.asObservable();
   }
 
+  public deletedChat(): Observable<string> {
+    return this.chatDeleted$.asObservable();
+  }
+
+  public newChat(): Observable<Chat> {
+    return this.chatCreated$.asObservable();
+  }
+
   private reconnectIfNecessary(): Promise<void> {
     return this.connection?.state !== "Connected" ? this.connect() : Promise.resolve()
   }
 
   private useConnection(action: (_: any) => Promise<void>): Promise<void> {
-    return this.reconnectIfNecessary().then(action).catch(err => this.logService.errorSnackBar("An error has occured with message"));
+    return this.reconnectIfNecessary().then(action).catch(err => this.logService.errorSnackBar(err));
   }
 
   public sendMessage(chatId: string, message: string): Promise<void> {
     return this.useConnection(_ => 
       this.connection ? 
         this.connection.invoke("message.send", chatId, message) :
-        Promise.reject("Unable to establish connection"));
+        Promise.reject("An error has occured while sending message: Unable to establish connection"));
   }
 
   public editMessage(messageId: string, message: string): Promise<void> {
     return this.useConnection(_ => 
       this.connection ? 
         this.connection?.invoke("message.edit", messageId, message) :
-        Promise.reject("Unable to establish connection"));
+        Promise.reject("An error has occured while editing message: Unable to establish connection"));
   }
 
   public deleteMessage(messageId: string): Promise<void> {
     return this.useConnection(_ => 
       this.connection ? 
         this.connection?.invoke("message.delete", messageId) :
-        Promise.reject("Unable to establish connection"));
+        Promise.reject("An error has occured while deleting message: Unable to establish connection"));
+  }
+
+  public deleteChat(chatId: string): Promise<void> {
+    return this.useConnection(_ => 
+      this.connection ? 
+        this.connection?.invoke("chat.delete", chatId) :
+        Promise.reject("An error has occured while deleting chat: Unable to establish connection"));
+  }
+
+  public createChat(userId: string): Promise<void> {
+    return this.useConnection(_ => 
+      this.connection ? 
+        this.connection?.invoke("chat.createWith", userId) :
+        Promise.reject("An error has occured while creating chat: Unable to establish connection"));
   }
   
   public disconnect() {
