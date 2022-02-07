@@ -3,6 +3,7 @@ using EasyDesk.CleanArchitecture.Domain.Metamodel;
 using EasyDesk.Tools.Options;
 using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
 using System;
+using static EasyDesk.Tools.Options.OptionImports;
 
 namespace ChatService.Domain.Aggregates.PrivateChatAggregate;
 
@@ -21,7 +22,7 @@ public class PrivateChat : AggregateRoot, IChat
         Guid creator,
         Guid partecipant,
         Timestamp creationTime) =>
-        new(id, creator, partecipant, creationTime);
+        new(id, Some(creator), Some(partecipant), creationTime);
 
     public Guid Id { get; }
 

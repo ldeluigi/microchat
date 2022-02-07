@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using ChatService.Application;
+﻿using ChatService.Application;
 using ChatService.Application.Queries.PrivateMessages;
 using ChatService.Application.Queries.PrivateMessages.Outputs;
 using ChatService.Infrastructure.DataAccess.Model.MessageAggregate;
@@ -32,7 +30,7 @@ public class GetMessagesOfPrivateChatHandler : PaginatedQueryHandlerBase<GetMess
         Id: privateMessage.Id,
         ChatId: privateMessage.ChatId,
         SendTime: privateMessage.SendTime,
-        LastEditTime: privateMessage.LastEditTime,
+        LastEditTime: privateMessage.LastEditTime.AsOption(),
         SenderId: privateMessage.SenderId.AsOption(),
         Viewed: privateMessage.SenderId.AsOption().Contains(asSeenBy) ? true : privateMessage.Viewed,
         Text: privateMessage.Text);
@@ -42,5 +40,5 @@ public class GetMessagesOfPrivateChatHandler : PaginatedQueryHandlerBase<GetMess
             .Where(m => m.ChatId == request.ChatId)
             .OrderByDescending(m => m.SendTime)
             .Select(m => ConvertModelToOutput(m, _userInfoProvider.RequireUserId()))
-            .GetPage(request.Pagination);
+            .GetPageAsync(request.Pagination);
 }

@@ -23,17 +23,17 @@ public class User : AggregateRoot
         Surname = surname;
     }
 
-    public void UpdateName(Name name) => Name = name;
+    public void UpdateName(Name name) => Name = Some(name);
 
     public void RemoveName() => Name = None;
 
-    public void UpdateSurname(Name surname) => Surname = surname;
+    public void UpdateSurname(Name surname) => Surname = Some(surname);
 
     public void RemoveSurname() => Surname = None;
 
     public void UpdateUsername(Username username) => Username = username;
 
-    public static User Create(Guid id, Username username, Name name, Name surname) => new(id, username, name, surname);
+    public static User Create(Guid id, Username username, Name name, Name surname) => new(id, username, Some(name), Some(surname));
 
     public static User Create(Guid id, Username username) => new(id, username, None, None);
 }

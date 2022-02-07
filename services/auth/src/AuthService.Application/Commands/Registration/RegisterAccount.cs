@@ -26,9 +26,10 @@ public static class RegisterAccount
     {
         public Validator()
         {
-            RuleFor(x => x.Email).Matches(Email.Pattern);
+            RuleFor(x => x.Email).NotEmpty().Matches(Email.Pattern);
             ValidatePassword(RuleFor(x => x.Password));
             RuleFor(x => x.Username)
+                .NotEmpty()
                 .MinimumLength(Username.MinimumLenght)
                 .Matches(Username.Pattern);
         }

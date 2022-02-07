@@ -9,6 +9,7 @@ using EasyDesk.CleanArchitecture.Application.Messaging.DependencyInjection;
 using EasyDesk.CleanArchitecture.Application.Modules;
 using EasyDesk.CleanArchitecture.Dal.EfCore.DependencyInjection;
 using EasyDesk.CleanArchitecture.Infrastructure.Configuration;
+using EasyDesk.CleanArchitecture.Infrastructure.Jwt;
 using EasyDesk.CleanArchitecture.Web.Authentication.Jwt;
 using EasyDesk.CleanArchitecture.Web.Startup;
 using EasyDesk.CleanArchitecture.Web.Startup.Modules;
@@ -53,13 +54,12 @@ public class Startup : BaseStartup
                 applyMigrations: Environment.IsDevelopment() || shouldApplyMigrations))
             .AddSwagger()
             .AddAuthentication(options =>
-                options.AddScheme(nameof(JwtBearerScheme), new JwtBearerScheme(options =>
+                options.AddJwtBearer(nameof(JwtBearerScheme), options =>
                     options.ConfigureValidationParameters(
-                        JwtConfigurationUtils.GetJwtValidationConfiguration(Configuration, ServiceName)))))
-            .AddModule(new PermissionsModule())
-            .AddAuthorization(configure => { })
+                        Configuration.GetJwtValidationConfiguration(JwtAuthorityModule.JwtScope))))
+            .AddAuthorization()
             .AddModule(new JwtAuthorityModule(Configuration))
-            .AddModule(new AuthDomainModule())
+            .AddModule<AuthDomainModule>()
             .AddRebusMessaging(configure =>
                 configure
                     .UseOutbox()

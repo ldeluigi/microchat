@@ -40,6 +40,6 @@ public class GetUsersQueryHandler : PaginatedQueryHandlerBase<GetUsers.Query, Us
             .Concat(second)
             .Concat(third)
             .ProjectTo<UserOutput>(_mapper.ConfigurationProvider)
-            .GetPage(request.Pagination);
+            .GetPageAsync(request.Pagination);
     }
 }

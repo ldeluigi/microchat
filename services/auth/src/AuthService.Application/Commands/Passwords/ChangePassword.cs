@@ -19,8 +19,9 @@ public static class ChangePassword
     {
         public Validator()
         {
-            RuleFor(c => c.NewPassword).NotEqual(x => x.OldPassword);
-            RuleFor(c => c.NewPassword).MinimumLength(PlainTextPassword.MinimumLength);
+            RuleFor(c => c.NewPassword).NotEmpty().NotEqual(x => x.OldPassword);
+            RuleFor(c => c.NewPassword).NotEmpty().MinimumLength(PlainTextPassword.MinimumLength);
+            RuleFor(c => c.OldPassword).NotEmpty();
         }
     }
 

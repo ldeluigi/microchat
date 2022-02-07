@@ -5,6 +5,7 @@ using EasyDesk.CleanArchitecture.Application.Messaging.DependencyInjection;
 using EasyDesk.CleanArchitecture.Application.Modules;
 using EasyDesk.CleanArchitecture.Dal.EfCore.DependencyInjection;
 using EasyDesk.CleanArchitecture.Infrastructure.Configuration;
+using EasyDesk.CleanArchitecture.Infrastructure.Jwt;
 using EasyDesk.CleanArchitecture.Web.Authentication.Jwt;
 using EasyDesk.CleanArchitecture.Web.Startup;
 using EasyDesk.CleanArchitecture.Web.Startup.Modules;
@@ -24,6 +25,8 @@ namespace UserService.Web;
 /// </summary>
 public class Startup : BaseStartup
 {
+    private const string SectionName = "JwtScopes:Global";
+
     /// <summary>
     /// Creates a new instance of the <see cref="Startup"/> class.
     /// </summary>
@@ -53,19 +56,16 @@ public class Startup : BaseStartup
                 applyMigrations: Environment.IsDevelopment() || shouldApplyMigrations))
             .AddSwagger()
             .AddAuthentication(options =>
-                options.AddScheme(new JwtBearerScheme(options =>
-                    options.UseJwtSettingsFromConfiguration(
-                        Configuration,
-                        scopeName: "Global"))))
-            .AddModule(new PermissionsModule())
-            .AddAuthorization(configure => { })
-            .AddModule(new UserDomainModule())
+                options.AddJwtBearer(nameof(JwtBearerScheme), options =>
+                    options.ConfigureValidationParameters(Configuration.GetJwtValidationConfiguration(SectionName))))
+            .AddAuthorization()
+            .AddModule<UserDomainModule>()
             .AddRebusMessaging(configure =>
                 configure
                     .UseOutbox()
                     .AddKnownMessageTypesFromAssembliesOf(typeof(ApplicationMarker))
                     .ConfigureTransport(t =>
                         t.UseRabbitMq(Configuration.GetConnectionString("RabbitMq"), ServiceName)))
-            .AddModule(new TopicSubscriberModule());
+            .AddModule<TopicSubscriberModule>();
     }
 }

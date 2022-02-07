@@ -10,11 +10,17 @@ using ChatService.Infrastructure.DataAccess.Repositories;
 using EasyDesk.CleanArchitecture.Application.Modules;
 using EasyDesk.CleanArchitecture.Dal.EfCore.ModelConversion;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace ChatService.Web.DependencyInjection;
 
 public class ChatDomainModule : IAppModule
 {
+    public class TestScope
+    {
+        public Guid Random { get; set; } = Guid.NewGuid();
+    }
+
     public void ConfigureServices(IServiceCollection services, AppDescription app)
     {
         services
@@ -22,7 +28,8 @@ public class ChatDomainModule : IAppModule
             .AddScoped<IPrivateChatRepository, PrivateChatRepository>()
             .AddScoped<IPrivateMessageRepository, PrivateMessageRepository>()
             .AddScoped<UserLifecycleService>()
-            .AddScoped<PrivateChatLifecycleService>();
+            .AddScoped<PrivateChatLifecycleService>()
+            .AddScoped<TestScope>();
         services
             .AddSingleton<IModelConverter<User, UserModel>, UserModelConverter>()
             .AddSingleton<IModelConverter<PrivateChat, PrivateChatModel>, PrivateChatModelConverter>()

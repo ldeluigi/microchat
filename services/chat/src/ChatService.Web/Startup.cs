@@ -10,17 +10,18 @@ using EasyDesk.CleanArchitecture.Application.Messaging.DependencyInjection;
 using EasyDesk.CleanArchitecture.Application.Modules;
 using EasyDesk.CleanArchitecture.Dal.EfCore.DependencyInjection;
 using EasyDesk.CleanArchitecture.Infrastructure.Configuration;
+using EasyDesk.CleanArchitecture.Infrastructure.Jwt;
+using EasyDesk.CleanArchitecture.Web.Authentication;
 using EasyDesk.CleanArchitecture.Web.Authentication.Jwt;
 using EasyDesk.CleanArchitecture.Web.Startup;
 using EasyDesk.CleanArchitecture.Web.Startup.Modules;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Rebus.Config;
 using System;
-using System.Threading.Tasks;
+using static EasyDesk.Tools.Options.OptionImports;
 
 namespace ChatService.Web;
 
@@ -30,6 +31,7 @@ namespace ChatService.Web;
 public class Startup : BaseStartup
 {
     private const string SignalRHubPath = "/signalr/chat";
+    private const string JwtScope = "JwtScopes:Global";
 
     /// <summary>
     /// Creates a new instance of the <see cref="Startup"/> class.
@@ -61,34 +63,25 @@ public class Startup : BaseStartup
                 applyMigrations: Environment.IsDevelopment() || shouldApplyMigrations))
             .AddSwagger()
             .AddAuthentication(options =>
-                options.AddScheme(new JwtBearerScheme(options =>
+                options.AddJwtBearer(nameof(JwtBearerScheme), options =>
                 {
-                    options
-                    .UseJwtSettingsFromConfiguration(
-                        Configuration,
-                        "Global");
-                    options.Events = new JwtBearerEvents
+                    options.ConfigureValidationParameters(Configuration.GetJwtValidationConfiguration(JwtScope));
+                    options.TokenReader = TokenReaders.Combine(options.TokenReader, context =>
                     {
-                        OnMessageReceived = context =>
-                        {
-                            var accessToken = context.Request.Query["access_token"];
-                            Console.WriteLine("EEEEEEEEEEEEE");
+                        var accessToken = context.Request.Query["access_token"];
 
-                            // If the request is for our hub...
-                            var path = context.HttpContext.Request.Path;
-                            if (!string.IsNullOrEmpty(accessToken) &&
-                                path.StartsWithSegments(SignalRHubPath))
-                            {
-                                // Read the token out of the query string
-                                context.Token = accessToken;
-                                Console.WriteLine(accessToken);
-                            }
-                            return Task.CompletedTask;
+                        // If the request is for our hub...
+                        var path = context.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                            path.StartsWithSegments(SignalRHubPath))
+                        {
+                            // Read the token out of the query string
+                            return Some<string>(accessToken);
                         }
-                    };
-                })))
-            .AddModule<PermissionsModule>()
-            .AddAuthorization(configure => { })
+                        return None;
+                    });
+                }))
+            .AddAuthorization()
             .AddModule<ChatDomainModule>()
             .AddRebusMessaging(configure =>
                 configure

@@ -36,20 +36,11 @@ public class JwtAccessTokenService : IAccessTokenService
     {
         var id = Guid.NewGuid();
         var idClaim = new Claim(JwtClaimNames.JwtId, id.ToString());
-        var claimsIdentity = new ClaimsIdentity(CreateClaimsList(account).Append(idClaim));
-        try
-        {
-            var tokenString = _jwtService.Create(
-                _jwtTokenConfiguration,
-                claimsIdentity,
-                out var token);
-            return new(id, Token.From(tokenString), Timestamp.FromUtcDateTime(token.ValidTo));
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.Message, ex);
-            throw;
-        }
+        var tokenString = _jwtService.Create(
+            CreateClaimsList(account).Append(idClaim),
+            out var token,
+            _jwtTokenConfiguration);
+        return new(id, Token.From(tokenString), Timestamp.FromUtcDateTime(token.ValidTo));
     }
 
     private IEnumerable<Claim> CreateClaimsList(Account user)

@@ -33,7 +33,7 @@ public class PrivateMessage : AggregateRoot
         Guid senderId,
         Timestamp sendTime)
     {
-        return new(id, chatId, text, senderId, sendTime, None, false);
+        return new(id, chatId, text, Some(senderId), sendTime, None, false);
     }
 
     public Guid Id { get; }
@@ -50,9 +50,9 @@ public class PrivateMessage : AggregateRoot
 
     public Option<Guid> SenderId { get; }
 
-    public void EditText(MessageText newText)
+    public void EditText(MessageText newText, Timestamp time)
     {
-        LastEditTime = Some(Timestamp.Now);
+        LastEditTime = Some(time);
         Text = newText;
     }
 

@@ -15,7 +15,7 @@ public abstract class PasswordValidatorBase<TCredentials> : AbstractValidator<TC
 {
     protected void ValidatePassword(IRuleBuilderInitial<TCredentials, string> passwordRule)
     {
-        passwordRule.MinimumLength(PlainTextPassword.MinimumLength);
+        passwordRule.NotEmpty().MinimumLength(PlainTextPassword.MinimumLength);
     }
 }
 

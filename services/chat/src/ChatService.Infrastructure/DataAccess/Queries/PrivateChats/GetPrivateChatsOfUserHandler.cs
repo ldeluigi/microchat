@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using ChatService.Application;
+﻿using ChatService.Application;
 using ChatService.Application.Queries.PrivateChats;
 using ChatService.Application.Queries.PrivateChats.Outputs;
 using ChatService.Infrastructure.DataAccess.Model.ChatAggregate;
@@ -46,5 +44,5 @@ public class GetPrivateChatsOfUserHandler : PaginatedQueryHandlerBase<GetPrivate
             .Where(c => c.CreatorId.Equals(request.UserId) || c.PartecipantId.Equals(request.UserId))
             .OrderByDescending(c => c.Messages.MaxBy(m => m.SendTime))
             .Select(c => ConvertModelToOutput(c, _userInfoProvider.RequireUserId()))
-            .GetPage(request.Pagination);
+            .GetPageAsync(request.Pagination);
 }
