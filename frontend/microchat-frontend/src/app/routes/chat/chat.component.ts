@@ -68,6 +68,9 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
       this.elementRef.nativeElement.scrollTop = this.elementRef.nativeElement.scrollHeight;
       this.messages = [];
       this.getOldMessages();
+      this.messages.filter(m => m.viewed && m.sender !== this.accountService.userValue?.userId).forEach(m => {
+        this.signalrService.viewedMessage(m.id);
+      })
     }
     this.addToMessages(
       {id: "id1",
@@ -75,10 +78,14 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
         text:"Grazie, anche a me e famiglia!",
         sendTime: new Date(2021,11,25,12,4),
         edited:false,
+        viewed:true,
         sender:"Thommy"
       }, true)
     if (changes['message'] && changes['message'].currentValue) {
       this.addToMessages(changes['message'].currentValue, true);
+      if (changes['message'].currentValue.sender !== this.accountService.userValue?.userId) {
+        this.signalrService.viewedMessage(changes['message'].currentValue.id);
+      }
     }
     if (changes['scrollPerc'] && changes['scrollPerc'].currentValue < 15) {
       console.log("TODO: carica altri messaggi");
@@ -108,10 +115,10 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
 
   getOldMessages() {
     var receivedMessages = [
-      {id: "id", chatId: this.chat.id, text:"Buon Natale", sendTime: new Date(2021,11,25,12),edited:true,sender:"Simo"},
-      {id: "id1", chatId: this.chat.id, text:"Grazie, anche a te e famiglia!", sendTime: new Date(2021,11,25,12,1), edited:false,sender:"Thommy"},
-      {id: "id2", chatId: this.chat.id, text:":)", sendTime: new Date(2021,11,25,12,2), edited:false,sender:"Simo"},
-      {id: "id3", chatId: this.chat.id, text:"Dai ricominciamo a lavorare al proj", sendTime: new Date(2021,11,26,12,3), edited:true,sender:"Thommy"}
+      {id: "id", chatId: this.chat.id, text:"Buon Natale", sendTime: new Date(2021,11,25,12),edited:true,viewed:true,sender:"Simo"},
+      {id: "id1", chatId: this.chat.id, text:"Grazie, anche a te e famiglia!", sendTime: new Date(2021,11,25,12,1), edited:false,viewed:false,sender:"Thommy"},
+      {id: "id2", chatId: this.chat.id, text:":)", sendTime: new Date(2021,11,25,12,2), edited:false,viewed:true,sender:"Simo"},
+      {id: "id3", chatId: this.chat.id, text:"Dai ricominciamo a lavorare al proj", sendTime: new Date(2021,11,26,12,3), edited:true,viewed:true,sender:"Thommy"}
     ]
     var count = 0;
     receivedMessages.reverse().forEach(message => count += this.addToMessages(message, false) ? 1 : 0);

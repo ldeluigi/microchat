@@ -89,6 +89,13 @@ import { Chat } from 'src/model/Chat';
         Promise.reject("An error has occured while sending message: Unable to establish connection"));
   }
 
+  public viewedMessage(messageId: string): Promise<void> {
+    return this.useConnection(_ => 
+      this.connection ? 
+        this.connection.invoke("message.view", messageId) :
+        Promise.reject("An error has occured while sending message: Unable to establish connection"));
+  }
+
   public editMessage(messageId: string, message: string): Promise<void> {
     return this.useConnection(_ => 
       this.connection ? 
