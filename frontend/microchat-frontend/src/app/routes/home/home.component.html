@@ -28,7 +28,7 @@
           <app-contact [chat]="active"></app-contact>
           <div id="action_menu_btn">
             <div><i class="fas fa-trash delete" (click)="deleteChat()"></i></div>
-            <div><i class="far fa-chart-bar" (click)=showStats(active)></i></div>
+            <div><i class="far fa-chart-bar" (click)=showStats()></i></div>
           </div>
         </div>
         <app-chat class="app-chat" 
@@ -41,7 +41,14 @@
                   (scroll)="scroll($event)"></app-chat>
         <div class="card-footer">
           <div class="input-group">
-            <textarea id="newMessage" name="msg" class="form-control type_msg" placeholder="Type your message..." [(ngModel)]="newMessage" (ngModelChange)="onChange()"></textarea>
+            <textarea 
+              id="newMessage" 
+              name="msg" 
+              class="form-control type_msg" 
+              placeholder="Type your message..." 
+              [(ngModel)]="newMessage" 
+              (ngModelChange)="onChange()"
+              (keydown.enter)="sendMessage()"></textarea>
             <div class="input-group-append">
               <span class="input-group-text send_btn" (click)=sendMessage()>
                 <i class='{{sendOrEditClass()}}'></i>
