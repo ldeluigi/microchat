@@ -1,5 +1,5 @@
 @startuml User Domain User Context
-!include meta/Domain.Analysis.metamodel.iuml
+!include meta/domain-analysis.metamodel.iuml
 
 $aggregate(User) {
     $aggregate_root(User) {

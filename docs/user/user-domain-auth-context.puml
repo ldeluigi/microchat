@@ -1,5 +1,5 @@
 @startuml User Domain Auth Context
-!include meta/Domain.Analysis.metamodel.iuml
+!include meta/domain-analysis.metamodel.iuml
 
 $aggregate(Account) {
     $aggregate_root(Account) {
