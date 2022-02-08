@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace ChatService.Web.SignalR;
 
+//[Authorize]
 public class AbstractMediatrHub : Hub
 {
     private IMapper _mapper;

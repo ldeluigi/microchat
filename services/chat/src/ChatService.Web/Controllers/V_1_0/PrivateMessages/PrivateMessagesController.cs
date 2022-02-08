@@ -15,7 +15,7 @@ public class PrivateMessagesController : AbstractMediatrController
     {
         var query = new GetMessagesOfPrivateChat(chatId, pagination);
         return await Query(query)
-            .MappingContent(Mapper.Map<PrivateChatMessageDto>)
+            .Paging(Mapper.Map<PrivateChatMessageDto>)
             .ReturnOk();
     }
 }

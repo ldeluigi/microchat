@@ -1,7 +1,7 @@
-﻿using ChatService.Application;
-using EasyDesk.CleanArchitecture.Application.Authorization;
+﻿using EasyDesk.CleanArchitecture.Application.Authorization;
 using EasyDesk.CleanArchitecture.Application.Modules;
 using EasyDesk.CleanArchitecture.Infrastructure.Json;
+using EasyDesk.Tools.Options;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -39,6 +39,13 @@ public class SignalRModule : IAppModule
 
     private class DefaultUserIdProvider : IUserIdProvider
     {
-        public string GetUserId(HubConnectionContext connection) => connection.GetHttpContext().RequestServices.GetRequiredService<IUserInfoProvider>().RequireUserId().ToString();
+        public string GetUserId(HubConnectionContext connection) =>
+            connection
+            .GetHttpContext()
+            .RequestServices
+            .GetRequiredService<IUserInfoProvider>()
+            .GetUserInfo()
+            .Map(u => u.UserId)
+            .OrElseNull();
     }
 }

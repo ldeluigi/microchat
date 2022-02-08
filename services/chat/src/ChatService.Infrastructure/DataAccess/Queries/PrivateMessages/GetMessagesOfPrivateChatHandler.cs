@@ -30,7 +30,7 @@ public class GetMessagesOfPrivateChatHandler : PaginatedQueryHandlerBase<GetMess
         _mapper = mapper;
     }
 
-    private PrivateChatMessageOutput ConvertModelToOutput(PrivateMessageModel privateMessage, PrivateChatModel chatModel, Guid asSeenBy) => new(
+    private static PrivateChatMessageOutput ConvertModelToOutput(PrivateMessageModel privateMessage, PrivateChatModel chatModel, Guid asSeenBy) => new(
         Id: privateMessage.Id,
         ChatId: privateMessage.ChatId,
         SendTime: privateMessage.SendTime,
@@ -48,14 +48,17 @@ public class GetMessagesOfPrivateChatHandler : PaginatedQueryHandlerBase<GetMess
     {
         var userId = _userInfoProvider.RequireUserId();
         return await _chatContext.PrivateMessages
+            .AsNoTracking()
             .Where(m => m.ChatId == request.ChatId)
-            .OrderByDescending(m => m.SendTime)
             .Join(
                 _chatContext.PrivateChats.Where(
                     c => c.PartecipantId == userId || c.CreatorId == userId),
                 on => on.ChatId,
                 on => on.Id,
-                (message, chat) => ConvertModelToOutput(message, chat, userId))
+                (message, chat) => new { Message = message, Chat = chat })
+            .OrderByDescending(m => m.Message.SendTime)
+            .Select(x =>
+                ConvertModelToOutput(x.Message, x.Chat, userId))
             .GetPageAsync(request.Pagination);
     }
 }

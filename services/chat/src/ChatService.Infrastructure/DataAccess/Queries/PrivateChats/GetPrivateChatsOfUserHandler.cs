@@ -11,6 +11,7 @@ using EasyDesk.CleanArchitecture.Application.Pages;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Dal.EfCore.Utils;
 using EasyDesk.Tools.Options;
+using Microsoft.EntityFrameworkCore;
 using static EasyDesk.CleanArchitecture.Application.Responses.ResponseImports;
 using static EasyDesk.Tools.Options.OptionImports;
 
@@ -35,6 +36,7 @@ public class GetPrivateChatsOfUserHandler : PaginatedQueryHandlerBase<GetPrivate
             return Failure<Page<PrivateChatOfUserOutput>>(new NotFoundError());
         }
         return await _chatContext.PrivateChats
+            .AsNoTracking()
             .Where(c => c.CreatorId == userId || c.PartecipantId == userId)
             .OrderBy(c => c.Id)
             .GroupJoin(
