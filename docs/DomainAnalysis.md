@@ -1,20 +1,28 @@
 # Domain Driven Design
 
-## Ubiquitous Language
+## Knowledge Crunching
+The process of knowledge crunching involves stakeholder and domain experts (the team itself took these roles) and creates (iteratively) a refined _Ubiquitous Language_, _Context Map_ and _Domain Model_ through the dialogue and the collection of *User stories* (not reported here) and Use Cases.
 
-|Term | Definition|
-|-----|-----------|
-|Message| Piece of information sent in a chat by a user relative to a specific moment |
-|Chat | Entity that contains messages and other metadata. A chat can involve at least one user.|
-|User | Entity that uses the chat.|
+!!! note
+    The following documentation regards the analysis of a simplified Problem Space in order to focus (for the purposes of this project) to the technology know-how of scalable, full-fledged microservices systems based on DDD patterns and effective distributed systems design principles.
 
-## Use Case Scenario
-
+### Use Cases
 ```plantuml
 @startuml Use Case Diagram
 !include UseCaseScenario.puml
 @enduml
 ```
+There is only one type of user for our service. A user owns an account and is able to manage personal information and login data for it. With an account it's possibile to search other users
+
+## Ubiquitous Language
+
+|Term | Definition| Usage | Other meanings |
+|-----|-----------|-------|----------------|
+|Message| Piece of information sent in a chat by a user relative to a specific moment. | As a noun or as a verb. To message means to send a message. |
+|Send| To deliver a message in a chat, where someone can see it in real time or later | As a verb, relative to messages. | The act of requesting the service to deliver a message to its destination. |
+|Chat| Entity that contains messages and other metadata. A chat can involve at least one user.| As a noun. As a verb it means to send and/or receive messages. | The container of related messages. The communication medium between users. |
+|Account| A collection of personal information about a user that enables the chat related functionalities. | As a noun, related to creation, deletion, update, personal information, authentication and authorization features. |
+|User| A person with an account in the service. |
 
 ## Context Map
 
