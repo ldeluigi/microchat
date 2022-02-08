@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { firstValueFrom, map, Observable, Observer, Subscriber } from 'rxjs';
-import { ChatDto } from 'src/model/Chat';
+import { ChatOfUser, DetailedChat } from 'src/model/Chat';
 import { Response, ResponsePaginate } from 'src/model/serverResponse';
 import { ApiURLService } from './api-url.service';
 import { LogService } from './log.service';
@@ -23,11 +23,11 @@ export class ChatService {
     }
 
   
-    public getChats(chatId: string): Observable<ChatDto[]> {
+    public getChats(chatId: string): Observable<ChatOfUser[]> {
       return new Observable(obs => this.sub(chatId, 0, obs));
     }
 
-    private sub(chatId:string, page: number, obs:Subscriber<unknown>) {
+    private sub(chatId:string, page: number, obs:Subscriber<ChatOfUser[]>) {
       this.getPaginateChat(chatId, page, 100).then(chat => 
         {
           if (chat.meta.pageIndex < chat.meta.pageCount - 1) {
@@ -36,33 +36,31 @@ export class ChatService {
             obs.complete();
           }
           obs.next(chat.data);
-        })
+        }).catch(error => obs.error(error))
     };
 
-    private getPaginateChat(chatId: string, pageIndex: number, pageSize: number): Promise<ResponsePaginate<ChatDto[]>> {
+    private getPaginateChat(chatId: string, pageIndex: number, pageSize: number): Promise<ResponsePaginate<ChatOfUser[]>> {
       let params = new HttpParams()
         .set("chatId", chatId)
         .set("pageIndex", pageIndex)
         .set("pageSize", pageSize)
         .set("version", this.chatVersion)
-      return firstValueFrom(this.http.get<ResponsePaginate<ChatDto[]>>(`${this.apiURL.chatApiUrl}/${chatId}`, {params: params}));
+      return firstValueFrom(this.http.get<ResponsePaginate<ChatOfUser[]>>(`${this.apiURL.chatApiUrl}/${chatId}`, {params: params}));
     }
 
-
-    public chatInfo(chatId: string): Observable<ChatDto> {
+    public chatInfo(chatId: string): Observable<DetailedChat> {
       let params = new HttpParams()
       .set("version", this.chatVersion)
-      return this.http.get<Response<ChatDto>>(`${this.apiURL.chatApiUrl}/${chatId}`, {params: params})
+      return this.http.get<Response<DetailedChat>>(`${this.apiURL.chatApiUrl}/${chatId}`, {params: params})
         .pipe(map(u => u.data));
     }
 
-    public getOldMessages(chatId: string, pageIndex: number, pageSize: number): Observable<MessageDto> {
+    public getOldMessages(chatId: string, pageIndex: number, pageSize: number): Observable<ResponsePaginate<MessageDto[]>> {
       let params = new HttpParams()
         .set("chatId", chatId)
         .set("pageIndex", pageIndex)
         .set("pageSize", pageSize)
         .set("version", this.chatVersion)
-      return this.http.get<Response<MessageDto>>(`${this.apiURL.messageApiUrl}/${chatId}`, {params: params})
-        .pipe(map(u => u.data));
+      return this.http.get<ResponsePaginate<MessageDto[]>>(`${this.apiURL.messageApiUrl}/${chatId}`, {params: params});
     }
 }

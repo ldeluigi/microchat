@@ -7,7 +7,7 @@ import { ApiURLService } from './api-url.service';
 import { LogService } from './log.service';
 import { Chat, ChatDto } from 'src/model/Chat';
 import { UserService } from './user.service';
-import { toUser } from 'src/model/UserInfo';
+import { infoToUser } from 'src/model/UserInfo';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ import { toUser } from 'src/model/UserInfo';
  export class SignalRService {
   private newMessage$: Subject<Message>;
   private editMessage$: Subject<Message>;
-  private messageDeleted$: Subject<string>;
+  private messageDeleted$: Subject<Message>;
   private chatDeleted$: Subject<string>;
   private chatCreated$: Subject<Chat>;
   private connection: signalR.HubConnection | undefined;
@@ -28,7 +28,7 @@ import { toUser } from 'src/model/UserInfo';
   ) {
     this.newMessage$ = new Subject<Message>();
     this.editMessage$ = new Subject<Message>();
-    this.messageDeleted$ = new Subject<string>();
+    this.messageDeleted$ = new Subject<Message>();
     this.chatDeleted$ = new Subject<string>();
     this.chatCreated$ = new Subject<Chat>();
   }
@@ -39,7 +39,7 @@ import { toUser } from 'src/model/UserInfo';
         this.disconnect();
         this.connection = new signalR.HubConnectionBuilder()
             .withUrl(this.apiUrlService.signalRApiUrl, { accessTokenFactory: () => this.accountService.userValue?.accessToken || "" })
-            .configureLogging(signalR.LogLevel.Trace)
+            .configureLogging(signalR.LogLevel.Warning)
             .withAutomaticReconnect()
             .build();
         started = this.connection.start().then(_ => this.initOnMethods()).catch(err => {
@@ -55,17 +55,14 @@ import { toUser } from 'src/model/UserInfo';
     }
 
   private initOnMethods() {
-    this.connection!.on('message.received', (message : MessageDto) => {
-      console.log(message);
+    this.connection!.on('message.received', (message: MessageDto) => {
       this.newMessage$.next(toMessage(message));
     });
-    this.connection!.on('message.edited', (message) => {
-      console.log(message);
+    this.connection!.on('message.edited', (message: MessageDto) => {
       this.editMessage$.next(toMessage(message));
     });
-    this.connection!.on('message.deleted', (messageId) => {
-      console.log(messageId);
-      this.messageDeleted$.next(messageId);
+    this.connection!.on('message.deleted', (message: MessageDto) => {
+      this.messageDeleted$.next(toMessage(message));
     });
     this.connection!.on('message.viewed', _ => {}); // ignore viewed message
     this.connection!.on('chat.deleted', (chat: ChatDto) => {
@@ -77,7 +74,7 @@ import { toUser } from 'src/model/UserInfo';
         userId = chatDto.partecipant;
       }
       this.userService.userInfo(userId).subscribe(info => {
-        var newChat: Chat = {id: chatDto.id, hasNewMessages: 0, lastMessageTime: new Date, user: toUser(info)}
+        var newChat: Chat = {id: chatDto.id, hasNewMessages: 0, lastMessageTime: new Date, user: infoToUser(info)}
         this.chatCreated$.next(newChat);
       })
     });
@@ -92,7 +89,7 @@ import { toUser } from 'src/model/UserInfo';
     return this.editMessage$.asObservable();
   }
 
-  public deletedMessage(): Observable<string> {
+  public deletedMessage(): Observable<Message> {
     return this.messageDeleted$.asObservable();
   }
 
