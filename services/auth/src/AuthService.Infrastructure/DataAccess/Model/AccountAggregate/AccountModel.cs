@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using AuthService.Application.Queries.Accounts;
+using AuthService.Application.Queries.Accounts.Outputs;
 using EasyDesk.CleanArchitecture.Application.Mapping;
 using EasyDesk.Tools.PrimitiveTypes.DateAndTime;
 using Microsoft.EntityFrameworkCore;

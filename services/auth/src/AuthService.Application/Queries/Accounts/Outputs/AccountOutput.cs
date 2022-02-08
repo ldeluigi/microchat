@@ -1,7 +1,7 @@
 ﻿using System;
 using AuthService.Domain.Aggregates.AccountAggregate;
 
-namespace AuthService.Application.Queries.Accounts;
+namespace AuthService.Application.Queries.Accounts.Outputs;
 
 public record AccountOutput(
     Guid Id,

@@ -50,7 +50,12 @@ public class GetMessagesOfPrivateChatHandler : PaginatedQueryHandlerBase<GetMess
         return await _chatContext.PrivateMessages
             .Where(m => m.ChatId == request.ChatId)
             .OrderByDescending(m => m.SendTime)
-            .Join(_chatContext.PrivateChats, on => on.ChatId, on => on.Id, (message, chat) => ConvertModelToOutput(message, chat, userId))
+            .Join(
+                _chatContext.PrivateChats.Where(
+                    c => c.PartecipantId == userId || c.CreatorId == userId),
+                on => on.ChatId,
+                on => on.Id,
+                (message, chat) => ConvertModelToOutput(message, chat, userId))
             .GetPageAsync(request.Pagination);
     }
 }

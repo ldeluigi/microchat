@@ -1,5 +1,7 @@
-﻿using ChatService.Application.Queries.PrivateChats;
+﻿using ChatService.Application;
+using ChatService.Application.Queries.PrivateChats;
 using ChatService.Application.Queries.PrivateChats.Outputs;
+using EasyDesk.CleanArchitecture.Application.Authorization;
 using EasyDesk.CleanArchitecture.Application.ErrorManagement;
 using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Application.Responses;
@@ -13,22 +15,27 @@ namespace ChatService.Infrastructure.DataAccess.Queries.PrivateChats;
 public class GetPrivateChatDetailsHandler : RequestHandlerBase<GetPrivateChatDetails, DetailedPrivateChatOutput>
 {
     private readonly ChatContext _chatContext;
+    private readonly IUserInfoProvider _userInfoProvider;
 
-    public GetPrivateChatDetailsHandler(ChatContext chatContext)
+    public GetPrivateChatDetailsHandler(ChatContext chatContext, IUserInfoProvider userInfoProvider)
     {
         _chatContext = chatContext;
+        _userInfoProvider = userInfoProvider;
     }
 
-    protected override async Task<Response<DetailedPrivateChatOutput>> Handle(GetPrivateChatDetails request) =>
-        await _chatContext.PrivateChats
-            .Where(c => c.Id == request.Id)
+    protected override async Task<Response<DetailedPrivateChatOutput>> Handle(GetPrivateChatDetails request)
+    {
+        var userId = _userInfoProvider.RequireUserId();
+        return await _chatContext.PrivateChats
+            .Where(c => c.Id == request.Id && (c.PartecipantId == userId || c.CreatorId == userId))
             .GroupJoin(_chatContext.PrivateMessages, on => on.Id, on => on.ChatId, (chat, messages) =>
-                new DetailedPrivateChatOutput(
-                    chat.Id,
-                    chat.CreatorId.AsOption(),
-                    chat.PartecipantId.AsOption(),
-                    chat.CreationTime,
-                    messages.Count()))
+            new DetailedPrivateChatOutput(
+            chat.Id,
+            chat.CreatorId.AsOption(),
+            chat.PartecipantId.AsOption(),
+            chat.CreationTime,
+            messages.Count()))
             .FirstOptionAsync()
             .ThenOrElseError(Errors.NotFound);
+    }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using AuthService.Application.Commands.Tokens;
-using AuthService.Application.Queries.Accounts;
+using AuthService.Application.Queries.Accounts.Outputs;
 using AuthService.Domain.Aggregates.AccountAggregate;
 using AuthService.Domain.Authentication.Accounts;
 using AuthService.Domain.Authentication.Passwords;

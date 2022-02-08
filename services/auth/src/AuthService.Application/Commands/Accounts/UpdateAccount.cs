@@ -1,8 +1,9 @@
 using System;
 using System.Threading.Tasks;
-using AuthService.Application.Queries.Accounts;
+using AuthService.Application.Queries.Accounts.Outputs;
 using AuthService.Domain.Aggregates.AccountAggregate;
 using AuthService.Domain.Authentication.Accounts;
+using EasyDesk.CleanArchitecture.Application.Authorization;
 using EasyDesk.CleanArchitecture.Application.ErrorManagement;
 using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Application.Responses;
@@ -40,18 +41,24 @@ public static class UpdateAccount
     {
         private readonly IAccountRepository _accountRepository;
         private readonly AccountLifecycleService _accountLifecycle;
+        private readonly IUserInfoProvider _userInfoProvider;
 
         public Handler(
             IAccountRepository accountRepository,
-            AccountLifecycleService accountLifecycle)
+            AccountLifecycleService accountLifecycle,
+            IUserInfoProvider userInfoProvider)
         {
             _accountRepository = accountRepository;
             _accountLifecycle = accountLifecycle;
+            _userInfoProvider = userInfoProvider;
         }
 
         protected override async Task<Response<AccountOutput>> Handle(Command request)
         {
-            // TODO: add check for authorization
+            if (_userInfoProvider.RequireUserId() != request.AccountId)
+            {
+                return ResponseImports.Failure<AccountOutput>(new NotFoundError());
+            }
             return await _accountRepository.GetById(request.AccountId)
                 .ThenMapAsync(async account =>
                 {

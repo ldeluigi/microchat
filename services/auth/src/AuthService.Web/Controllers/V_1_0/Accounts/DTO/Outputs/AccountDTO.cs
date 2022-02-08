@@ -1,4 +1,4 @@
-﻿using AuthService.Application.Queries.Accounts;
+﻿using AuthService.Application.Queries.Accounts.Outputs;
 using EasyDesk.CleanArchitecture.Application.Mapping;
 using System;
 

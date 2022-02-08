@@ -7,7 +7,9 @@ using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
+using static EasyDesk.CleanArchitecture.Application.Responses.ResponseImports;
 
 namespace ChatService.Application.Commands.PrivateMessages;
 
@@ -33,13 +35,22 @@ public class DeletePrivateMessage
 
         protected override async Task<Response<PrivateChatMessageOutput>> Handle(Command request)
         {
-            Result<PrivateChat> chatResult = default;
+            var userId = _userInfoProvider.RequireUserId();
+            Response<PrivateChat> chatResult = default;
             return await _privateMessageRepository
                 .GetById(request.MessageId)
-                .ThenRequireAsync(async m => chatResult = await _privateChatRepository.GetById(m.ChatId))
+                .ThenRequireAsync(async m => chatResult = await _privateChatRepository
+                                                                    .GetById(m.ChatId)
+                                                                    .ThenRequire(chat =>
+                                                                    {
+                                                                        if (!chat.PartecipantId.Contains(userId) && !chat.CreatorId.Contains(userId))
+                                                                        {
+                                                                            return Failure<PrivateChatMessageOutput>(new NotFoundError());
+                                                                        }
+                                                                        return Success(chat);
+                                                                    }))
                 .ThenIfSuccess(request => _privateMessageRepository.Remove(request))
-                .ThenMap(m => PrivateChatMessageOutput.From(m, chatResult.ReadValue(), _userInfoProvider.RequireUserId()))
-                .ThenToResponse();
+                .ThenMap(m => PrivateChatMessageOutput.From(m, chatResult.ReadValue(), userId));
         }
     }
 }

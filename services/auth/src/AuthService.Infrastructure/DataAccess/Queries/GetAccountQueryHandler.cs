@@ -1,8 +1,11 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using AuthService.Application;
 using AuthService.Application.Queries.Accounts;
+using AuthService.Application.Queries.Accounts.Outputs;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using EasyDesk.CleanArchitecture.Application.Authorization;
 using EasyDesk.CleanArchitecture.Application.ErrorManagement;
 using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Application.Responses;
@@ -15,18 +18,24 @@ public class GetAccountQueryHandler : RequestHandlerBase<GetAccount.Query, Accou
 {
     private readonly AuthContext _authContext;
     private readonly IMapper _mapper;
+    private readonly IUserInfoProvider _userInfoProvider;
 
-    public GetAccountQueryHandler(AuthContext authContext, IMapper mapper)
+    public GetAccountQueryHandler(AuthContext authContext, IMapper mapper, IUserInfoProvider userInfoProvider)
     {
         _authContext = authContext;
         _mapper = mapper;
+        _userInfoProvider = userInfoProvider;
     }
 
     protected override async Task<Response<AccountOutput>> Handle(GetAccount.Query request)
     {
+        if (_userInfoProvider.RequireUserId() != request.AccountId)
+        {
+            return ResponseImports.Failure<AccountOutput>(new NotFoundError());
+        }
         return await _authContext
             .Accounts
-            .Where(u => u.Id == request.UserId)
+            .Where(u => u.Id == request.AccountId)
             .ProjectTo<AccountOutput>(_mapper.ConfigurationProvider)
             .FirstOptionAsync()
             .ThenOrElseError(Errors.NotFound);

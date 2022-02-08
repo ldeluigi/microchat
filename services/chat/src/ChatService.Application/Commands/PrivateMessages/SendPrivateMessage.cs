@@ -1,4 +1,7 @@
-﻿using ChatService.Application.Queries.PrivateMessages.Outputs;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using ChatService.Application.Queries.PrivateMessages.Outputs;
 using ChatService.Domain.Aggregates.MessageAggregate;
 using ChatService.Domain.Aggregates.PrivateChatAggregate;
 using EasyDesk.CleanArchitecture.Application.Authorization;
@@ -7,9 +10,7 @@ using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Domain.Time;
 using FluentValidation;
-using System;
-using System.Threading.Tasks;
-using static EasyDesk.CleanArchitecture.Domain.Metamodel.Results.ResultImports;
+using static EasyDesk.CleanArchitecture.Application.Responses.ResponseImports;
 using static EasyDesk.Tools.Options.OptionImports;
 
 namespace ChatService.Application.Commands.PrivateMessages;
@@ -58,10 +59,18 @@ public class SendPrivateMessage
                 text: MessageText.From(request.Text),
                 senderId: userId,
                 sendTime: _timestampProvider.Now);
-            return _privateChatRepository.GetById(message.ChatId)
+            return _privateChatRepository
+                .GetById(message.ChatId)
+                .ThenRequire(chat =>
+                {
+                    if (!chat.PartecipantId.Contains(userId) && !chat.CreatorId.Contains(userId))
+                    {
+                        return Failure<PrivateChatMessageOutput>(new NotFoundError());
+                    }
+                    return Success(chat);
+                })
                 .ThenIfSuccess(_ => _privateMessageRepository.Save(message))
-                .ThenMap(c => PrivateChatMessageOutput.From(message, c, userId))
-                .ThenToResponse();
+                .ThenMap(c => PrivateChatMessageOutput.From(message, c, userId));
         }
     }
 }

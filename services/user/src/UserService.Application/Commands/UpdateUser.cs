@@ -1,4 +1,5 @@
-﻿using EasyDesk.CleanArchitecture.Application.ErrorManagement;
+﻿using EasyDesk.CleanArchitecture.Application.Authorization;
+using EasyDesk.CleanArchitecture.Application.ErrorManagement;
 using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
@@ -46,14 +47,20 @@ public static class UpdateUser
     public class Handler : RequestHandlerBase<Command, UserOutput>
     {
         private readonly IUserRepository _userRepository;
+        private readonly IUserInfoProvider _userInfoProvider;
 
-        public Handler(IUserRepository userRepository)
+        public Handler(IUserRepository userRepository, IUserInfoProvider userInfoProvider)
         {
             _userRepository = userRepository;
+            _userInfoProvider = userInfoProvider;
         }
 
         protected override async Task<Response<UserOutput>> Handle(Command request)
         {
+            if (_userInfoProvider.RequireUserId() != request.UserId)
+            {
+                return Failure<UserOutput>(new NotFoundError());
+            }
             return await _userRepository.GetById(request.UserId)
                 .ThenIfSuccess(user =>
                 {

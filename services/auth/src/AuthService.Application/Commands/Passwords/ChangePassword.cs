@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AuthService.Application.Queries.Accounts;
+using AuthService.Application.Queries.Accounts.Outputs;
 using AuthService.Domain.Authentication.Accounts;
 using AuthService.Domain.Authentication.Passwords;
+using EasyDesk.CleanArchitecture.Application.Authorization;
 using EasyDesk.CleanArchitecture.Application.ErrorManagement;
 using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Application.Responses;
@@ -27,17 +28,23 @@ public static class ChangePassword
 
     public class Handler : RequestHandlerBase<Command, AccountOutput>
     {
+        private readonly IUserInfoProvider _userInfoProvider;
         private readonly AccountLifecycleService _accountLifecycleService;
 
         public Handler(
+            IUserInfoProvider userInfoProvider,
             AccountLifecycleService accountLifecycleService)
         {
+            _userInfoProvider = userInfoProvider;
             _accountLifecycleService = accountLifecycleService;
         }
 
         protected override async Task<Response<AccountOutput>> Handle(Command request)
         {
-            // TODO: add check for authorization
+            if (_userInfoProvider.RequireUserId() != request.AccountId)
+            {
+                return ResponseImports.Failure<AccountOutput>(new NotFoundError());
+            }
             return await _accountLifecycleService
                 .UpdatePassword(request.AccountId, PlainTextPassword.From(request.OldPassword), PlainTextPassword.From(request.NewPassword))
                 .ThenMap(AccountOutput.From)
