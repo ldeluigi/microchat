@@ -30,12 +30,12 @@ export class ChatService {
     private sub(userId:string, page: number, obs:Subscriber<ChatOfUser[]>) {
       this.getPaginateChat(userId, page, 100).then(chat => 
         {
+          obs.next(chat.data);
           if (chat.meta.pageIndex < chat.meta.pageCount - 1) {
             this.sub(userId, chat.meta.pageIndex + 1, obs);
           } else {
             obs.complete();
           }
-          obs.next(chat.data);
         }).catch(error => obs.error(error))
     };
 
