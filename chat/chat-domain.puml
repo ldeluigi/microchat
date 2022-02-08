@@ -1,5 +1,5 @@
 @startuml Chat Domain
-!include meta/Domain.Analysis.metamodel.iuml
+!include meta/domain-analysis.metamodel.iuml
 
 $entity(Chat) {
     + id: Guid

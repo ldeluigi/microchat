@@ -1,6 +1,6 @@
 @startuml PrivateChat Subdomain
-!include meta/Domain.Analysis.metamodel.iuml
-!include Chat/Chat.Domain.puml
+!include meta/domain-analysis.metamodel.iuml
+!include chat/chat-domain.puml
 
 $aggregate(PrivateMessage) {
     $aggregate_root(PrivateMessage) extends Message{
