@@ -23,15 +23,15 @@ export class ChatService {
     }
 
   
-    public getChats(chatId: string): Observable<ChatOfUser[]> {
-      return new Observable(obs => this.sub(chatId, 0, obs));
+    public getChats(userId: string): Observable<ChatOfUser[]> {
+      return new Observable(obs => this.sub(userId, 0, obs));
     }
 
-    private sub(chatId:string, page: number, obs:Subscriber<ChatOfUser[]>) {
-      this.getPaginateChat(chatId, page, 100).then(chat => 
+    private sub(userId:string, page: number, obs:Subscriber<ChatOfUser[]>) {
+      this.getPaginateChat(userId, page, 100).then(chat => 
         {
           if (chat.meta.pageIndex < chat.meta.pageCount - 1) {
-            this.sub(chatId, chat.meta.pageIndex + 1, obs);
+            this.sub(userId, chat.meta.pageIndex + 1, obs);
           } else {
             obs.complete();
           }
@@ -39,13 +39,13 @@ export class ChatService {
         }).catch(error => obs.error(error))
     };
 
-    private getPaginateChat(chatId: string, pageIndex: number, pageSize: number): Promise<ResponsePaginate<ChatOfUser[]>> {
+    private getPaginateChat(userId: string, pageIndex: number, pageSize: number): Promise<ResponsePaginate<ChatOfUser[]>> {
       let params = new HttpParams()
-        .set("chatId", chatId)
+        .set("userId", userId)
         .set("pageIndex", pageIndex)
         .set("pageSize", pageSize)
         .set("version", this.chatVersion)
-      return firstValueFrom(this.http.get<ResponsePaginate<ChatOfUser[]>>(`${this.apiURL.chatApiUrl}/${chatId}`, {params: params}));
+      return firstValueFrom(this.http.get<ResponsePaginate<ChatOfUser[]>>(`${this.apiURL.chatApiUrl}`, {params: params}));
     }
 
     public chatInfo(chatId: string): Observable<DetailedChat> {
@@ -61,6 +61,6 @@ export class ChatService {
         .set("pageIndex", pageIndex)
         .set("pageSize", pageSize)
         .set("version", this.chatVersion)
-      return this.http.get<ResponsePaginate<MessageDto[]>>(`${this.apiURL.messageApiUrl}/${chatId}`, {params: params});
+      return this.http.get<ResponsePaginate<MessageDto[]>>(`${this.apiURL.messageApiUrl}`, {params: params});
     }
 }
