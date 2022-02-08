@@ -62,7 +62,6 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
     });
     this.deletedChatSubscription = this.signalrService.deletedChat().subscribe(chatId => {
-      console.log(chatId)
       this.active = this.active?.id === chatId ? undefined : this.active;
       this.chatList = this.chatList.filter(chat => chat.id !== chatId);
       this.setActiveListToChatList(() => this.activeList =  this.activeList.filter(chat => chat.id !== chatId));
@@ -72,12 +71,13 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.chatList.unshift(chat);
       if (chat.user?.id === this.createdWith) {
         this.active = chat;
+        this.createdWith = undefined;
       }
       this.setActiveListToChatList(() => this.findChat());
     });
     //$('#action_menu_btn').on("click", function(){ $('.action_menu').toggle(); });
 
-    this.chatService.getChats(this.accountService.userValue!.userId).subscribe({
+    this.chatService.getChats(this.accountService.userValue?.userId || "").subscribe({ // bug in test otherwise
       next: (chats) => {
         chats.forEach(chat => {
           console.log(chat.id);
