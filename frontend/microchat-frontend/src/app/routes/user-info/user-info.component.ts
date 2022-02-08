@@ -53,15 +53,21 @@ export class UserInfoComponent implements OnInit {
       this.surname = this.surnameInitValue();
       this.username = this.usernameInitValue();
     });
-    this.accountService.getInfo(this.data.id).subscribe(authInfo => {
-      this.user = authInfo;
-      this.username = this.usernameInitValue();
-      this.email = this.emailInitValue();
-    });
+    if (this.myInfo()) {
+      this.accountService.getInfo(this.data.id).subscribe(authInfo => {
+        this.user = authInfo;
+        this.username = this.usernameInitValue();
+        this.email = this.emailInitValue();
+      });
+    }
+  }
+
+  private myInfo(): boolean {
+    return this.data.id === this.accountService.userValue?.userId
   }
 
   modifiable(): string {
-    return this.data.id === this.accountService.userValue?.userId ? "show_it" : "hide_it"
+    return this.myInfo() ? "show_it" : "hide_it"
   }
 
   changeVisibility(elem: keyof Visibility) {

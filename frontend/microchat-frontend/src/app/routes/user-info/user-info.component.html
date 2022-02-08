@@ -1,7 +1,7 @@
 <div>
   <h3>User Info</h3>
   <p><span>id:</span><span> {{userInfo?.id || user?.id}}</span></p>
-  <p><span>email:</span>
+  <p class="{{modifiable()}}"><span>email:</span>
     <span [class]="showElem('email', false)">{{emailInitValue()}}</span>
     <input type="email" [(ngModel)]="email" [class]="showElem('email', true)">
     <i class="fas fa-pen {{modifiable()}}" (click)="changeVisibility('email')"></i>
