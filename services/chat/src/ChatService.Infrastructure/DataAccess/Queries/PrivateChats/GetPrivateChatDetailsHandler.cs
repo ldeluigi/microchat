@@ -28,14 +28,18 @@ public class GetPrivateChatDetailsHandler : RequestHandlerBase<GetPrivateChatDet
         var userId = _userInfoProvider.RequireUserId();
         return await _chatContext.PrivateChats
             .Where(c => c.Id == request.Id && (c.PartecipantId == userId || c.CreatorId == userId))
-            .GroupJoin(_chatContext.PrivateMessages, on => on.Id, on => on.ChatId, (chat, messages) =>
-            new DetailedPrivateChatOutput(
-            chat.Id,
-            chat.CreatorId.AsOption(),
-            chat.PartecipantId.AsOption(),
-            chat.CreationTime,
-            messages.Count()))
+            .GroupJoin(
+                _chatContext.PrivateMessages,
+                on => on.Id,
+                on => on.ChatId,
+                (chat, messages) => new { Chat = chat, Messages = messages.Count() })
             .FirstOptionAsync()
+            .ThenMap(res => new DetailedPrivateChatOutput(
+                res.Chat.Id,
+                res.Chat.CreatorId.AsOption(),
+                res.Chat.PartecipantId.AsOption(),
+                res.Chat.CreationTime,
+                res.Messages))
             .ThenOrElseError(Errors.NotFound);
     }
 }
