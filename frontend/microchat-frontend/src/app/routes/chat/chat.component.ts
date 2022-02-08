@@ -121,7 +121,7 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
 
   getOldMessages(scroll: boolean) {
     if (this.chat) {
-      const pageSize = 100;
+      const pageSize = 5;
       this.chatService.getOldMessages(this.chat.id, this.messagePage, pageSize).subscribe(messages => {
         if (messages.data[0] && this.chat?.id == messages.data[0].chat) {
           this.messagePage++;

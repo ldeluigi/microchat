@@ -48,17 +48,18 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.signalrService.connect();
     this.signalRSubscription = this.signalrService.newMessage().subscribe(
       (message) => {
+        const index = this.chatList.findIndex(chat => chat.id === message.chatId);
         if (message.chatId === this.active?.id) {
           this.newIncomingMessage = message;
         } else {
-          const index = this.chatList.findIndex(chat => chat.id === message.chatId);
           if (index >= 0) {
             this.chatList[index].hasNewMessages++;
-            this.chatList.unshift(this.chatList.splice(index, 1)[0]);
           } else {
-            console.log("TODO: richiedi chat");
+            window.location.reload();
           }
         }
+        this.chatList.unshift(this.chatList.splice(index, 1)[0]);
+        this.setActiveListToChatList(() => {})
     });
     this.deletedChatSubscription = this.signalrService.deletedChat().subscribe(chatId => {
       this.active = this.active?.id === chatId ? undefined : this.active;
