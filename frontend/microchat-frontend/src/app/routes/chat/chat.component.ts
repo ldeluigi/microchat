@@ -1,10 +1,11 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AccountService } from 'src/app/services/account.service';
+import { ChatService } from 'src/app/services/chat.service';
 import { SignalRService } from 'src/app/services/signal-r.service';
 import { UserService } from 'src/app/services/user.service';
 import { Chat } from 'src/model/Chat';
-import { Message } from 'src/model/Message';
+import { Message, toMessage } from 'src/model/Message';
 
 @Component({
   selector: 'app-chat',
@@ -15,6 +16,7 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
   @Input() chat: Chat | undefined;
   @Input() message!: Message | undefined;
   @Input() scrollPerc!: number;
+  messagePage = 0;
 
   deletedMessageId!: Subscription;
   editedMessageId!: Subscription;
@@ -35,15 +37,16 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
     private elementRef: ElementRef,
     private accountService: AccountService,
     private userService: UserService,
+    private chatService: ChatService,
     private signalrService: SignalRService
   ) {}
 
   ngOnInit(): void {
-    this.deletedMessageId = this.signalrService.deletedMessage().subscribe(messageId =>
-      this.messages = this.messages.filter(message => message.id !== messageId)
-    );
+    this.deletedMessageId = this.signalrService.deletedMessage().subscribe(deletedMessage => {
+      this.messages = this.messages.filter(message => message.id !== deletedMessage.id)
+    });
     this.editedMessageId = this.signalrService.editedMessage().subscribe(editedMessage => {
-      const index = this.messages.findIndex(message => message.id !== editedMessage.id);
+      const index = this.messages.findIndex(message => message.id == editedMessage.id);
       if (index >= 0) {
         this.messages[index] = editedMessage;
       } else {
@@ -63,9 +66,11 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['chat']) {
+    if (changes['chat'] /*&& changes['chat'].currentValue*/) { // TODO
       this.messages = [];
+      this.messagePage = 0;
       if (changes['chat'].currentValue) {
+        console.log(changes['chat'].currentValue.id);
         console.log("TODO: changed Chat");
         this.elementRef.nativeElement.scrollTop = this.elementRef.nativeElement.scrollHeight;
         this.getOldMessages();
@@ -73,15 +78,6 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
           this.signalrService.viewedMessage(m.id);
         });
         this.chat!.hasNewMessages = 0;
-        this.addToMessages(
-          {id: "id1",
-            chatId: changes['chat'].currentValue.id,
-            text:"Grazie, anche a me e famiglia!",
-            sendTime: new Date(2021,11,25,12,4),
-            edited:false,
-            viewed:true,
-            sender:"Thommy"
-          }, true)
       }
     }
     if (changes['message'] && changes['message'].currentValue) {
@@ -118,14 +114,16 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
 
   getOldMessages() {
     if (this.chat) {
-      var receivedMessages = [
-        {id: "id", chatId: this.chat.id, text:"Buon Natale", sendTime: new Date(2021,11,25,12),edited:true,viewed:true,sender:"Simo"},
-        {id: "id1", chatId: this.chat.id, text:"Grazie, anche a te e famiglia!", sendTime: new Date(2021,11,25,12,1), edited:false,viewed:false,sender:"Thommy"},
-        {id: "id2", chatId: this.chat.id, text:":)", sendTime: new Date(2021,11,25,12,2), edited:false,viewed:true,sender:"Simo"},
-        {id: "id3", chatId: this.chat.id, text:"Dai ricominciamo a lavorare al proj", sendTime: new Date(2021,11,26,12,3), edited:true,viewed:true,sender:"Thommy"}
-      ]
-      var count = 0;
-      receivedMessages.reverse().forEach(message => count += this.addToMessages(message, false) ? 1 : 0);
+      this.chatService.getOldMessages(this.chat.id, this.messagePage, 100).subscribe(messages => {
+        if (this.chat?.id == messages.data[0].chat) {
+          this.messagePage++;
+        }
+        var count = 0;
+        messages.data.reverse().forEach(message => count += this.addToMessages(toMessage(message), false) ? 1 : 0);
+        if (count < 10 && messages.meta.pageIndex < messages.meta.pageCount - 1) {
+          this.getOldMessages();
+        }
+      });
     }
   }
 

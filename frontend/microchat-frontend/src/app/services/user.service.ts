@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { HttpClient } from '@angular/common/http';
-import { first, firstValueFrom, map, Observable } from "rxjs";
-import { Response } from "src/model/serverResponse";
+import { first, map, Observable } from "rxjs";
+import { Response, ResponsePaginate } from "src/model/serverResponse";
 import { ApiURLService } from "./api-url.service";
 import { LogService } from "./log.service";
 import { UserInfo } from "src/model/UserInfo";
@@ -24,7 +24,7 @@ export class UserService {
   }
 
   usersSearched(searchString: string): Observable<UserInfo[]> {
-    return this.http.get<Response<UserInfo[]>>(`${this.apiURL.userApiUrl}${this.userVersion}`, {params: {search: searchString}})
+    return this.http.get<ResponsePaginate<UserInfo[]>>(`${this.apiURL.userApiUrl}${this.userVersion}`, {params: {search: searchString}})
       .pipe(map(u => u.data));
   }
 
@@ -51,8 +51,6 @@ export class UserService {
     this.http.put<Response<UserInfo>>(`${this.apiURL.userApiUrl}/${userId}${this.userVersion}`, data)
       .pipe(first()).subscribe({
         next: data => {
-          console.log(data);
-          this.logService.messageSnackBar('Data updated correctly');
         },
         error: (err: Error) => {
           this.logService.errorSnackBar(err.message)

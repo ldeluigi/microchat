@@ -17,6 +17,21 @@ export interface ChatDto {
   partecipant: string
 }
 
+export interface ChatOfUser {
+  id: string,
+  creatorId: string,
+  partecipantId: string,
+  CreationTimestamp: string,
+  NumberOfUnreadMessages?: number,
+  lastMessageTime: string
+}
+
+export interface DetailedChat {
+    id: string,
+    creationTimestamp: string,
+    numberOfMessages: number
+}
+
 export function UserLeftChat(chat: Chat) {
   return chat.user ? false : true;
 }

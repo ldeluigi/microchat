@@ -80,12 +80,12 @@ export class AccountService {
 
   register(user: UserRegistration): Observable<UserRegistrationResponse> {
     return this.http.post<Response<UserRegistrationResponse>>(`${this.apiURL.authApiUrl}${this.authVersion}`, user)
-      .pipe(map(u => u.data));
+      .pipe(map(u => u.data), first());
   }
 
   getInfo(userId: string): Observable<AuthUserInfo> {
     return this.http.get<Response<AuthUserInfo>>(`${this.apiURL.authApiUrl}/${userId}${this.authVersion}`)
-      .pipe(map(u => u.data));
+      .pipe(map(u => u.data), first());
   }
 
   async updateEmail(newEmail: string): Promise<void> {
@@ -144,6 +144,6 @@ export class AccountService {
       .pipe(map(a => {
         this.logout("user deleted correctly");
         return a.data;
-      }));
+      }), first());
   }
 }
