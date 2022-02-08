@@ -2,13 +2,15 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { MatDialog } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { AccountService } from 'src/app/services/account.service';
+import { ChatService } from 'src/app/services/chat.service';
 import { LogService } from 'src/app/services/log.service';
 import { SignalRService } from 'src/app/services/signal-r.service';
 import { UserService } from 'src/app/services/user.service';
 import { Chat, UserLeftChat } from 'src/model/Chat';
+import { authToUser } from 'src/model/LoggedUser';
 import { Message } from 'src/model/Message';
 import { Stats } from 'src/model/Stats';
-import { toUser } from 'src/model/UserInfo';
+import { infoToUser } from 'src/model/UserInfo';
 import { StatsComponent } from '../stats/stats.component';
 import { UserInfoComponent } from '../user-info/user-info.component';
 
@@ -39,6 +41,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private signalrService: SignalRService,
     private logService: LogService,
     private accountService: AccountService,
+    private chatService: ChatService,
     public dialog: MatDialog
   ) {}
 
@@ -74,13 +77,46 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
     //$('#action_menu_btn').on("click", function(){ $('.action_menu').toggle(); });
 
-    //getChatList
-    //this.chatList.push({id:"a6e155fa-3651-4358-97d3-6394942c2daa", hasNewMessages:8, lastMessageTime: new Date(2021, 11, 1, 16), user: {id: "c6ddc9d5-6a84-4fc1-972f-57b2d866aadb", name: "ThommyN1"}});
-    //this.chatList.push({id:"f04cc7ad-008c-4662-a581-e0c53aa53167", hasNewMessages:5, lastMessageTime: new Date(2021, 11, 1, 13)});
-    //this.chatList.push({id:"3", hasNewMessages:0, lastMessageTime: new Date(2021, 11, 1, 14)});
-    //this.chatList.push({id:"4", hasNewMessages:2, lastMessageTime: new Date(2021, 11, 1, 15)});
-    //this.chatList.sort((chat1, chat2) => chat2.lastMessageTime.getTime() - chat1.lastMessageTime.getTime());
-    this.initActiveList();
+    this.chatService.getChats(this.accountService.userValue!.userId).subscribe({
+      next: (chats) => {
+        chats.forEach(chat => {
+          console.log(chat.id);
+          const otherUser = 
+            chat.creatorId && chat.creatorId != this.accountService.userValue?.userId ?
+              chat.creatorId :
+              chat.partecipantId && chat.partecipantId != this.accountService.userValue?.userId ?
+                chat.partecipantId :
+                undefined
+          const addingChat : Chat = {
+            id: chat.id,
+            hasNewMessages: chat.NumberOfUnreadMessages || 0,
+            lastMessageTime: new Date(Date.parse(chat.lastMessageTime)),
+          }
+          if (otherUser) {
+            this.accountService.getInfo(otherUser).subscribe(auth => {
+              addingChat.user = authToUser(auth);
+              this.addInChatList(addingChat);
+            });
+          } else {
+            this.addInChatList(addingChat);
+          }
+        })
+      },
+      error: () => this.logService.errorSnackBar("chats are not loaded correctly"),
+      complete: () => {
+        console.log("chat loaded correctly");
+        this.initActiveList();
+      }
+    });
+  }
+
+  private addInChatList(chat: Chat) {
+    const index = this.chatList.findIndex(c => c.lastMessageTime.getTime < chat.lastMessageTime.getTime)
+    if (index >= 0) {
+      this.chatList.splice(index, 0, chat);
+    } else {
+      this.chatList.unshift(chat)
+    }
   }
       
   ngOnDestroy(): void {
@@ -153,7 +189,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       let foundChatList: Chat[] = []
       this.userService.usersSearched(this.search).subscribe(users => {
         users.forEach(user => 
-          foundChatList.push({id: "", hasNewMessages: 0, lastMessageTime: new Date, user: toUser(user)}))
+          foundChatList.push({id: "", hasNewMessages: 0, lastMessageTime: new Date, user: infoToUser(user)}))
       })
       this.setActiveListToChatList(() => this.activeList = foundChatList);
     } else {
@@ -177,17 +213,15 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   showStats() {
     if (this.active) {
-      console.log("TODO: get stats from chat :"+ this.active?.id);
-      const detailedChat = {
-        Id: this.active?.id,
-        CreationTimestamp: "05/02/2022",
-        NumberOfMessages: 10};
-      const days = Math.ceil(Date.parse(detailedChat.CreationTimestamp) - new Date().getTimezoneOffset() - Date.now() / (1000 * 3600 * 24));
-      const stats: Stats = { 
-        totalMessages: detailedChat.NumberOfMessages,
-        avgWeekMsg: detailedChat.NumberOfMessages / Math.ceil(days / 7),
-        avgDaysMsg: detailedChat.NumberOfMessages / days };
-      this.dialog.open(StatsComponent, {data : stats});
+      console.log("TODO: get stats from chat :"+ this.active.id);
+      this.chatService.chatInfo(this.active.id).subscribe(detailedChat => {
+        const days = Math.ceil(Date.parse(detailedChat.creationTimestamp) - new Date().getTimezoneOffset() - Date.now() / (1000 * 3600 * 24));
+        const stats: Stats = { 
+          totalMessages: detailedChat.numberOfMessages,
+          avgWeekMsg: detailedChat.numberOfMessages / Math.ceil(days / 7),
+          avgDaysMsg: detailedChat.numberOfMessages / days };
+        this.dialog.open(StatsComponent, {data : stats});
+      });
     } else {
       this.logService.messageSnackBar("Unable to get stats for missing chat");
     }
