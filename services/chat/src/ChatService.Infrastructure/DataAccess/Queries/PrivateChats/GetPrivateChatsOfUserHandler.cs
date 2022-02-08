@@ -38,12 +38,18 @@ public class GetPrivateChatsOfUserHandler : PaginatedQueryHandlerBase<GetPrivate
         return await _chatContext.PrivateChats
             .AsNoTracking()
             .Where(c => c.CreatorId == userId || c.PartecipantId == userId)
-            .Select(c => new { Chat = c, UnreadMessages = _chatContext.PrivateMessages.Where(m => m.ChatId == c.Id && !m.Viewed && m.SenderId != userId).Count() })
+            .Select(c => new
+            {
+                Chat = c,
+                UnreadMessages = _chatContext.PrivateMessages.Where(m => m.ChatId == c.Id && !m.Viewed && m.SenderId != userId).Count(),
+                LastMessageTimestamp = _chatContext.PrivateMessages.Where(m => m.ChatId == c.Id).Select(m => m.SendTime).Max()
+            })
             .OrderBy(c => c.Chat.Id)
             .Select(x => PrivateChatModelMapper
                 .ConvertModelToOutput(
                     x.Chat,
                     x.UnreadMessages,
+                    x.LastMessageTimestamp.AsOption(),
                     userId))
             .GetPageAsync(request.Pagination);
     }

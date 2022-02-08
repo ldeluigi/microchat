@@ -11,7 +11,8 @@ public record PrivateChatOfUserDto(
     Guid? Creator,
     Guid? Partecipant,
     Timestamp Creation,
-    int? NumberOfUnreadMessages);
+    int? NumberOfUnreadMessages,
+    Timestamp LastMessageTime);
 
 public class PrivateChatOfUserMapping : DirectMapping<PrivateChatOfUserOutput, PrivateChatOfUserDto>
 {
@@ -20,7 +21,8 @@ public class PrivateChatOfUserMapping : DirectMapping<PrivateChatOfUserOutput, P
         o.CreatorId.AsNullable(),
         o.PartecipantId.AsNullable(),
         o.CreationTimestamp,
-        o.NumberOfUnreadMessages.AsNullable()))
+        o.NumberOfUnreadMessages.AsNullable(),
+        o.LastMessageTimestamp.OrElseNull()))
     {
     }
 }
