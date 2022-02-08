@@ -7,7 +7,7 @@ export interface UserInfo {
   username: string
 }
 
-export function toUser(userInfo: UserInfo): User {
+export function infoToUser(userInfo: UserInfo): User {
   return {id: userInfo.id, name: userInfo.username};
 }
 
