@@ -10,7 +10,6 @@ using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Application.Pages;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Dal.EfCore.Utils;
-using EasyDesk.Tools;
 using EasyDesk.Tools.Options;
 using Microsoft.EntityFrameworkCore;
 using static EasyDesk.CleanArchitecture.Application.Responses.ResponseImports;
@@ -40,16 +39,12 @@ public class GetPrivateChatsOfUserHandler : PaginatedQueryHandlerBase<GetPrivate
             .AsNoTracking()
             .Where(c => c.CreatorId == userId || c.PartecipantId == userId)
             .Select(c => new { Chat = c, UnreadMessages = _chatContext.PrivateMessages.Where(m => m.ChatId == c.Id && !m.Viewed && m.SenderId != userId).Count() })
-
             .OrderBy(c => c.Chat.Id)
-            .GetPageAsync(request.Pagination)
-            .Map(x => new Page<PrivateChatOfUserOutput>(
-                x.Items.Select(y => PrivateChatModelMapper
+            .Select(x => PrivateChatModelMapper
                 .ConvertModelToOutput(
-                    y.Chat,
-                    y.UnreadMessages,
-                    userId)),
-                x.Pagination,
-                x.Count));
+                    x.Chat,
+                    x.UnreadMessages,
+                    userId))
+            .GetPageAsync(request.Pagination);
     }
 }
