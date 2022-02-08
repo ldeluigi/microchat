@@ -28,7 +28,15 @@ public class GetAllPrivateChatsOfUserHandler : RequestHandlerBase<GetAllPrivateC
         var userId = _userInfoProvider.RequireUserId();
         var result = await _chatContext.PrivateChats
             .Where(c => c.CreatorId == userId || c.PartecipantId == userId)
-            .GroupJoin(_chatContext.PrivateMessages, on => on.Id, on => on.ChatId, (chat, messages) => PrivateChatModelMapper.ConvertModelToOutput(chat, messages, userId))
+            .GroupJoin(
+                _chatContext.PrivateMessages,
+                on => on.Id,
+                on => on.ChatId,
+                (chat, messages) =>
+                    PrivateChatModelMapper.ConvertModelToOutput(
+                        chat,
+                        messages.Select(m => !m.Viewed && m.SenderId != userId).Count(),
+                        userId))
             .ToListAsync();
         return ResponseImports.Success<IEnumerable<PrivateChatOfUserOutput>>(result);
     }

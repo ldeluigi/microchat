@@ -35,9 +35,18 @@ public class GetPrivateChatsOfUserHandler : PaginatedQueryHandlerBase<GetPrivate
             return Failure<Page<PrivateChatOfUserOutput>>(new NotFoundError());
         }
         return await _chatContext.PrivateChats
-            .Where(c => c.CreatorId == request.UserId || c.PartecipantId == request.UserId)
+            .Where(c => c.CreatorId == userId || c.PartecipantId == userId)
             .OrderBy(c => c.Id)
-            .GroupJoin(_chatContext.PrivateMessages, on => on.Id, on => on.ChatId, (chat, messages) => PrivateChatModelMapper.ConvertModelToOutput(chat, messages, userId))
+            .GroupJoin(
+                _chatContext.PrivateMessages,
+                on => on.Id,
+                on => on.ChatId,
+                (chat, messages) =>
+                    PrivateChatModelMapper
+                        .ConvertModelToOutput(
+                            chat,
+                            messages.Select(m => !m.Viewed && m.SenderId != userId).Count(),
+                            userId))
             .GetPageAsync(request.Pagination);
     }
 }

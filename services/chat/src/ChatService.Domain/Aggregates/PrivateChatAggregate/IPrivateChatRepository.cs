@@ -10,4 +10,8 @@ public interface IPrivateChatRepository :
     IRemoveRepository<PrivateChat>
 {
     Task<bool> ChatAlreadyExistBetween(Guid creatorId, Guid participantId);
+
+    Task RemoveUserFromChats(Guid userId);
+
+    Task DeleteEmptyChats();
 }

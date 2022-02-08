@@ -6,9 +6,9 @@ using EasyDesk.CleanArchitecture.Domain.Metamodel;
 using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Z.EntityFramework.Plus;
 
 namespace ChatService.Infrastructure.DataAccess.Repositories;
 
@@ -31,16 +31,27 @@ public class PrivateChatRepository : EfCoreRepository<PrivateChat, PrivateChatMo
             || (c.PartecipantId == user2 && c.CreatorId == user1))
         .AnyAsync();
 
-    private void DeleteOrphanChats(IQueryable<PrivateChatModel> orphanChats)
-    {
-        _context.PrivateMessages.RemoveRange(_context.PrivateMessages.Join(orphanChats, on => on.ChatId, on => on.Id, (m, c) => m));
-        DbSet.RemoveRange(orphanChats);
-    }
-
     public async Task<Result<PrivateChat>> GetById(Guid id) => await GetSingle(q => q.Where(x => x.Id == id));
 
     protected override DbSet<PrivateChatModel> GetDbSet(ChatContext context) => context.PrivateChats;
 
     protected override IQueryable<PrivateChatModel> Includes(IQueryable<PrivateChatModel> initialQuery) =>
         initialQuery;
+
+    public async Task RemoveUserFromChats(Guid userId)
+    {
+        await DbSet
+            .Where(c => c.PartecipantId == userId)
+            .UpdateAsync(m => new() { PartecipantId = null });
+        await DbSet
+            .Where(c => c.CreatorId == userId)
+            .UpdateAsync(m => new() { CreatorId = null });
+    }
+
+    public async Task DeleteEmptyChats()
+    {
+        await DbSet
+            .Where(c => c.PartecipantId == null && c.CreatorId == null)
+            .DeleteAsync();
+    }
 }

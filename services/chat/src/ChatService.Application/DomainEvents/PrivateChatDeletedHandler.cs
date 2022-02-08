@@ -17,8 +17,9 @@ public class PrivateChatDeletedHandler : DomainEventHandlerBase<PrivateChatDelet
         _privateMessageRepository = privateMessageRepository;
     }
 
-    protected override Task<Response<Nothing>> Handle(PrivateChatDeleted ev)
+    protected override async Task<Response<Nothing>> Handle(PrivateChatDeleted ev)
     {
-        return OkAsync;
+        await _privateMessageRepository.DeleteMessagesOfChat(ev.ChatId);
+        return Ok;
     }
 }
