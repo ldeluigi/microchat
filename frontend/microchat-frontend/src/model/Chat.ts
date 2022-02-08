@@ -17,8 +17,6 @@ export interface ChatDto {
   partecipant: string
 }
 
-
-
 export function UserLeftChat(chat: Chat) {
   return chat.user ? false : true;
 }

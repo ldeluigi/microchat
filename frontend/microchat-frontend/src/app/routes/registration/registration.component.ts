@@ -117,12 +117,17 @@ export class RegistrationComponent implements OnInit {
     };
     this.accountService
       .register(user)
-      .then(_ => {
-        this.logService.messageSnackBar(user.username + ' registered: it\'s time to login and play.');
-        this.router.navigate([this.returnUrl]);
-      })
-      .catch(error => {
-        this.logService.errorSnackBar(error);
-      });
+      .pipe(first())
+      .subscribe(
+        {
+          next: (_) => {
+            this.logService.messageSnackBar(user.username + ' registered: it\'s time to login and play.');
+            this.router.navigate([this.returnUrl]);
+          },
+          error:(error) => {
+            this.logService.errorSnackBar(error);
+          }
+        }
+      );
   }
 }

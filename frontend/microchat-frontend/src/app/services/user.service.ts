@@ -28,9 +28,9 @@ export class UserService {
       .pipe(map(u => u.data));
   }
 
-  userInfo(userId: string): Promise<UserInfo> {
-    return firstValueFrom(this.http.get<Response<UserInfo>>(`${this.apiURL.userApiUrl}/${userId}${this.userVersion}`)
-      .pipe(map(u => u.data)));
+  userInfo(userId: string): Observable<UserInfo> {
+    return this.http.get<Response<UserInfo>>(`${this.apiURL.userApiUrl}/${userId}${this.userVersion}`)
+      .pipe(map(u => u.data));
   }
 
   getSrcImg(userId: string): string {

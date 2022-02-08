@@ -10,23 +10,23 @@ export interface Message {
 
 export interface MessageDto {
   id: string,
-  chatId: string,
+  chat: string,
   text: string,
   sendTime: string,
   lastEditTime: string,
   viewed: boolean,
-  senderId: string
+  sender: string
 }
 
 export function toMessage(dto: MessageDto): Message {
   const message: Message = {
     id: dto.id,
-    chatId: dto.chatId,
+    chatId: dto.chat,
     text: dto.text,
     sendTime: new Date(Date.parse(dto.sendTime)),
     edited: dto.lastEditTime? true : false,
     viewed: dto.viewed,
-    sender: dto.senderId,
+    sender: dto.sender,
   }
   return message;
 }

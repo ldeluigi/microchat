@@ -47,13 +47,13 @@ export class UserInfoComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: {id: string}) { }
 
   ngOnInit(): void {
-    this.userService.userInfo(this.data.id).then(info => {
+    this.userService.userInfo(this.data.id).subscribe(info => {
       this.userInfo = info;
       this.name = this.nameInitValue();
       this.surname = this.surnameInitValue();
       this.username = this.usernameInitValue();
     });
-    this.accountService.getInfo(this.data.id).then(authInfo => {
+    this.accountService.getInfo(this.data.id).subscribe(authInfo => {
       this.user = authInfo;
       this.username = this.usernameInitValue();
       this.email = this.emailInitValue();
