@@ -26,6 +26,12 @@ export interface ChatOfUser {
   lastMessageTime: string
 }
 
+export interface DetailedChat {
+    id: string,
+    creationTimestamp: string,
+    numberOfMessages: number
+}
+
 export function UserLeftChat(chat: Chat) {
   return chat.user ? false : true;
 }
