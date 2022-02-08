@@ -10,6 +10,7 @@ using EasyDesk.CleanArchitecture.Application.Mediator;
 using EasyDesk.CleanArchitecture.Application.Pages;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Dal.EfCore.Utils;
+using EasyDesk.Tools;
 using EasyDesk.Tools.Options;
 using Microsoft.EntityFrameworkCore;
 using static EasyDesk.CleanArchitecture.Application.Responses.ResponseImports;
@@ -38,17 +39,17 @@ public class GetPrivateChatsOfUserHandler : PaginatedQueryHandlerBase<GetPrivate
         return await _chatContext.PrivateChats
             .AsNoTracking()
             .Where(c => c.CreatorId == userId || c.PartecipantId == userId)
-            .OrderBy(c => c.Id)
-            .GroupJoin(
-                _chatContext.PrivateMessages,
-                on => on.Id,
-                on => on.ChatId,
-                (chat, messages) =>
-                    PrivateChatModelMapper
-                        .ConvertModelToOutput(
-                            chat,
-                            messages.Select(m => !m.Viewed && m.SenderId != userId).Count(),
-                            userId))
-            .GetPageAsync(request.Pagination);
+            .Select(c => new { Chat = c, UnreadMessages = _chatContext.PrivateMessages.Where(m => m.ChatId == c.Id && !m.Viewed && m.SenderId != userId).Count() })
+
+            .OrderBy(c => c.Chat.Id)
+            .GetPageAsync(request.Pagination)
+            .Map(x => new Page<PrivateChatOfUserOutput>(
+                x.Items.Select(y => PrivateChatModelMapper
+                .ConvertModelToOutput(
+                    y.Chat,
+                    y.UnreadMessages,
+                    userId)),
+                x.Pagination,
+                x.Count));
     }
 }

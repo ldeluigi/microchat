@@ -27,25 +27,17 @@ public class GetPrivateChatDetailsHandler : RequestHandlerBase<GetPrivateChatDet
     protected override async Task<Response<DetailedPrivateChatOutput>> Handle(GetPrivateChatDetails request)
     {
         var userId = _userInfoProvider.RequireUserId();
-        return await _chatContext.PrivateMessages
+        return await _chatContext.PrivateChats
             .AsNoTracking()
-            .Join(
-                _chatContext.PrivateChats
-                    .Where(c => c.Id == request.Id && (c.PartecipantId == userId || c.CreatorId == userId)),
-                on => on.ChatId,
-                on => on.Id,
-                (message, chat) => new { Chat = chat, Message = message })
-            .GroupBy(
-                x => x.Chat.Id,
-                (chatId, group) =>
-                    new { Chat = group.First().Chat, MessageCount = group.Count() })
-            .FirstOptionAsync()
-            .ThenMap(x => new DetailedPrivateChatOutput(
+            .Where(c => c.Id == request.Id && (c.PartecipantId == userId || c.CreatorId == userId))
+            .Select(c => new { MessageCount = _chatContext.PrivateMessages.Where(m => m.ChatId == c.Id).Count(), Chat = c })
+            .Select(x => new DetailedPrivateChatOutput(
                 x.Chat.Id,
                 x.Chat.CreatorId.AsOption(),
                 x.Chat.PartecipantId.AsOption(),
                 x.Chat.CreationTime,
                 x.MessageCount))
+            .FirstOptionAsync()
             .ThenOrElseError(Errors.NotFound);
     }
 }
