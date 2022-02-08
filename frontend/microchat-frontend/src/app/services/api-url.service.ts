@@ -14,9 +14,19 @@ export class ApiURLService {
     return this.loadApiUrl();
   }
 
-  get chatApiUrl(): string {
+  get signalRApiUrl(): string {
     var port = environment.chatPort;
     return `${this.loadApiUrl()}:${port}/signalr/chat`;
+  }
+
+  get ChatApiUrl(): string {
+    var port = environment.chatPort;
+    return `${this.loadApiUrl()}:${port}/chats`;
+  }
+
+  get MessageApiUrl(): string {
+    var port = environment.chatPort;
+    return `${this.loadApiUrl()}:${port}/messages`;
   }
 
   get authApiUrl(): string {
