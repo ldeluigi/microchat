@@ -16,6 +16,7 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
   @Input() chat: Chat | undefined;
   @Input() message!: Message | undefined;
   @Input() scrollPerc!: number;
+  scrollPercToGetOldMessages: number = 15;
   messagePage = 0;
 
   deletedMessageId!: Subscription;
@@ -62,7 +63,11 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
   }
 
   ngAfterViewInit(): void {
-    this.elementRef.nativeElement.scrollTop = this.elementRef.nativeElement.scrollHeight;
+    this.scrollDown();
+  }
+
+  private scrollDown(): void {
+    this.elementRef.nativeElement.scrollTop = this.elementRef.nativeElement.scrollHeight + this.elementRef.nativeElement.offsetHeight;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -72,12 +77,12 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
       if (changes['chat'].currentValue) {
         console.log(changes['chat'].currentValue.id);
         console.log("TODO: changed Chat");
-        this.elementRef.nativeElement.scrollTop = this.elementRef.nativeElement.scrollHeight;
-        this.getOldMessages();
+        this.getOldMessages(true);
         this.messages.filter(m => m.viewed && m.sender !== this.accountService.userValue?.userId).forEach(m => {
           this.signalrService.viewedMessage(m.id);
         });
         this.chat!.hasNewMessages = 0;
+        this.scrollDown();
       }
     }
     if (changes['message'] && changes['message'].currentValue) {
@@ -85,9 +90,11 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
       if (changes['message'].currentValue.sender !== this.accountService.userValue?.userId) {
         this.signalrService.viewedMessage(changes['message'].currentValue.id);
       }
+      this.scrollDown();
     }
-    if (changes['scrollPerc'] && changes['scrollPerc'].currentValue < 15 && this.chat) {
+    if (changes['scrollPerc'] && changes['scrollPerc'].currentValue < this.scrollPercToGetOldMessages && this.chat) {
       console.log("TODO: carica altri messaggi");
+      this.getOldMessages(false);
       changes['scrollPerc'].currentValue;
     }
   }
@@ -109,19 +116,23 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
       this.messages[index] = message;
     }
     this.resortMessages();
-    return alreadyPresent;
+    return !alreadyPresent;
   }
 
-  getOldMessages() {
+  getOldMessages(scroll: boolean) {
     if (this.chat) {
-      this.chatService.getOldMessages(this.chat.id, this.messagePage, 100).subscribe(messages => {
-        if (this.chat?.id == messages.data[0].chat) {
+      const pageSize = 100;
+      this.chatService.getOldMessages(this.chat.id, this.messagePage, pageSize).subscribe(messages => {
+        if (messages.data[0] && this.chat?.id == messages.data[0].chat) {
           this.messagePage++;
         }
         var count = 0;
-        messages.data.reverse().forEach(message => count += this.addToMessages(toMessage(message), false) ? 1 : 0);
-        if (count < 10 && messages.meta.pageIndex < messages.meta.pageCount - 1) {
-          this.getOldMessages();
+        messages.data.forEach(message => count += this.addToMessages(toMessage(message), false) ? 1 : 0);
+        if (scroll) {
+          this.scrollDown();
+        }
+        if (this.scrollPerc < this.scrollPercToGetOldMessages && messages.meta.pageIndex < messages.meta.pageCount - 1) {
+          this.getOldMessages(scroll);
         }
       });
     }
