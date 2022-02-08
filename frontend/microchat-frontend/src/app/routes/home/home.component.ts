@@ -7,7 +7,6 @@ import { LogService } from 'src/app/services/log.service';
 import { SignalRService } from 'src/app/services/signal-r.service';
 import { UserService } from 'src/app/services/user.service';
 import { Chat, UserLeftChat } from 'src/model/Chat';
-import { authToUser } from 'src/model/LoggedUser';
 import { Message } from 'src/model/Message';
 import { Stats } from 'src/model/Stats';
 import { infoToUser } from 'src/model/UserInfo';
@@ -80,21 +79,20 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.chatService.getChats(this.accountService.userValue?.userId || "").subscribe({ // bug in test otherwise
       next: (chats) => {
         chats.forEach(chat => {
-          console.log(chat.id);
           const otherUser = 
-            chat.creatorId && chat.creatorId != this.accountService.userValue?.userId ?
-              chat.creatorId :
-              chat.partecipantId && chat.partecipantId != this.accountService.userValue?.userId ?
-                chat.partecipantId :
+            chat.creator && chat.creator != this.accountService.userValue?.userId ?
+              chat.creator :
+              chat.partecipant && chat.partecipant != this.accountService.userValue?.userId ?
+                chat.partecipant :
                 undefined
           const addingChat : Chat = {
             id: chat.id,
-            hasNewMessages: chat.NumberOfUnreadMessages || 0,
+            hasNewMessages: chat.numberOfUnreadMessages || 0,
             lastMessageTime: new Date(Date.parse(chat.lastMessageTime)),
           }
           if (otherUser) {
-            this.accountService.getInfo(otherUser).subscribe(auth => {
-              addingChat.user = authToUser(auth);
+            this.userService.userInfo(otherUser).subscribe(info => {
+              addingChat.user = infoToUser(info);
               this.addInChatList(addingChat);
             });
           } else {

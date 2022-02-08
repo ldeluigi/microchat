@@ -19,10 +19,10 @@ export interface ChatDto {
 
 export interface ChatOfUser {
   id: string,
-  creatorId: string,
-  partecipantId: string,
-  CreationTimestamp: string,
-  NumberOfUnreadMessages?: number,
+  creator: string,
+  partecipant: string,
+  creation: string,
+  numberOfUnreadMessages?: number,
   lastMessageTime: string
 }
 
