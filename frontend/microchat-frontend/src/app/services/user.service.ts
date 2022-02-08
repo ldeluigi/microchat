@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { HttpClient } from '@angular/common/http';
-import { first, map, Observable } from "rxjs";
+import { first, firstValueFrom, map, Observable } from "rxjs";
 import { Response } from "src/model/serverResponse";
 import { ApiURLService } from "./api-url.service";
 import { LogService } from "./log.service";
@@ -28,9 +28,9 @@ export class UserService {
       .pipe(map(u => u.data));
   }
 
-  usersInfo(userId: string): Observable<UserInfo> {
-    return this.http.get<Response<UserInfo>>(`${this.apiURL.userApiUrl}/${userId}${this.userVersion}`)
-      .pipe(map(u => u.data));
+  userInfo(userId: string): Promise<UserInfo> {
+    return firstValueFrom(this.http.get<Response<UserInfo>>(`${this.apiURL.userApiUrl}/${userId}${this.userVersion}`)
+      .pipe(map(u => u.data)));
   }
 
   getSrcImg(userId: string): string {

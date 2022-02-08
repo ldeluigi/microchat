@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable, throwError } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { AuthUserInfo, LoggedUser } from 'src/model/LoggedUser';
 import { LogLevel } from 'src/model/logLevel';
@@ -78,14 +78,14 @@ export class AccountService {
     this.router.navigate(['/login']);
   }
 
-  register(user: UserRegistration): Observable<UserRegistrationResponse> {
-    return this.http.post<Response<UserRegistrationResponse>>(`${this.apiURL.authApiUrl}${this.authVersion}`, user)
-      .pipe(map(u => u.data));
+  register(user: UserRegistration): Promise<UserRegistrationResponse> {
+    return firstValueFrom(this.http.post<Response<UserRegistrationResponse>>(`${this.apiURL.authApiUrl}${this.authVersion}`, user)
+      .pipe(map(u => u.data)));
   }
 
-  getInfo(userId: string): Observable<AuthUserInfo> {
-    return this.http.get<Response<AuthUserInfo>>(`${this.apiURL.authApiUrl}/${userId}${this.authVersion}`)
-      .pipe(map(u => u.data));
+  getInfo(userId: string): Promise<AuthUserInfo> {
+    return firstValueFrom(this.http.get<Response<AuthUserInfo>>(`${this.apiURL.authApiUrl}/${userId}${this.authVersion}`)
+      .pipe(map(u => u.data)));
   }
 
   async updateEmail(newEmail: string): Promise<void> {
@@ -142,7 +142,7 @@ export class AccountService {
     }
     return this.http.delete<Response<LoggedUser>>(`${this.apiURL.authApiUrl}/${user.userId}${this.authVersion}`)
       .pipe(map(a => {
-        this.saveUser(null);
+        this.logout("user deleted correctly");
         return a.data;
       }));
   }

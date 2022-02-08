@@ -38,7 +38,7 @@ import { toUser } from 'src/model/UserInfo';
       if (this.isConnected()) {
         this.disconnect();
         this.connection = new signalR.HubConnectionBuilder()
-            .withUrl(this.apiUrlService.chatApiUrl, { accessTokenFactory: () => this.accountService.userValue?.accessToken || "" })
+            .withUrl(this.apiUrlService.signalRApiUrl, { accessTokenFactory: () => this.accountService.userValue?.accessToken || "" })
             .configureLogging(signalR.LogLevel.Trace)
             .withAutomaticReconnect()
             .build();
@@ -76,7 +76,7 @@ import { toUser } from 'src/model/UserInfo';
       if (this.accountService.userValue?.userId === chatDto.creator) {
         userId = chatDto.partecipant;
       }
-      this.userService.usersInfo(userId).pipe(first()).subscribe(info => {
+      this.userService.userInfo(userId).then(info => {
         var newChat: Chat = {id: chatDto.id, hasNewMessages: 0, lastMessageTime: new Date, user: toUser(info)}
         this.chatCreated$.next(newChat);
       })
