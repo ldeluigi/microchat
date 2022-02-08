@@ -23,9 +23,9 @@ export class UserService {
   ) {
   }
 
-  usersSearched(searchString: string): Observable<UserInfo[]> {
-    return this.http.get<Response<UserInfo[]>>(`${this.apiURL.userApiUrl}${this.userVersion}`, {params: {search: searchString}})
-      .pipe(map(u => u.data));
+  usersSearched(searchString: string): Promise<UserInfo[]> {
+    return firstValueFrom(this.http.get<Response<UserInfo[]>>(`${this.apiURL.userApiUrl}${this.userVersion}`, {params: {search: searchString}})
+      .pipe(map(u => u.data)));
   }
 
   userInfo(userId: string): Promise<UserInfo> {
