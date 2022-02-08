@@ -213,9 +213,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   showStats() {
     if (this.active) {
-      console.log("TODO: get stats from chat :"+ this.active.id);
       this.chatService.chatInfo(this.active.id).subscribe(detailedChat => {
-        const days = Math.ceil(Date.parse(detailedChat.creationTimestamp) - new Date().getTimezoneOffset() - Date.now() / (1000 * 3600 * 24));
+        const days = Math.ceil((Date.now() - Date.parse(detailedChat.creation) + new Date().getTimezoneOffset()) / (1000 * 3600 * 24));
         const stats: Stats = { 
           totalMessages: detailedChat.numberOfMessages,
           avgWeekMsg: detailedChat.numberOfMessages / Math.ceil(days / 7),

@@ -28,7 +28,7 @@ export interface ChatOfUser {
 
 export interface DetailedChat {
     id: string,
-    creationTimestamp: string,
+    creation: string,
     numberOfMessages: number
 }
 
