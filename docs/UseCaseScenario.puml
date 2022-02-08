@@ -1,19 +1,18 @@
 @startuml Use Case Diagram
 
 left to right direction
-:User: --> (create account)
-:User: --> (modify profile)
+actor "User" as user
 
-(modify username) -up-|> (modify profile)
-(modify email) -up-|> (modify profile)
-(modify password) -up-|> (modify profile)
-(modify name) -up-|> (modify profile)
-(modify surname) -up-|> (modify profile)
-
-:User: -up-> (create chat)
-:User: -up-> (delete chat)
-:User: -up-> (send messagge)
-:User: -up-> (modify messagge)
-:User: -up-> (delete messagge)
-
+rectangle "Use Cases" {
+    usecase "manage account" as manage_account
+    usecase "search user" as search_user
+    usecase "manage chat" as manage_chat
+    usecase "manage message" as manage_message
+    usecase "modify password" as modify_password
+}
+user --> manage_account
+user --> search_user
+user --> manage_chat
+user --> manage_message
+user --> modify_password
 @enduml
