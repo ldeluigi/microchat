@@ -1,4 +1,6 @@
-﻿using ChatService.Application;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using ChatService.Application;
 using ChatService.Application.Queries.PrivateChats;
 using ChatService.Application.Queries.PrivateChats.Outputs;
 using ChatService.Infrastructure.DataAccess.Queries.PrivateChats.Mappers;
@@ -9,10 +11,8 @@ using EasyDesk.CleanArchitecture.Application.Pages;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Dal.EfCore.Utils;
 using EasyDesk.Tools.Options;
-using System.Linq;
-using System.Threading.Tasks;
-using static EasyDesk.Tools.Options.OptionImports;
 using static EasyDesk.CleanArchitecture.Application.Responses.ResponseImports;
+using static EasyDesk.Tools.Options.OptionImports;
 
 namespace ChatService.Infrastructure.DataAccess.Queries.PrivateChats;
 
