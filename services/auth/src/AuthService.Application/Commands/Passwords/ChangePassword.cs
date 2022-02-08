@@ -20,8 +20,9 @@ public static class ChangePassword
     {
         public Validator()
         {
-            RuleFor(c => c.NewPassword).NotEmpty().NotEqual(x => x.OldPassword);
             RuleFor(c => c.NewPassword).NotEmpty().MinimumLength(PlainTextPassword.MinimumLength);
+            RuleFor(c => c.NewPassword).NotEqual(x => x.OldPassword)
+                .WithMessage("New password must be different from old password.");
             RuleFor(c => c.OldPassword).NotEmpty();
         }
     }
