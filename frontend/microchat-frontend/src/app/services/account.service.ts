@@ -78,14 +78,14 @@ export class AccountService {
     this.router.navigate(['/login']);
   }
 
-  register(user: UserRegistration): Promise<UserRegistrationResponse> {
-    return firstValueFrom(this.http.post<Response<UserRegistrationResponse>>(`${this.apiURL.authApiUrl}${this.authVersion}`, user)
-      .pipe(map(u => u.data)));
+  register(user: UserRegistration): Observable<UserRegistrationResponse> {
+    return this.http.post<Response<UserRegistrationResponse>>(`${this.apiURL.authApiUrl}${this.authVersion}`, user)
+      .pipe(map(u => u.data));
   }
 
-  getInfo(userId: string): Promise<AuthUserInfo> {
-    return firstValueFrom(this.http.get<Response<AuthUserInfo>>(`${this.apiURL.authApiUrl}/${userId}${this.authVersion}`)
-      .pipe(map(u => u.data)));
+  getInfo(userId: string): Observable<AuthUserInfo> {
+    return this.http.get<Response<AuthUserInfo>>(`${this.apiURL.authApiUrl}/${userId}${this.authVersion}`)
+      .pipe(map(u => u.data));
   }
 
   async updateEmail(newEmail: string): Promise<void> {

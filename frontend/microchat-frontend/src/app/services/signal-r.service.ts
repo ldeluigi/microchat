@@ -76,7 +76,7 @@ import { toUser } from 'src/model/UserInfo';
       if (this.accountService.userValue?.userId === chatDto.creator) {
         userId = chatDto.partecipant;
       }
-      this.userService.userInfo(userId).then(info => {
+      this.userService.userInfo(userId).subscribe(info => {
         var newChat: Chat = {id: chatDto.id, hasNewMessages: 0, lastMessageTime: new Date, user: toUser(info)}
         this.chatCreated$.next(newChat);
       })
