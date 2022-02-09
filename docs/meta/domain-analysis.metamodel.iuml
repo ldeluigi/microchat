@@ -62,7 +62,7 @@ $common_class($name, $alias, Enum)
 !unquoted procedure $print_legend()
 $entity("Entity Name")
 $value("Value Object Name")
-$aggregate("Aggregate Name") {
+$aggregate("Name") {
   $aggregate_root("Aggregate Root Name")
 }
 $service("Service Name")
