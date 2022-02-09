@@ -3,7 +3,7 @@
 ## User context
 ```plantuml
 @startuml User Domain Map
-!include user-domain-user-context.puml
+!include domain-analysis/domain-models/user/user-domain-user-context.puml
 @enduml
 ```
 ### Details
@@ -25,7 +25,7 @@
 ## Auth context
 ```plantuml
 @startuml Auth Domain Map
-!include user-domain-auth-context.puml
+!include domain-analysis/domain-models/user/user-domain-auth-context.puml
 @enduml
 ```
 

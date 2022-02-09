@@ -1,7 +1,7 @@
 # Use Cases
 ```plantuml
 @startuml Use Case Diagram
-!include use-case-scenario.puml
+!include domain-exploration/use-case-scenario.puml
 @enduml
 ```
 
