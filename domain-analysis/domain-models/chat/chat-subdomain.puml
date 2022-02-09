@@ -1,0 +1,19 @@
+@startuml Chat SubDomain
+!include meta/domain-analysis.metamodel.iuml
+
+$entity(Chat) {
+    + id: Guid
+    + creationTime: DateTime
+    + creatorId: Guid
+}
+
+$aggregate(User) {
+    $aggregate_root(User) {
+        + id: Guid
+        + lastSeenTimestamp: Timestamp
+    }
+}
+
+User "1" <.. "0..*" Chat: creator
+
+@enduml
