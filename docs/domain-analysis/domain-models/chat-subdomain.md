@@ -33,20 +33,22 @@ User "1" <.. "0..*" Chat: creator
 @startuml PrivateChat Context
 
 !include meta/domain-analysis.metamodel.iuml
-$entity(Chat) {
-    + id: Guid
-    + creationTime: DateTime
-    + creatorId: Guid
+
+$aggregate(PrivateChat) {
+    $aggregate_root(PrivateChat) {
+        + id: Guid
+        + creationTime: DateTime
+        + creatorId: Guid
+        + partecipantId: Guid
+    }
 }
 
 $aggregate(User) {
     $aggregate_root(User) {
         + id: Guid
-        + lastSeenTimestamp: Timestamp
     }
 }
 
-User "1" <.. "0..*" Chat: creator
 
 $aggregate(PrivateMessage) {
     $aggregate_root(PrivateMessage) {
@@ -54,9 +56,9 @@ $aggregate(PrivateMessage) {
         + chatId: Guid
         + sendTime: DateTime
         + lastEditTime: Option[DateTime]
-        + senderId: Guid
+        + senderId: Option[Guid]
         + viewed: Bool
-        + editText(newText: String): void
+        + editText(newText: String, DateTime time): void
         + setViewed(): Void
     }
     
@@ -64,13 +66,7 @@ $aggregate(PrivateMessage) {
         + text: String
     }
 
-    MessageText -o PrivateMessage
-}
-
-$aggregate(PrivateChat) {
-    $aggregate_root(PrivateChat) extends Chat {
-        + partecipantId: Guid
-    }
+    MessageText --o PrivateMessage
 }
 
 $service(ChatService) {
@@ -83,9 +79,11 @@ $service(ChatService) {
     + getLastSentMessages(userId: Guid): List[Message]
 }
 
-User "1" <.left. "0..*" PrivateMessage: sender
-PrivateMessage "0..*" --* "1" Chat: isSentOn
-User "1" <.. "0..*" PrivateChat: partecipant
+User "1" <... "0..*" PrivateChat: creator
+User "1" <... "0..*" PrivateMessage: sender
+PrivateMessage "0..*" -left-* "1" PrivateChat: isSentOn
+User "1" <... "0..*" PrivateChat: partecipant
+@enduml
 ```
 ### Details
 
