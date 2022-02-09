@@ -60,12 +60,12 @@ $common_class($name, $alias, Enum)
 !endprocedure
 '
 !unquoted procedure $print_legend()
-$entity("Entity")
-$value("Value Object")
-$aggregate("Aggregate") {
-  $aggregate_root("Aggregate Root")
+$entity("Entity Name")
+$value("Value Object Name")
+$aggregate("Aggregate Name") {
+  $aggregate_root("Aggregate Root Name")
 }
-$service("Service")
+$service("Service Name")
 !endprocedure
 '
 @enduml
