@@ -9,13 +9,14 @@ $subdomain "User Subdomain" {
     $context "User Context" as user
     $context "Auth Context" as auth
 
-    $conformist(user, auth)
+    $common_interface(auth, User Lifecycle, lifecycle)
+    $conformist(user, lifecycle, $interface=true)
 }
 
 $subdomain "Chat Subdomain" {
     $context "Chat Context" as chat
 
-    $conformist(chat, auth)
+    $conformist(chat, lifecycle, $interface=true)
 }
 
 @enduml
