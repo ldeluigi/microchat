@@ -26,9 +26,9 @@ $aggregate(User) {
     }
 
     
-    Name -o User
+    Name --o User
     Surname -o User
-    Username -o User
+    Username --o User
 }
 
 @enduml
