@@ -69,14 +69,9 @@ $aggregate(PrivateMessage) {
     MessageText --o PrivateMessage
 }
 
-$service(ChatService) {
-    + createChat(participants: List[Guid]): Chat
-    + getLastUsedChats(userId: Guid): List[Chat]
-    + getChat(userId: Guid, chatId: Guid) : Chat
-    + sendMessage(chatId: Guid, text: String, userId: Guid): Message
-    + editMessage(messageId: Guid, text: String, userId: Guid): Message
-    + deleteMessage(messageId: Guid, userId: Guid): Message
-    + getLastSentMessages(userId: Guid): List[Message]
+$service(PrivateChatLifecycleService) {
+    + createPrivateChat(creatorId: Guid, participantId: Guid): PrivateChat
+    + deletePrivateChat(id: Guid): PrivateChat
 }
 
 User "1" <... "0..*" PrivateChat: creator
