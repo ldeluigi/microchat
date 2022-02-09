@@ -21,12 +21,11 @@ export class ErrorInterceptor implements HttpInterceptor {
         // refresh the token
         return this.handle401Error(request, next);
       }
-      // console.log(err);
 
       try {
-      const error =
-        err.error.errors[0] ?
-          err.error.errors[0].detail : (err.statusText ? err.statusText : "Unknown Error");
+        const error =
+          err.error.errors[0] ?
+            err.error.errors[0].detail : (err.statusText ? err.statusText : "Unknown Error");
         return throwError(() => new Error(error));
       } catch (ex) {
         return throwError(() => new Error("Unknown error occured"));

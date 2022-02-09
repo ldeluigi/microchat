@@ -54,7 +54,11 @@ export class LogService {
   }
 
   errorSnackBar(error: string, duration: number = 10000): void {
-    this.formatStringAndOpen(error, undefined, { duration, panelClass: 'snackBarError' });
+    try {
+      this.formatStringAndOpen(error, undefined, { duration, panelClass: 'snackBarError' });
+    } catch(ex) {
+      this.formatStringAndOpen("unknown error", undefined, { duration, panelClass: 'snackBarError' });
+    }
   }
 
   recommendALink(message: string, url: string, duration: number = 6000): void {
