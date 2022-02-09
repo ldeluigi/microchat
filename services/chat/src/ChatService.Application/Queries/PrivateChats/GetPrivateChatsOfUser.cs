@@ -6,4 +6,4 @@ using System;
 namespace ChatService.Application.Queries.PrivateChats;
 
 public record GetPrivateChatsOfUser(Guid UserId, Pagination Pagination) :
-    PaginatedQueryBase<PrivateChatOfUserOutput>(Pagination);
+    QueryWithPaginationBase<PrivateChatOfUserOutput>(Pagination);

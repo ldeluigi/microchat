@@ -1,10 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using AuthService.Domain.Aggregates.AccountAggregate;
 using AuthService.Domain.Authentication;
 using AuthService.Domain.Authentication.Accounts;
 using AuthService.Domain.Authentication.Passwords;
 using EasyDesk.CleanArchitecture.Application.ErrorManagement;
 using EasyDesk.CleanArchitecture.Application.Mediator;
+using EasyDesk.CleanArchitecture.Application.Mediator.Handlers;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
 using FluentValidation;
@@ -19,7 +21,7 @@ public abstract class PasswordValidatorBase<TCredentials> : AbstractValidator<TC
     }
 }
 
-public abstract class LoginHandlerBase<TCredentials, TRequest> : RequestHandlerBase<TRequest, AuthenticationResult>
+public abstract class LoginHandlerBase<TCredentials, TRequest> : ICommandHandler<TRequest, AuthenticationResult>
     where TRequest : CommandBase<AuthenticationResult>
 {
     private readonly LoginService _loginService;
@@ -36,7 +38,7 @@ public abstract class LoginHandlerBase<TCredentials, TRequest> : RequestHandlerB
         _loginMethod = loginMethod;
     }
 
-    protected override async Task<Response<AuthenticationResult>> Handle(TRequest request)
+    public async Task<Response<AuthenticationResult>> Handle(TRequest request, CancellationToken cancellationToken)
     {
         var credentials = GetCredentials(request);
         return await _loginService.Login(credentials, _loginMethod)

@@ -1,7 +1,7 @@
 ﻿using ChatService.Infrastructure.DataAccess.Model.ChatAggregate;
 using ChatService.Infrastructure.DataAccess.Model.MessageAggregate;
 using ChatService.Infrastructure.DataAccess.Model.UserAggregate;
-using EasyDesk.CleanArchitecture.Dal.EfCore.Entities;
+using EasyDesk.CleanArchitecture.Dal.EfCore.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChatService.Infrastructure.DataAccess;

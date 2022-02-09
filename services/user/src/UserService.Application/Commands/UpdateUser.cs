@@ -1,6 +1,7 @@
 ﻿using EasyDesk.CleanArchitecture.Application.Authorization;
 using EasyDesk.CleanArchitecture.Application.ErrorManagement;
 using EasyDesk.CleanArchitecture.Application.Mediator;
+using EasyDesk.CleanArchitecture.Application.Mediator.Handlers;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
 using EasyDesk.Tools.Options;
@@ -8,6 +9,7 @@ using FluentValidation;
 using Microchat.UserService.Application.Queries;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using UserService.Domain.Aggregates.UserAggregate;
 
@@ -44,7 +46,7 @@ public static class UpdateUser
             }
         };
 
-    public class Handler : RequestHandlerBase<Command, UserOutput>
+    public class Handler : ICommandHandler<Command, UserOutput>
     {
         private readonly IUserRepository _userRepository;
         private readonly IUserInfoProvider _userInfoProvider;
@@ -55,7 +57,7 @@ public static class UpdateUser
             _userInfoProvider = userInfoProvider;
         }
 
-        protected override async Task<Response<UserOutput>> Handle(Command request)
+        public async Task<Response<UserOutput>> Handle(Command request, CancellationToken cancellationToken)
         {
             if (_userInfoProvider.RequireUserId() != request.UserId)
             {

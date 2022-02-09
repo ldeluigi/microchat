@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using ChatService.Application;
 using ChatService.Application.Queries.PrivateChats;
@@ -6,7 +7,7 @@ using ChatService.Application.Queries.PrivateChats.Outputs;
 using ChatService.Infrastructure.DataAccess.Queries.PrivateChats.Mappers;
 using EasyDesk.CleanArchitecture.Application.Authorization;
 using EasyDesk.CleanArchitecture.Application.ErrorManagement;
-using EasyDesk.CleanArchitecture.Application.Mediator;
+using EasyDesk.CleanArchitecture.Application.Mediator.Handlers;
 using EasyDesk.CleanArchitecture.Application.Pages;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Dal.EfCore.Utils;
@@ -17,7 +18,7 @@ using static EasyDesk.Tools.Options.OptionImports;
 
 namespace ChatService.Infrastructure.DataAccess.Queries.PrivateChats;
 
-public class GetPrivateChatsOfUserHandler : PaginatedQueryHandlerBase<GetPrivateChatsOfUser, PrivateChatOfUserOutput>
+public class GetPrivateChatsOfUserHandler : IQueryWithPaginationHandler<GetPrivateChatsOfUser, PrivateChatOfUserOutput>
 {
     private readonly ChatContext _chatContext;
     private readonly IUserInfoProvider _userInfoProvider;
@@ -28,7 +29,7 @@ public class GetPrivateChatsOfUserHandler : PaginatedQueryHandlerBase<GetPrivate
         _userInfoProvider = userInfoProvider;
     }
 
-    protected override async Task<Response<Page<PrivateChatOfUserOutput>>> Handle(GetPrivateChatsOfUser request)
+    public async Task<Response<Page<PrivateChatOfUserOutput>>> Handle(GetPrivateChatsOfUser request, CancellationToken cancellationToken)
     {
         var userId = _userInfoProvider.RequireUserId();
         if (userId != request.UserId)

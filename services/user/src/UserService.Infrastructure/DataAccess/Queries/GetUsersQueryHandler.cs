@@ -1,17 +1,18 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using EasyDesk.CleanArchitecture.Application.Mediator;
+using EasyDesk.CleanArchitecture.Application.Mediator.Handlers;
 using EasyDesk.CleanArchitecture.Application.Pages;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Dal.EfCore.Utils;
 using Microchat.UserService.Application.Queries;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using UserService.Application.Queries;
 
 namespace UserService.Infrastructure.DataAccess.Queries;
 
-public class GetUsersQueryHandler : PaginatedQueryHandlerBase<GetUsers.Query, UserOutput>
+public class GetUsersQueryHandler : IQueryWithPaginationHandler<GetUsers.Query, UserOutput>
 {
     private readonly UserContext _userContext;
     private readonly IMapper _mapper;
@@ -22,7 +23,7 @@ public class GetUsersQueryHandler : PaginatedQueryHandlerBase<GetUsers.Query, Us
         _mapper = mapper;
     }
 
-    protected override async Task<Response<Page<UserOutput>>> Handle(GetUsers.Query request)
+    public async Task<Response<Page<UserOutput>>> Handle(GetUsers.Query request, CancellationToken cancellationToken)
     {
         var first = _userContext
             .Users

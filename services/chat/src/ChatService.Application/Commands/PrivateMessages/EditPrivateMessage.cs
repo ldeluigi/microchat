@@ -4,12 +4,14 @@ using ChatService.Domain.Aggregates.PrivateChatAggregate;
 using EasyDesk.CleanArchitecture.Application.Authorization;
 using EasyDesk.CleanArchitecture.Application.ErrorManagement;
 using EasyDesk.CleanArchitecture.Application.Mediator;
+using EasyDesk.CleanArchitecture.Application.Mediator.Handlers;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
 using EasyDesk.CleanArchitecture.Domain.Time;
 using FluentValidation;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using static EasyDesk.CleanArchitecture.Application.Responses.ResponseImports;
 
@@ -29,7 +31,7 @@ public class EditPrivateMessage
         }
     }
 
-    public class Handler : RequestHandlerBase<Command, PrivateChatMessageOutput>
+    public class Handler : ICommandHandler<Command, PrivateChatMessageOutput>
     {
         private readonly IPrivateMessageRepository _privateMessageRepository;
         private readonly IPrivateChatRepository _privateChatRepository;
@@ -48,7 +50,7 @@ public class EditPrivateMessage
             _timestampProvider = timestampProvider;
         }
 
-        protected override async Task<Response<PrivateChatMessageOutput>> Handle(Command request)
+        public async Task<Response<PrivateChatMessageOutput>> Handle(Command request, CancellationToken cancellationToken)
         {
             var userId = _userInfoProvider.RequireUserId();
             Response<PrivateChat> chatResult = default;

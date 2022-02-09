@@ -1,10 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using AuthService.Domain.Aggregates.AccountAggregate;
 using AuthService.Domain.Authentication;
 using AuthService.Domain.Authentication.Accounts;
 using EasyDesk.CleanArchitecture.Application.Authorization;
 using EasyDesk.CleanArchitecture.Application.ErrorManagement;
 using EasyDesk.CleanArchitecture.Application.Mediator;
+using EasyDesk.CleanArchitecture.Application.Mediator.Handlers;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
 using EasyDesk.CleanArchitecture.Domain.Model;
@@ -26,7 +28,7 @@ public static class Refresh
         }
     }
 
-    public class Handler : RequestHandlerBase<Command, AuthenticationResult>
+    public class Handler : ICommandHandler<Command, AuthenticationResult>
     {
         private readonly IAccountRepository _accountRepository;
         private readonly RefreshService _refreshService;
@@ -39,7 +41,7 @@ public static class Refresh
             _refreshService = refreshService;
         }
 
-        protected override async Task<Response<AuthenticationResult>> Handle(Command request)
+        public async Task<Response<AuthenticationResult>> Handle(Command request, CancellationToken cancellationToken)
         {
             var refreshToken = Token.From(request.RefreshToken);
             return await _accountRepository.GetByRefreshToken(refreshToken)

@@ -4,14 +4,14 @@
     "net6.0": {
       "EasyDesk.CleanArchitecture.Application": {
         "type": "Direct",
-        "requested": "[0.34.2, )",
-        "resolved": "0.34.2",
-        "contentHash": "eZgpt7VGii3G+4IhIjjei5tKwH/qmeE8zUcsW2Sll10rjqmYdzmL7CNWz7SBpEF4xret1b+D95rtB4uFIWrB3Q==",
+        "requested": "[0.35.0, )",
+        "resolved": "0.35.0",
+        "contentHash": "wXNQKlCLypDzXA+88qtj8xrJK6h11rvlfIJEh8HmpcQ4C8PsYdCqZfuWEZd4jJXXy1hdHS0rjC+r+joUAAQ2zg==",
         "dependencies": {
           "AutoMapper": "11.0.1",
           "AutoMapper.Extensions.Microsoft.DependencyInjection": "11.0.0",
-          "EasyDesk.CleanArchitecture.Domain": "0.34.2",
-          "EasyDesk.Tools": "5.0.0",
+          "EasyDesk.CleanArchitecture.Domain": "0.35.0",
+          "EasyDesk.Tools": "5.1.0",
           "FluentValidation": "10.3.6",
           "FluentValidation.DependencyInjectionExtensions": "10.3.6",
           "MediatR": "10.0.1",
@@ -53,16 +53,16 @@
       },
       "EasyDesk.CleanArchitecture.Domain": {
         "type": "Transitive",
-        "resolved": "0.34.2",
-        "contentHash": "V7kF9/DZuaybD3eTdr3GSbQeaKRJol7psz0Fi0IIRPzxFk6O7iK8q4l0/ZSerc8IgJfbqlraqFk4prrJyxNdHQ==",
+        "resolved": "0.35.0",
+        "contentHash": "gLnI6ivSaCN6PCf6fZ33Lh5PNCC+KP74cKsFiEP49QWupxcC5iVXdbLZbxXKWd2WGid7Fdr6il5d1L9fMeFEzg==",
         "dependencies": {
-          "EasyDesk.Tools": "5.0.0"
+          "EasyDesk.Tools": "5.1.0"
         }
       },
       "EasyDesk.Tools": {
         "type": "Transitive",
-        "resolved": "5.0.0",
-        "contentHash": "IQ8/24a/HBO2L2asoGgVQBC5U1eSVKI/6k2zLuGY8q01HMWZivse0LBewkfB+UpfxdO+3vRiHsMVtIu2Tdwa1g=="
+        "resolved": "5.1.0",
+        "contentHash": "Z2/jbezBxS9d0WihrINdTDD7IGs97GB+xUeQGgH7dIkQ6DeEndgcCBGNofgSG+qgUPmE52LcqijsNROLzmlezg=="
       },
       "FluentValidation": {
         "type": "Transitive",
@@ -553,7 +553,7 @@
       "chatservice.domain": {
         "type": "Project",
         "dependencies": {
-          "EasyDesk.CleanArchitecture.Domain": "0.34.2"
+          "EasyDesk.CleanArchitecture.Domain": "0.35.0"
         }
       }
     }

@@ -27,7 +27,7 @@ public class UserController : AbstractMediatrController
     {
         var query = new GetUsers.Query(search, pagination);
         return await Query(query)
-            .Paging(Mapper.Map<UserDto>)
+            .MappingPageContent(Mapper.Map<UserDto>)
             .ReturnOk();
     }
 

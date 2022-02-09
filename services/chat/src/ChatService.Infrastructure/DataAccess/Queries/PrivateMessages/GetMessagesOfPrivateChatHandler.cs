@@ -5,7 +5,7 @@ using ChatService.Application.Queries.PrivateMessages.Outputs;
 using ChatService.Infrastructure.DataAccess.Model.ChatAggregate;
 using ChatService.Infrastructure.DataAccess.Model.MessageAggregate;
 using EasyDesk.CleanArchitecture.Application.Authorization;
-using EasyDesk.CleanArchitecture.Application.Mediator;
+using EasyDesk.CleanArchitecture.Application.Mediator.Handlers;
 using EasyDesk.CleanArchitecture.Application.Pages;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Dal.EfCore.Utils;
@@ -13,11 +13,12 @@ using EasyDesk.Tools.Options;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ChatService.Infrastructure.DataAccess.Queries.PrivateMessages;
 
-public class GetMessagesOfPrivateChatHandler : PaginatedQueryHandlerBase<GetMessagesOfPrivateChat, PrivateChatMessageOutput>
+public class GetMessagesOfPrivateChatHandler : IQueryWithPaginationHandler<GetMessagesOfPrivateChat, PrivateChatMessageOutput>
 {
     private readonly ChatContext _chatContext;
     private readonly IUserInfoProvider _userInfoProvider;
@@ -44,7 +45,7 @@ public class GetMessagesOfPrivateChatHandler : PaginatedQueryHandlerBase<GetMess
             PartecipantId: chatModel.PartecipantId.AsOption(),
             CreationTimestamp: chatModel.CreationTime));
 
-    protected override async Task<Response<Page<PrivateChatMessageOutput>>> Handle(GetMessagesOfPrivateChat request)
+    public async Task<Response<Page<PrivateChatMessageOutput>>> Handle(GetMessagesOfPrivateChat request, CancellationToken cancellationToken)
     {
         var userId = _userInfoProvider.RequireUserId();
         return await _chatContext.PrivateMessages

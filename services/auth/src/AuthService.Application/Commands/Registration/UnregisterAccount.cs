@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using AuthService.Application.Queries.Accounts.Outputs;
 using AuthService.Domain.Authentication.Accounts;
 using EasyDesk.CleanArchitecture.Application.Authorization;
 using EasyDesk.CleanArchitecture.Application.ErrorManagement;
 using EasyDesk.CleanArchitecture.Application.Mediator;
+using EasyDesk.CleanArchitecture.Application.Mediator.Handlers;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
 
@@ -14,7 +16,7 @@ public static class UnregisterAccount
 {
     public record Command(Guid AccountId) : CommandBase<AccountOutput>;
 
-    public class Handler : RequestHandlerBase<Command, AccountOutput>
+    public class Handler : ICommandHandler<Command, AccountOutput>
     {
         private readonly IUserInfoProvider _userInfoProvider;
         private readonly AccountLifecycleService _accountLifecycleService;
@@ -27,7 +29,7 @@ public static class UnregisterAccount
             _accountLifecycleService = accountLifecycleService;
         }
 
-        protected override async Task<Response<AccountOutput>> Handle(Command request)
+        public async Task<Response<AccountOutput>> Handle(Command request, CancellationToken cancellationToken)
         {
             if (_userInfoProvider.RequireUserId() != request.AccountId)
             {

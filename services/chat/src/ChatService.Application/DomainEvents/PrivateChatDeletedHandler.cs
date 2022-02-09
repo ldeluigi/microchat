@@ -1,14 +1,14 @@
 ﻿using ChatService.Domain;
 using ChatService.Domain.Aggregates.MessageAggregate;
-using EasyDesk.CleanArchitecture.Application.Mediator;
-using EasyDesk.CleanArchitecture.Application.Responses;
+using EasyDesk.CleanArchitecture.Domain.Metamodel;
+using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
 using EasyDesk.Tools;
 using System.Threading.Tasks;
-using static EasyDesk.CleanArchitecture.Application.Responses.ResponseImports;
+using static EasyDesk.CleanArchitecture.Domain.Metamodel.Results.ResultImports;
 
 namespace ChatService.Application.DomainEvents;
 
-public class PrivateChatDeletedHandler : DomainEventHandlerBase<PrivateChatDeleted>
+public class PrivateChatDeletedHandler : IDomainEventHandler<PrivateChatDeleted>
 {
     private readonly IPrivateMessageRepository _privateMessageRepository;
 
@@ -17,7 +17,7 @@ public class PrivateChatDeletedHandler : DomainEventHandlerBase<PrivateChatDelet
         _privateMessageRepository = privateMessageRepository;
     }
 
-    protected override async Task<Response<Nothing>> Handle(PrivateChatDeleted ev)
+    public async Task<Result<Nothing>> Handle(PrivateChatDeleted ev)
     {
         await _privateMessageRepository.DeleteMessagesOfChat(ev.ChatId);
         return Ok;

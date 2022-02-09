@@ -1,4 +1,4 @@
-﻿using EasyDesk.CleanArchitecture.Dal.EfCore.Entities;
+﻿using EasyDesk.CleanArchitecture.Dal.EfCore.Domain;
 using Microsoft.EntityFrameworkCore;
 using UserService.Infrastructure.DataAccess.Model.UserAggregate;
 

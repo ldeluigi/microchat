@@ -1,5 +1,5 @@
 ﻿using AuthService.Infrastructure.DataAccess.Model.AccountAggregate;
-using EasyDesk.CleanArchitecture.Dal.EfCore.Entities;
+using EasyDesk.CleanArchitecture.Dal.EfCore.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace AuthService.Infrastructure.DataAccess;

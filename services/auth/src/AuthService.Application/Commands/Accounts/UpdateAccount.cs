@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using AuthService.Application.Queries.Accounts.Outputs;
 using AuthService.Domain.Aggregates.AccountAggregate;
@@ -6,6 +7,7 @@ using AuthService.Domain.Authentication.Accounts;
 using EasyDesk.CleanArchitecture.Application.Authorization;
 using EasyDesk.CleanArchitecture.Application.ErrorManagement;
 using EasyDesk.CleanArchitecture.Application.Mediator;
+using EasyDesk.CleanArchitecture.Application.Mediator.Handlers;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Domain.Metamodel.Results;
 using EasyDesk.CleanArchitecture.Domain.Model;
@@ -37,7 +39,7 @@ public static class UpdateAccount
         }
     }
 
-    public class Handler : RequestHandlerBase<Command, AccountOutput>
+    public class Handler : ICommandHandler<Command, AccountOutput>
     {
         private readonly IAccountRepository _accountRepository;
         private readonly AccountLifecycleService _accountLifecycle;
@@ -53,7 +55,7 @@ public static class UpdateAccount
             _userInfoProvider = userInfoProvider;
         }
 
-        protected override async Task<Response<AccountOutput>> Handle(Command request)
+        public async Task<Response<AccountOutput>> Handle(Command request, CancellationToken cancellationToken)
         {
             if (_userInfoProvider.RequireUserId() != request.AccountId)
             {

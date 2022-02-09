@@ -9,7 +9,7 @@ public static class GetUsers
 {
     public record Query(
         string SearchString,
-        Pagination Pagination) : PaginatedQueryBase<UserOutput>(Pagination);
+        Pagination Pagination) : QueryWithPaginationBase<UserOutput>(Pagination);
 
     public class Validator : AbstractValidator<Query>
     {

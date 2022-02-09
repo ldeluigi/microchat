@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AuthService.Application;
 using AuthService.Application.Queries.Accounts;
@@ -7,14 +8,14 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using EasyDesk.CleanArchitecture.Application.Authorization;
 using EasyDesk.CleanArchitecture.Application.ErrorManagement;
-using EasyDesk.CleanArchitecture.Application.Mediator;
+using EasyDesk.CleanArchitecture.Application.Mediator.Handlers;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Dal.EfCore.Utils;
 using EasyDesk.CleanArchitecture.Domain.Utils;
 
 namespace AuthService.Infrastructure.DataAccess.Queries;
 
-public class GetAccountQueryHandler : RequestHandlerBase<GetAccount.Query, AccountOutput>
+public class GetAccountQueryHandler : IQueryHandler<GetAccount.Query, AccountOutput>
 {
     private readonly AuthContext _authContext;
     private readonly IMapper _mapper;
@@ -27,7 +28,7 @@ public class GetAccountQueryHandler : RequestHandlerBase<GetAccount.Query, Accou
         _userInfoProvider = userInfoProvider;
     }
 
-    protected override async Task<Response<AccountOutput>> Handle(GetAccount.Query request)
+    public async Task<Response<AccountOutput>> Handle(GetAccount.Query request, CancellationToken cancellationToken)
     {
         if (_userInfoProvider.RequireUserId() != request.AccountId)
         {

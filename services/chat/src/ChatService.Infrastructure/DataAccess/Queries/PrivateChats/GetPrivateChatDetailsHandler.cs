@@ -3,17 +3,18 @@ using ChatService.Application.Queries.PrivateChats;
 using ChatService.Application.Queries.PrivateChats.Outputs;
 using EasyDesk.CleanArchitecture.Application.Authorization;
 using EasyDesk.CleanArchitecture.Application.ErrorManagement;
-using EasyDesk.CleanArchitecture.Application.Mediator;
+using EasyDesk.CleanArchitecture.Application.Mediator.Handlers;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Dal.EfCore.Utils;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using static EasyDesk.Tools.Options.OptionImports;
 
 namespace ChatService.Infrastructure.DataAccess.Queries.PrivateChats;
 
-public class GetPrivateChatDetailsHandler : RequestHandlerBase<GetPrivateChatDetails, DetailedPrivateChatOutput>
+public class GetPrivateChatDetailsHandler : IQueryHandler<GetPrivateChatDetails, DetailedPrivateChatOutput>
 {
     private readonly ChatContext _chatContext;
     private readonly IUserInfoProvider _userInfoProvider;
@@ -24,7 +25,7 @@ public class GetPrivateChatDetailsHandler : RequestHandlerBase<GetPrivateChatDet
         _userInfoProvider = userInfoProvider;
     }
 
-    protected override async Task<Response<DetailedPrivateChatOutput>> Handle(GetPrivateChatDetails request)
+    public async Task<Response<DetailedPrivateChatOutput>> Handle(GetPrivateChatDetails request, CancellationToken cancellationToken)
     {
         var userId = _userInfoProvider.RequireUserId();
         return await _chatContext.PrivateChats
