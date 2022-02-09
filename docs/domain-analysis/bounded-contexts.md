@@ -2,8 +2,22 @@
 
 
 ```plantuml
-@startuml Context Map
-!include context-map.puml
+@startuml Domain
+!include meta/context-map.metamodel.iuml
+
+$subdomain "User Subdomain" {
+    $context "User Context" as user
+    $context "Auth Context" as auth
+
+    $conformist(user, auth)
+}
+
+$subdomain "Chat Subdomain" {
+    $context "Chat Context" as chat
+
+    $conformist(chat, auth)
+}
+
 @enduml
 ```
 
