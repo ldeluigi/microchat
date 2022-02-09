@@ -58,4 +58,14 @@ $common_class($name, Enum)
 !unquoted procedure $enum($name, $alias)
 $common_class($name, $alias, Enum)
 !endprocedure
+'
+!unquoted procedure $print_legend()
+$entity("Entity")
+$value("Value Object")
+$aggregate("Aggregate") {
+  $aggregate_root("Aggregate Root")
+}
+$service("Service")
+!endprocedure
+'
 @enduml

@@ -1,0 +1,599 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-8.1.9">
+    
+    
+      
+        <title>Legend - ldeluigi/microchat</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2b4465f4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.e6a45f82.min.css">
+        
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings1.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings2.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-enum-headings3.css">
+    
+      <link rel="stylesheet" href="../../css/print-site.css">
+    
+      <link rel="stylesheet" href="../../css/print-site-material.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="indigo">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../index.html" title="ldeluigi/microchat" class="md-header__button md-logo" aria-label="ldeluigi/microchat" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 14h2v3h3v2h-3v3h-2v-3h-3v-2h3v-3M12 3c5.5 0 10 3.58 10 8 0 .58-.08 1.14-.22 1.68A6.005 6.005 0 0 0 13 18l.08.95L12 19c-1.24 0-2.43-.18-3.53-.5C5.55 21 2 21 2 21c2.33-2.33 2.7-3.9 2.75-4.5C3.05 15.07 2 13.14 2 11c0-4.42 4.5-8 10-8z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            ldeluigi/microchat
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Legend
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6zm0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4zM7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </label>
+          
+        
+          
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="white" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/ldeluigi/microchat/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../index.html" title="ldeluigi/microchat" class="md-nav__button md-logo" aria-label="ldeluigi/microchat" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 14h2v3h3v2h-3v3h-2v-3h-3v-2h3v-3M12 3c5.5 0 10 3.58 10 8 0 .58-.08 1.14-.22 1.68A6.005 6.005 0 0 0 13 18l.08.95L12 19c-1.24 0-2.43-.18-3.53-.5C5.55 21 2 21 2 21c2.33-2.33 2.7-3.9 2.75-4.5C3.05 15.07 2 13.14 2 11c0-4.42 4.5-8 10-8z"/></svg>
+
+    </a>
+    ldeluigi/microchat
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/ldeluigi/microchat/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../index.html" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Domain Exploration
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Domain Exploration" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Domain Exploration
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domain-exploration/knowledge-crunching.html" class="md-nav__link">
+        Knowledge Crunching process
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domain-exploration/use-case.html" class="md-nav__link">
+        Use Cases
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../domain-exploration/ubiquitous-language.html" class="md-nav__link">
+        Ubiquitous Language
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Domain Analysis
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Domain Analysis" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Domain Analysis
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bounded-contexts.html" class="md-nav__link">
+        Bounded Contexts
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2" type="checkbox" id="__nav_3_2" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2">
+          Domain Models
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Domain Models" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_2">
+          <span class="md-nav__icon md-icon"></span>
+          Domain Models
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="chat-subdomain.html" class="md-nav__link">
+        Chat Data Domain Model
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+      <a href="legend.html" class="md-nav__link md-nav__link--active">
+        Legend
+      </a>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="user-subdomain.html" class="md-nav__link">
+        User Data Domain Model
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../print_page.html" class="md-nav__link">
+        Print as PDF
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+  
+                
+<a href="https://github.com/ldeluigi/microchat/edit/master/docs/domain-analysis/domain-models/legend.md" title="Edit this page" class="md-content__button md-icon">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+</a>
+
+
+  <h1>Legend</h1>
+
+<p><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBjb250ZW50U2NyaXB0VHlwZT0iYXBwbGljYXRpb24vZWNtYXNjcmlwdCIgY29udGVudFN0eWxlVHlwZT0idGV4dC9jc3MiIGhlaWdodD0iMjM1cHgiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiIHN0eWxlPSJ3aWR0aDo1NzhweDtoZWlnaHQ6MjM1cHg7YmFja2dyb3VuZDojRkZGRkZGOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTc4IDIzNSIgd2lkdGg9IjU3OHB4IiB6b29tQW5kUGFuPSJtYWduaWZ5Ij48ZGVmcy8+PGc+PCEtLU1ENT1bZDE4M2U4NzJmYmVhOGVkMThlYzg4MzY4ODYzYzczMmFdCmNsdXN0ZXIgQWdncmVnYXRlIEFnZ3JlZ2F0ZS0tPjxyZWN0IGZpbGw9IiNGRkZGRkYiIGhlaWdodD0iMTE2IiBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjEuMDsiIHdpZHRoPSIyODgiIHg9IjI4NCIgeT0iMTIuNjg4NSIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJWZXJkYW5hIiBmb250LXNpemU9IjIyIiBmb250LXdlaWdodD0iYm9sZCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIyNzIiIHg9IjI5MiIgeT0iMzUuMTA5NCI+QWdncmVnYXRlIEFnZ3JlZ2F0ZTwvdGV4dD48IS0tTUQ1PVsyZTA0OGQ5OTRlZjRhNmU3NjQ0ZTQ3YTY3YzI0ODdlYl0KY2xhc3MgQWdncmVnYXRlIFJvb3QtLT48cmVjdCBjb2RlTGluZT0iMiIgZmlsbD0iI0ZGRkZGRiIgaGVpZ2h0PSI1Ni4yNjU2IiBpZD0iQWdncmVnYXRlIFJvb3QiIHN0eWxlPSJzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MS41OyIgd2lkdGg9IjEzNyIgeD0iMzAxLjUiIHk9IjU2LjY4ODUiLz48ZWxsaXBzZSBjeD0iMzE0LjUiIGN5PSI3Ni44MjEzIiBmaWxsPSIjRkZGRkZGIiByeD0iOSIgcnk9IjkiIHN0eWxlPSJzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MS4wOyIvPjxwYXRoIGQ9Ik0zMTcuNDY4OCw4Mi40NjE5IFEzMTYuODkwNiw4Mi43NTg4IDMxNi4yNSw4Mi44OTk0IFEzMTUuNjA5NCw4My4wNTU3IDMxNC45MDYzLDgzLjA1NTcgUTMxMi40MDYzLDgzLjA1NTcgMzExLjA3ODEsODEuNDE1IFEzMDkuNzY1Niw3OS43NTg4IDMwOS43NjU2LDc2LjYzMzggUTMwOS43NjU2LDczLjUwODggMzExLjA3ODEsNzEuODUyNSBRMzEyLjQwNjMsNzAuMTk2MyAzMTQuOTA2Myw3MC4xOTYzIFEzMTUuNjA5NCw3MC4xOTYzIDMxNi4yNSw3MC4zNTI1IFEzMTYuOTA2Myw3MC41MDg4IDMxNy40Njg4LDcwLjgwNTcgTDMxNy40Njg4LDczLjUyNDQgUTMxNi44NDM4LDcyLjk0NjMgMzE2LjI1LDcyLjY4MDcgUTMxNS42NTYzLDcyLjM5OTQgMzE1LjAzMTMsNzIuMzk5NCBRMzEzLjY4NzUsNzIuMzk5NCAzMTMsNzMuNDc3NSBRMzEyLjMxMjUsNzQuNTQgMzEyLjMxMjUsNzYuNjMzOCBRMzEyLjMxMjUsNzguNzI3NSAzMTMsNzkuODA1NyBRMzEzLjY4NzUsODAuODY4MiAzMTUuMDMxMyw4MC44NjgyIFEzMTUuNjU2Myw4MC44NjgyIDMxNi4yNSw4MC42MDI1IFEzMTYuODQzOCw4MC4zMjEzIDMxNy40Njg4LDc5Ljc0MzIgTDMxNy40Njg4LDgyLjQ2MTkgWiAiIGZpbGw9IiMwMDAwMDAiLz48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iVmVyZGFuYSIgZm9udC1zaXplPSIxMiIgZm9udC1zdHlsZT0iaXRhbGljIiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjExMyIgeD0iMzI0LjUiIHk9IjcyLjgyNzEiPsKrQWdncmVnYXRlIFJvb3TCuzwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iVmVyZGFuYSIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSIxMDkiIHg9IjMyNi41IiB5PSI4OC42NTIzIj5BZ2dyZWdhdGUgUm9vdDwvdGV4dD48bGluZSBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjEuNTsiIHgxPSIzMDIuNSIgeDI9IjQzNy41IiB5MT0iOTYuOTU0MSIgeTI9Ijk2Ljk1NDEiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjEuNTsiIHgxPSIzMDIuNSIgeDI9IjQzNy41IiB5MT0iMTA0Ljk1NDEiIHkyPSIxMDQuOTU0MSIvPjwhLS1NRDU9W2JlOTk2Y2RiOGU2YmYyZmM3Y2I4OWM1NTVmMmNkMTQ0XQpjbGFzcyBFbnRpdHktLT48cmVjdCBjb2RlTGluZT0iMiIgZmlsbD0iI0ZGRkZGRiIgaGVpZ2h0PSI1Ni4yNjU2IiBpZD0iRW50aXR5IiBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjEuNTsiIHdpZHRoPSI3NCIgeD0iNDIiIHk9IjU2LjY4ODUiLz48ZWxsaXBzZSBjeD0iNTUiIGN5PSI3Ni44MjEzIiBmaWxsPSIjRkZGRkZGIiByeD0iOSIgcnk9IjkiIHN0eWxlPSJzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MS4wOyIvPjxwYXRoIGQ9Ik01Ny45Njg4LDgyLjQ2MTkgUTU3LjM5MDYsODIuNzU4OCA1Ni43NSw4Mi44OTk0IFE1Ni4xMDk0LDgzLjA1NTcgNTUuNDA2Myw4My4wNTU3IFE1Mi45MDYzLDgzLjA1NTcgNTEuNTc4MSw4MS40MTUgUTUwLjI2NTYsNzkuNzU4OCA1MC4yNjU2LDc2LjYzMzggUTUwLjI2NTYsNzMuNTA4OCA1MS41NzgxLDcxLjg1MjUgUTUyLjkwNjMsNzAuMTk2MyA1NS40MDYzLDcwLjE5NjMgUTU2LjEwOTQsNzAuMTk2MyA1Ni43NSw3MC4zNTI1IFE1Ny40MDYzLDcwLjUwODggNTcuOTY4OCw3MC44MDU3IEw1Ny45Njg4LDczLjUyNDQgUTU3LjM0MzgsNzIuOTQ2MyA1Ni43NSw3Mi42ODA3IFE1Ni4xNTYzLDcyLjM5OTQgNTUuNTMxMyw3Mi4zOTk0IFE1NC4xODc1LDcyLjM5OTQgNTMuNSw3My40Nzc1IFE1Mi44MTI1LDc0LjU0IDUyLjgxMjUsNzYuNjMzOCBRNTIuODEyNSw3OC43Mjc1IDUzLjUsNzkuODA1NyBRNTQuMTg3NSw4MC44NjgyIDU1LjUzMTMsODAuODY4MiBRNTYuMTU2Myw4MC44NjgyIDU2Ljc1LDgwLjYwMjUgUTU3LjM0MzgsODAuMzIxMyA1Ny45Njg4LDc5Ljc0MzIgTDU3Ljk2ODgsODIuNDYxOSBaICIgZmlsbD0iIzAwMDAwMCIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJWZXJkYW5hIiBmb250LXNpemU9IjEyIiBmb250LXN0eWxlPSJpdGFsaWMiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iNTAiIHg9IjY1IiB5PSI3Mi44MjcxIj7Cq0VudGl0ecK7PC90ZXh0Pjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJWZXJkYW5hIiBmb250LXNpemU9IjE0IiBsZW5ndGhBZGp1c3Q9InNwYWNpbmciIHRleHRMZW5ndGg9IjM4IiB4PSI3MSIgeT0iODguNjUyMyI+RW50aXR5PC90ZXh0PjxsaW5lIHN0eWxlPSJzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MS41OyIgeDE9IjQzIiB4Mj0iMTE1IiB5MT0iOTYuOTU0MSIgeTI9Ijk2Ljk1NDEiLz48bGluZSBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjEuNTsiIHgxPSI0MyIgeDI9IjExNSIgeTE9IjEwNC45NTQxIiB5Mj0iMTA0Ljk1NDEiLz48IS0tTUQ1PVswNmMzY2I1MmRiNGE2YTAwNzhlM2NlZjllZTk2MWNjYV0KY2xhc3MgVmFsdWUgT2JqZWN0LS0+PHJlY3QgY29kZUxpbmU9IjQyIiBmaWxsPSIjRkZGRkZGIiBoZWlnaHQ9IjQ0IiBpZD0iVmFsdWUgT2JqZWN0IiBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjEuNTsiIHdpZHRoPSIxMTUiIHg9IjE1MS41IiB5PSI2Mi42ODg1Ii8+PGVsbGlwc2UgY3g9IjE2NC41IiBjeT0iNzYuNjg4NSIgZmlsbD0iI0ZGRkZGRiIgcng9IjkiIHJ5PSI5IiBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjEuMDsiLz48cGF0aCBkPSJNMTY3LjQ2ODgsODIuMzI5MSBRMTY2Ljg5MDYsODIuNjI2IDE2Ni4yNSw4Mi43NjY2IFExNjUuNjA5NCw4Mi45MjI5IDE2NC45MDYzLDgyLjkyMjkgUTE2Mi40MDYzLDgyLjkyMjkgMTYxLjA3ODEsODEuMjgyMiBRMTU5Ljc2NTYsNzkuNjI2IDE1OS43NjU2LDc2LjUwMSBRMTU5Ljc2NTYsNzMuMzc2IDE2MS4wNzgxLDcxLjcxOTcgUTE2Mi40MDYzLDcwLjA2MzUgMTY0LjkwNjMsNzAuMDYzNSBRMTY1LjYwOTQsNzAuMDYzNSAxNjYuMjUsNzAuMjE5NyBRMTY2LjkwNjMsNzAuMzc2IDE2Ny40Njg4LDcwLjY3MjkgTDE2Ny40Njg4LDczLjM5MTYgUTE2Ni44NDM4LDcyLjgxMzUgMTY2LjI1LDcyLjU0NzkgUTE2NS42NTYzLDcyLjI2NjYgMTY1LjAzMTMsNzIuMjY2NiBRMTYzLjY4NzUsNzIuMjY2NiAxNjMsNzMuMzQ0NyBRMTYyLjMxMjUsNzQuNDA3MiAxNjIuMzEyNSw3Ni41MDEgUTE2Mi4zMTI1LDc4LjU5NDcgMTYzLDc5LjY3MjkgUTE2My42ODc1LDgwLjczNTQgMTY1LjAzMTMsODAuNzM1NCBRMTY1LjY1NjMsODAuNzM1NCAxNjYuMjUsODAuNDY5NyBRMTY2Ljg0MzgsODAuMTg4NSAxNjcuNDY4OCw3OS42MTA0IEwxNjcuNDY4OCw4Mi4zMjkxIFogIiBmaWxsPSIjMDAwMDAwIi8+PHRleHQgZmlsbD0iIzAwMDAwMCIgZm9udC1mYW1pbHk9IlZlcmRhbmEiIGZvbnQtc2l6ZT0iMTQiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iODciIHg9IjE3Ni41IiB5PSI4MS41MzUyIj5WYWx1ZSBPYmplY3Q8L3RleHQ+PGxpbmUgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoxLjU7IiB4MT0iMTUyLjUiIHgyPSIyNjUuNSIgeTE9IjkwLjY4ODUiIHkyPSI5MC42ODg1Ii8+PGxpbmUgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoxLjU7IiB4MT0iMTUyLjUiIHgyPSIyNjUuNSIgeTE9Ijk4LjY4ODUiIHkyPSI5OC42ODg1Ii8+PCEtLU1ENT1bZGJiOGI0ZjEzYzdiMjEzOTRmOWQ3NTdlNTg3MzJmNDVdCmNsYXNzIFNlcnZpY2UtLT48cmVjdCBjb2RlTGluZT0iMiIgZmlsbD0iI0ZGRkZGRiIgaGVpZ2h0PSI1Ni4yNjU2IiBpZD0iU2VydmljZSIgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoxLjU7IiB3aWR0aD0iMTM0IiB4PSIxMiIgeT0iMTcyLjY4ODUiLz48ZWxsaXBzZSBjeD0iMjUiIGN5PSIxOTIuODIxMyIgZmlsbD0iI0ZGRkZGRiIgcng9IjkiIHJ5PSI5IiBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjEuMDsiLz48cGF0aCBkPSJNMjcuOTY4OCwxOTguNDYxOSBRMjcuMzkwNiwxOTguNzU4OCAyNi43NSwxOTguODk5NCBRMjYuMTA5NCwxOTkuMDU1NyAyNS40MDYzLDE5OS4wNTU3IFEyMi45MDYzLDE5OS4wNTU3IDIxLjU3ODEsMTk3LjQxNSBRMjAuMjY1NiwxOTUuNzU4OCAyMC4yNjU2LDE5Mi42MzM4IFEyMC4yNjU2LDE4OS41MDg4IDIxLjU3ODEsMTg3Ljg1MjUgUTIyLjkwNjMsMTg2LjE5NjMgMjUuNDA2MywxODYuMTk2MyBRMjYuMTA5NCwxODYuMTk2MyAyNi43NSwxODYuMzUyNSBRMjcuNDA2MywxODYuNTA4OCAyNy45Njg4LDE4Ni44MDU3IEwyNy45Njg4LDE4OS41MjQ0IFEyNy4zNDM4LDE4OC45NDYzIDI2Ljc1LDE4OC42ODA3IFEyNi4xNTYzLDE4OC4zOTk0IDI1LjUzMTMsMTg4LjM5OTQgUTI0LjE4NzUsMTg4LjM5OTQgMjMuNSwxODkuNDc3NSBRMjIuODEyNSwxOTAuNTQgMjIuODEyNSwxOTIuNjMzOCBRMjIuODEyNSwxOTQuNzI3NSAyMy41LDE5NS44MDU3IFEyNC4xODc1LDE5Ni44NjgyIDI1LjUzMTMsMTk2Ljg2ODIgUTI2LjE1NjMsMTk2Ljg2ODIgMjYuNzUsMTk2LjYwMjUgUTI3LjM0MzgsMTk2LjMyMTMgMjcuOTY4OCwxOTUuNzQzMiBMMjcuOTY4OCwxOTguNDYxOSBaICIgZmlsbD0iIzAwMDAwMCIvPjx0ZXh0IGZpbGw9IiMwMDAwMDAiIGZvbnQtZmFtaWx5PSJWZXJkYW5hIiBmb250LXNpemU9IjEyIiBmb250LXN0eWxlPSJpdGFsaWMiIGxlbmd0aEFkanVzdD0ic3BhY2luZyIgdGV4dExlbmd0aD0iMTEwIiB4PSIzNSIgeT0iMTg4LjgyNzEiPsKrRG9tYWluIFNlcnZpY2XCuzwvdGV4dD48dGV4dCBmaWxsPSIjMDAwMDAwIiBmb250LWZhbWlseT0iVmVyZGFuYSIgZm9udC1zaXplPSIxNCIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nIiB0ZXh0TGVuZ3RoPSI1MCIgeD0iNjUiIHk9IjIwNC42NTIzIj5TZXJ2aWNlPC90ZXh0PjxsaW5lIHN0eWxlPSJzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MS41OyIgeDE9IjEzIiB4Mj0iMTQ1IiB5MT0iMjEyLjk1NDEiIHkyPSIyMTIuOTU0MSIvPjxsaW5lIHN0eWxlPSJzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MS41OyIgeDE9IjEzIiB4Mj0iMTQ1IiB5MT0iMjIwLjk1NDEiIHkyPSIyMjAuOTU0MSIvPjwhLS1NRDU9W2JlODIyNDhiMzdhN2Y5NzQxMWI0ZDI4Y2IyMzgxM2VlXQpsaW5rIEVudGl0eSB0byBWYWx1ZSBPYmplY3QtLT48IS0tTUQ1PVs1ZmE2ZjQwODg3NmVlNzhjMjExNmU0MzlmMGE2NDdjNF0KbGluayBFbnRpdHkgdG8gU2VydmljZS0tPjwhLS1NRDU9WzQ0MDkxNzAwMzQ0NjQxMTU5MzRiMjdhMzNhZWQwYTFkXQpAc3RhcnR1bWwgTGVnZW5kDQohdGhlbWUgcGxhaW4NCiFpbmNsdWRlIG1ldGEvZG9tYWluLWFuYWx5c2lzLm1ldGFtb2RlbC5pdW1sDQokcHJpbnRfbGVnZW5kKCkNCkBlbmR1bWwNCgpAc3RhcnR1bWwgTGVnZW5kDQoNCg0KDQoNCg0KDQoNCjxzdHlsZT4NCiAgcm9vdCB7DQogICAgQmFja2dyb3VuZENvbG9yIHdoaXRlDQogICAgRm9udENvbG9yIGJsYWNrDQogICAgRm9udE5hbWUgVmVyZGFuYQ0KICAgIEh5cGVyTGlua0NvbG9yIGJsdWUNCiAgICBMaW5lQ29sb3IgYmxhY2sNCiAgICBMaW5lVGhpY2tuZXNzIDENCiAgICBNYXJnaW4gNQ0KICB9DQogIGNhcHRpb24gew0KICAgIExpbmVUaGlja25lc3MgMA0KICB9DQogIGZvb3RlciB7DQogICAgTGluZVRoaWNrbmVzcyAwDQogIH0NCiAgaGVhZGVyIHsNCiAgICBMaW5lVGhpY2tuZXNzIDANCiAgfQ0KICBub2RlIHsNCiAgICBNYXhpbXVtV2lkdGggMzAwDQogIH0NCiAgdGl0bGUgew0KICAgIEZvbnRTaXplIDIyDQogICAgTGluZVRoaWNrbmVzcyAwDQogIH0NCjwvc3R5bGU+DQoNCnNraW5wYXJhbSBBcnJvd0xvbGxpcG9wQ29sb3IgYmxhY2sNCnNraW5wYXJhbSBCYWNrZ3JvdW5kQ29sb3Igd2hpdGUNCnNraW5wYXJhbSBEZWZhdWx0Rm9udE5hbWUgVmVyZGFuYQ0Kc2tpbnBhcmFtIERlZmF1bHRNb25vc3BhY2VkRm9udE5hbWUgQ291cmllcg0Kc2tpbnBhcmFtIExpZmVsaW5lU3RyYXRlZ3kgbm9zb2xpZA0Kc2tpbnBhcmFtIFBhcnRpY2lwYW50UGFkZGluZyAxMA0Kc2tpbnBhcmFtIFNlcXVlbmNlTGlmZUxpbmVCb3JkZXJDb2xvciBibGFjaw0Kc2tpbnBhcmFtIFNoYWRvd2luZyBmYWxzZQ0Kc2tpbnBhcmFtIFVzZUJldGFTdHlsZSB0cnVlDQoNCnNraW5wYXJhbSBBY3Rpdml0eSB7DQogIEJhY2tncm91bmRDb2xvciB3aGl0ZQ0KICBCYXJDb2xvciBibGFjaw0KICBCb3JkZXJDb2xvciBibGFjaw0KICBGb250Q29sb3IgYmxhY2sNCiAgRm9udE5hbWUgVmVyZGFuYQ0KfQ0Kc2tpbnBhcmFtIEJvdW5kYXJ5IHsNCiAgRm9udENvbG9yIGJsYWNrDQp9DQpza2lucGFyYW0gQm94IHsNCiAgUGFkZGluZyA1DQp9DQpza2lucGFyYW0gQ2lyY2xlZENoYXJhY3RlciB7DQogIEZvbnRDb2xvciBibGFjaw0KICBGb250TmFtZSBDb3VyaWVyDQogIFJhZGl1cyA5DQp9DQpza2lucGFyYW0gQ2xhc3Mgew0KICBCYWNrZ3JvdW5kQ29sb3Igd2hpdGUNCiAgQm9yZGVyQ29sb3IgYmxhY2sNCiAgRm9udENvbG9yIGJsYWNrDQogIEZvbnROYW1lIFZlcmRhbmENCn0NCnNraW5wYXJhbSBDbGFzc0F0dHJpYnV0ZSB7DQogIEZvbnRDb2xvciBibGFjaw0KICBGb250TmFtZSBWZXJkYW5hDQp9DQpza2lucGFyYW0gQ2xhc3NTdGVyZW90eXBlIHsNCiAgRm9udENvbG9yIGJsYWNrDQogIEZvbnROYW1lIFZlcmRhbmENCn0NCnNraW5wYXJhbSBGb290ZXIgew0KICBGb250Q29sb3IgYmxhY2sNCiAgRm9udE5hbWUgVmVyZGFuYQ0KfQ0Kc2tpbnBhcmFtIEhlYWRlciB7DQogIEZvbnRDb2xvciBibGFjaw0KICBGb250TmFtZSBWZXJkYW5hDQp9DQpza2lucGFyYW0gSHlwZXJsaW5rIHsNCiAgQ29sb3IgYmx1ZQ0KfQ0Kc2tpbnBhcmFtIEljb25QYWNrYWdlIHsNCiAgQ29sb3IgYmxhY2sNCiAgQmFja2dyb3VuZENvbG9yIHdoaXRlDQp9DQpza2lucGFyYW0gSWNvblByaXZhdGUgew0KICBDb2xvciBibGFjaw0KICBCYWNrZ3JvdW5kQ29sb3Igd2hpdGUNCn0NCnNraW5wYXJhbSBJY29uUHJvdGVjdGVkIHsNCiAgQ29sb3IgYmxhY2sNCiAgQmFja2dyb3VuZENvbG9yIHdoaXRlDQp9DQpza2lucGFyYW0gSWNvblB1YmxpYyB7DQogIENvbG9yIGJsYWNrDQogIEJhY2tncm91bmRDb2xvciB3aGl0ZQ0KfQ0Kc2tpbnBhcmFtIE5vdGUgew0KICBGb250Q29sb3IgYmxhY2sNCiAgRm9udE5hbWUgVmVyZGFuYQ0KfQ0Kc2tpbnBhcmFtIE9iamVjdCB7DQogIEJvcmRlckNvbG9yIGJsYWNrDQp9DQpza2lucGFyYW0gUGFja2FnZSB7DQogIEJvcmRlckNvbG9yIGJsYWNrDQogIEZvbnRDb2xvciBibGFjaw0KICBGb250TmFtZSBWZXJkYW5hDQp9DQpza2lucGFyYW0gU3RhdGUgew0KICBCYWNrZ3JvdW5kQ29sb3Igd2hpdGUNCiAgQm9yZGVyQ29sb3IgYmxhY2sNCn0NCnNraW5wYXJhbSBTdGVyZW90eXBlQSB7DQogIEJhY2tncm91bmRDb2xvciB3aGl0ZQ0KICBCb3JkZXJDb2xvciBibGFjaw0KfQ0Kc2tpbnBhcmFtIFN0ZXJlb3R5cGVDIHsNCiAgQmFja2dyb3VuZENvbG9yIHdoaXRlDQogIEJvcmRlckNvbG9yIGJsYWNrDQp9DQpza2lucGFyYW0gU3RlcmVvdHlwZUUgew0KICBCYWNrZ3JvdW5kQ29sb3Igd2hpdGUNCiAgQm9yZGVyQ29sb3IgYmxhY2sNCn0NCnNraW5wYXJhbSBTdGVyZW90eXBlSSB7DQogIEJhY2tncm91bmRDb2xvciB3aGl0ZQ0KICBCb3JkZXJDb2xvciBibGFjaw0KfQ0Kc2tpbnBhcmFtIFN0ZXJlb3R5cGVOIHsNCiAgQmFja2dyb3VuZENvbG9yIHdoaXRlDQogIEJvcmRlckNvbG9yIGJsYWNrDQp9DQpza2lucGFyYW0gVXNlQ2FzZVN0ZXJlb1R5cGUgew0KICBGb250Q29sb3IgYmxhY2sNCiAgRm9udE5hbWUgVmVyZGFuYQ0KfQ0KY2xhc3MgIkVudGl0eSIgPDwgRW50aXR5ID4+DQpjbGFzcyAiVmFsdWUgT2JqZWN0Ig0KcmVjdGFuZ2xlICJBZ2dyZWdhdGUgQWdncmVnYXRlIiB7DQpjbGFzcyAiQWdncmVnYXRlIFJvb3QiIDw8IEFnZ3JlZ2F0ZSBSb290ID4+DQp9DQpjbGFzcyAiU2VydmljZSIgPDwgRG9tYWluIFNlcnZpY2UgPj4NCkBlbmR1bWwNCgpQbGFudFVNTCB2ZXJzaW9uIDEuMjAyMi4wKFR1ZSBKYW4gMTEgMTY6MTY6NDIgR01UIDIwMjIpCihHUEwgc291cmNlIGRpc3RyaWJ1dGlvbikKSmF2YSBSdW50aW1lOiBPcGVuSkRLIFJ1bnRpbWUgRW52aXJvbm1lbnQKSlZNOiBPcGVuSkRLIDY0LUJpdCBTZXJ2ZXIgVk0KRGVmYXVsdCBFbmNvZGluZzogVVRGLTgKTGFuZ3VhZ2U6IGVuCkNvdW50cnk6IFVTCi0tPjwvZz48L3N2Zz4=" class="UML" alt="UML diagram image" title="UML diagram" /></p>
+
+  <hr>
+<div class="md-source-file">
+  <small>
+    
+      Last update:
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime">February 9, 2022 20:00:35</span>
+      
+        <br>
+        Created:
+        <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime">February 9, 2022 20:00:35</span>
+      
+    
+  </small>
+</div>
+
+              
+
+  
+    <div class="md-source-date">
+      <small>
+          Authors: <span class='git-page-authors git-authors'><a href='mailto:simone.magnani4@studio.unibo.it'>Simone</a></span>
+      </small>
+    </div>
+  
+
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="chat-subdomain.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Chat Data Domain Model" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Chat Data Domain Model
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="user-subdomain.html" class="md-footer__link md-footer__link--next" aria-label="Next: User Data Domain Model" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              User Data Domain Model
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+<script id="__config" type="application/json">{"base": "../..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.22074ed6.min.js"}</script>
+    
+
+<script src="https://unpkg.com/iframe-worker/polyfill"></script>
+<script src="../../search/search_index.js"></script>
+
+
+    
+      <script src="../../assets/javascripts/bundle.960e086b.min.js"></script>
+      
+        <script src="../../js/print-site.js"></script>
+      
+        <script src="../../js/arithmatex.config.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
