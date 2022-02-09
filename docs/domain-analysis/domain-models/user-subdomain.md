@@ -84,10 +84,10 @@ $aggregate(Account) {
     }
 
     Username -o Account
-    Email -o Account
-    PasswordHash -o Account
-    AccountSessions -o Account
-    Session -o AccountSessions
+    Email --o Account
+    PasswordHash --o Account
+    AccountSessions --o Account
+    Session --o AccountSessions
 }
 @enduml
 ```
