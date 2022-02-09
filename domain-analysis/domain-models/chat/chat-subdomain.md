@@ -3,7 +3,7 @@
 ## Chat subdomain class diagram
 ```plantuml
 @startuml Chat SubDomain
-!include chat-subdomain.puml
+!include ./chat-subdomain.puml
 @enduml
 ```
 
@@ -15,7 +15,7 @@
 ## Private Chat context class diagram
 ```plantuml
 @startuml PivateChat Context
-!include private-chat-context.puml
+!include ./private-chat-context.puml
 @enduml
 ```
 ### Details
