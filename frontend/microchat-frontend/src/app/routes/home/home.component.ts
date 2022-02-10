@@ -98,12 +98,12 @@ export class HomeComponent implements OnInit, OnDestroy {
           } else {
             return Promise.resolve(this.addInChatList(addingChat));
           }
-        })).then(_ => this.chatList.sort((c,chat) => chat.lastMessageTime.getTime() - c.lastMessageTime.getTime()))
+        })).then(_ => {
+          this.chatList.sort((c,chat) => chat.lastMessageTime.getTime() - c.lastMessageTime.getTime());
+          this.initActiveList();
+        })
       },
-      error: () => this.logService.errorSnackBar("chats are not loaded correctly"),
-      complete: () => {
-        this.initActiveList();
-      }
+      error: () => this.logService.errorSnackBar("chats are not loaded correctly")
     });
   }
 
