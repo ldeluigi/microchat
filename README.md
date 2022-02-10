@@ -11,7 +11,7 @@ https://ldeluigi.github.io/microchat
 
 # Demo Quickstart
 
-## Needed on the host
+## Requirements the host
 
 - [Angular CLI](https://github.com/angular/angular-cli) v13.
 - [NodeJS](https://nodejs.org/) v16.
