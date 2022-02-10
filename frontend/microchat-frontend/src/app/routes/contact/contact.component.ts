@@ -23,7 +23,8 @@ export class ContactComponent implements OnInit {
   title(): string {
     return this.chat ? 
             !UserLeftChat(this.chat) ? 
-                this.chat.user?.name + " - " + this.chat.user?.id 
+                this.chat.user?.username +
+                  (this.chat.user?.name || this.chat.user?.surname ? " - " + this.chat.user?.name + " " + this.chat.user?.surname : "")
               : "User left chat"
             : "Waiting for chat"
   }
