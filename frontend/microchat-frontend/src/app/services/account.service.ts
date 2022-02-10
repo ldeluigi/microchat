@@ -110,9 +110,16 @@ export class AccountService {
       this.logService.log('No user logged while try to update user info', LogLevel.Error);
       throw Error('Invalid user');
     }
-    this.http.put(`${url}/${user.userId}${this.authVersion}`, data)
+    this.http.put<Response<AuthUserInfo>>(`${url}/${user.userId}${this.authVersion}`, data)
     .pipe(first()).subscribe({
-      next: _ => this.logService.messageSnackBar('Data updated correctly'),
+      next: (receivedData: Response<AuthUserInfo>) => {
+        if (data.username && data.username != receivedData.data.username ||
+            (data.email && data.email != receivedData.data.email))
+            this.logService.errorSnackBar("Error occured updating data");
+        else {
+          this.logService.messageSnackBar("Data updated correctly");
+        }
+      },
       error: (err: Error) => {
         this.logService.errorSnackBar(err.message)
       }

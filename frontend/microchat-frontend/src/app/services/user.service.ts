@@ -51,6 +51,7 @@ export class UserService {
     this.http.put<Response<UserInfo>>(`${this.apiURL.userApiUrl}/${userId}${this.userVersion}`, data)
       .pipe(first()).subscribe({
         next: data => {
+          this.logService.messageSnackBar('Data updated correctly');
         },
         error: (err: Error) => {
           this.logService.errorSnackBar(err.message)

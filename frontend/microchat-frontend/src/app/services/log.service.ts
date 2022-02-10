@@ -12,6 +12,7 @@ export class LogService {
 
   readonly maxLogInProduction = LogLevel.All;
   private isProduction = false;
+  private errorTimestamp: number = 0;
 
   constructor(
     private snackBar: MatSnackBar,
@@ -41,11 +42,15 @@ export class LogService {
   }
 
   messageSnackBar(message: string, duration: number = 3000): void {
-    this.formatStringAndOpen(message, undefined, { duration, panelClass: 'snackBarMessage' });
+    if (this.ableToInfoOrMessage()) {
+      this.formatStringAndOpen(message, undefined, { duration, panelClass: 'snackBarMessage' });
+    }
   }
 
   infoSnackBar(message: string, duration: number = 10000): void {
-    this.formatStringAndOpen(message, 'OK', { duration, panelClass: 'snackBarInfo' });
+    if (this.ableToInfoOrMessage()) {
+      this.formatStringAndOpen(message, 'OK', { duration, panelClass: 'snackBarInfo' });
+    }
   }
 
   private formatStringAndOpen(message: string, action?: string, config?: MatSnackBarConfig): void {
@@ -53,7 +58,12 @@ export class LogService {
     this.snackBar.open(message, action, config);
   }
 
+  private ableToInfoOrMessage(): boolean {
+    return this.errorTimestamp < Date.now();
+  }
+
   errorSnackBar(error: string | Error, duration: number = 10000): void {
+    this.errorTimestamp = Date.now() + duration; 
     try {
       if (typeof error === "string") {
         this.formatStringAndOpen(error, undefined, { duration, panelClass: 'snackBarError' });
