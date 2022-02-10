@@ -43,22 +43,23 @@ export class UserInfoComponent implements OnInit {
   constructor(
     private userService: UserService,
     private accountService: AccountService,
+    private logService: LogService,
     public dialogRef: MatDialogRef<UserInfoComponent>,
     @Inject(MAT_DIALOG_DATA) public data: {id: string}) { }
 
   ngOnInit(): void {
-    this.userService.userInfo(this.data.id).subscribe(info => {
+    this.userService.userInfo(this.data.id).subscribe({next: info => {
       this.userInfo = info;
       this.name = this.nameInitValue();
       this.surname = this.surnameInitValue();
       this.username = this.usernameInitValue();
-    });
+    }, error: err => this.logService.errorSnackBar(err)});
     if (this.myInfo()) {
-      this.accountService.getInfo(this.data.id).subscribe(authInfo => {
+      this.accountService.getInfo(this.data.id).subscribe({next: authInfo => {
         this.user = authInfo;
         this.username = this.usernameInitValue();
         this.email = this.emailInitValue();
-      });
+      }, error: err => this.logService.errorSnackBar(err)});
     }
   }
 
@@ -103,7 +104,11 @@ export class UserInfoComponent implements OnInit {
     if (this.oldPass && this.newPass) {
       this.accountService.updatePassword(this.oldPass, this.newPass);
     }
-    this.dialogRef.close();
+    if ((this.oldPass && !this.newPass) || (!this.oldPass&& this.newPass)) {
+      this.logService.errorSnackBar("you have to insert both or none password");
+    } else {
+      this.dialogRef.close();
+    }
   }
 
   emailInitValue(): string | undefined {

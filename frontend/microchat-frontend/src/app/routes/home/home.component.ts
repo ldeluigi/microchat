@@ -45,8 +45,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.signalrService.connect();
-    this.signalRSubscription = this.signalrService.newMessage().subscribe(
-      (message) => {
+    this.signalRSubscription = this.signalrService.newMessage().subscribe({
+      next: (message) => {
         const index = this.chatList.findIndex(chat => chat.id === message.chatId);
         if (message.chatId === this.active?.id) {
           this.newIncomingMessage = message;
@@ -59,13 +59,13 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
         this.chatList.unshift(this.chatList.splice(index, 1)[0]);
         this.setActiveListToChatList(() => {});
-    });
-    this.deletedChatSubscription = this.signalrService.deletedChat().subscribe(chatId => {
+      }, error: err => this.logService.errorSnackBar(err)});
+    this.deletedChatSubscription = this.signalrService.deletedChat().subscribe({next: chatId => {
       this.active = this.active?.id === chatId ? undefined : this.active;
       this.chatList = this.chatList.filter(chat => chat.id !== chatId);
       this.setActiveListToChatList(() => this.activeList =  this.activeList.filter(chat => chat.id !== chatId));
-    });
-    this.newChatSubscription = this.signalrService.newChat().subscribe(chat => {
+    }, error: err => this.logService.errorSnackBar(err)});
+    this.newChatSubscription = this.signalrService.newChat().subscribe({next: chat => {
       this.chatList = this.chatList.filter(c => chat.id !== c.id);
       this.chatList.unshift(chat);
       if (chat.user?.id === this.createdWith) {
@@ -73,7 +73,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.createdWith = undefined;
       }
       this.setActiveListToChatList(() => this.findChat());
-    });
+    }, error: err => this.logService.errorSnackBar(err)});
     //$('#action_menu_btn').on("click", function(){ $('.action_menu').toggle(); });
 
     this.chatService.getChats(this.accountService.userValue?.userId || "").subscribe({ // bug in test otherwise
@@ -153,7 +153,6 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.search = "";
         });
       }
-      //this.chatService.createChat(chat.user).subscribe(newChat => this.active = newChat); // chat.user list or not?
     }
     this.initActiveList();
   }
@@ -186,13 +185,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.search) {
       console.log("TODO: richiesta chats", this.search);
       let foundChatList: Chat[] = []
-      this.userService.usersSearched(this.search).subscribe(users => {
+      this.userService.usersSearched(this.search).subscribe({next: users => {
         users.forEach(user => {
           if (foundChatList.findIndex(chat => chat.user?.id == user.id) < 0) {
             foundChatList.push({id: "", hasNewMessages: 0, lastMessageTime: new Date, user: user});
           }
         });
-      });
+      }, error: err => this.logService.errorSnackBar(err)});
       this.setActiveListToChatList(() => this.activeList = foundChatList);
     } else {
       this.initActiveList();
@@ -215,14 +214,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   showStats() {
     if (this.active) {
-      this.chatService.chatInfo(this.active.id).subscribe(detailedChat => {
+      this.chatService.chatInfo(this.active.id).subscribe({next: detailedChat => {
         const days = Math.ceil((Date.now() - Date.parse(detailedChat.creation) + new Date().getTimezoneOffset()) / (1000 * 3600 * 24));
         const stats: Stats = { 
           totalMessages: detailedChat.numberOfMessages,
           avgWeekMsg: detailedChat.numberOfMessages / Math.ceil(days / 7),
           avgDaysMsg: detailedChat.numberOfMessages / days };
         this.dialog.open(StatsComponent, {data : stats});
-      });
+      }, error: err => this.logService.errorSnackBar(err)});
     } else {
       this.logService.messageSnackBar("Unable to get stats for missing chat");
     }
