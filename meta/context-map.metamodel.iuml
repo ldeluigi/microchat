@@ -23,7 +23,7 @@ $supplier -(0-- $customer : Customer Supplier
 '
 !unquoted procedure $common_interface($supplier, $interface_name, $id)
 interface "$interface_name" as $id
-$id - "U" $supplier
+$id -- "U" $supplier
 !endprocedure
 '
 !function $optional_brackets($content)
@@ -36,5 +36,31 @@ $id - "U" $supplier
 '
 !unquoted procedure $shared_kernel($left, $right, $kernel_description = "")
 $left -(0)- $right : Shared Kernel\n$optional_brackets($kernel_description)
+!endprocedure
+
+!unquoted procedure $print_legend()
+left to right direction
+$subdomain Subdomain {
+    $context "Bounded Context" as c
+    $anticorruption_layer "Anti-Corruption Layer" as a {
+        $context "Legacy Context"
+    }
+}
+
+
+$context Customer as customer1
+$context Supplier as supplier1
+$context Conformist as conformist1
+$context Customer as customer2
+$context Supplier as supplier2
+$context Supplier as supplier3
+$context Supplier as supplier4
+$context Context as context
+$context Context as other
+$customer_supplier(customer1, supplier1) : Customer-Supplier
+$bidirectional_customer_supplier(customer2, supplier2): Bidirectional Customer-Supplier
+$conformist(conformist1, supplier3) : Conformist
+$common_interface(supplier4, interface_name1, i) : Common Interface
+$shared_kernel(context, other, kernel description) : Shared Kernel
 !endprocedure
 @enduml

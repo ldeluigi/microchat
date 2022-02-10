@@ -9,9 +9,9 @@
 $aggregate(PrivateChat) {
     $aggregate_root(PrivateChat) {
         + id: Guid
-        + creationTime: DateTime
-        + creatorId: Guid
-        + partecipantId: Guid
+        + creationTime: Timestamp
+        + creator: Guid
+        + partecipant: Guid
     }
 }
 
@@ -26,12 +26,13 @@ $aggregate(PrivateMessage) {
     $aggregate_root(PrivateMessage) {
         + id: Guid
         + chatId: Guid
-        + sendTime: DateTime
-        + lastEditTime: Option[DateTime]
+        + sendTime: Timestamp
+        + lastEditTime: Option[Timestamp]
         + senderId: Option[Guid]
         + viewed: Bool
-        + editText(newText: String, DateTime time): void
-        + setViewed(): Void
+        + messageText : MessageText
+        + editText(newText: MessageText, Timestamp)
+        + setViewed()
     }
     
     $value(MessageText) {
@@ -46,9 +47,9 @@ $service(PrivateChatLifecycleService) {
     + deletePrivateChat(id: Guid): PrivateChat
 }
 
-User "1" <... "0..*" PrivateChat: creator
-User "1" <... "0..*" PrivateMessage: sender
-PrivateMessage "0..*" -left-* "1" PrivateChat: isSentOn
+User "1" <.. "0..*" PrivateChat: creator
+User "1" <.. "0..*" PrivateMessage: sender
+PrivateChat "1" <.. "0..*" PrivateMessage: chat
 User "1" <... "0..*" PrivateChat: partecipant
 @enduml
 ```
