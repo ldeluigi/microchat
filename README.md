@@ -9,7 +9,7 @@ The documentation for this project can be found at:
 https://ldeluigi.github.io/microchat
 
 
-# Demo Development
+# Demo Quickstart
 
 ## Needed on the host
 
@@ -29,7 +29,7 @@ To stop and **clean volumes** use `docker compose down -v`.
 
 ## Frontend Development
 
-The client is developed and compiled on the host machine, so you need to go on its folder `cd .\frontend\microchat-frontend\` and run `npm install` to download dependencies; then u can run frontend using `ng serve`.
+The client is developed and compiled on the host machine, so you need to go on its folder `cd .\frontend\microchat-frontend\` and run `npm install` to download dependencies; then you can run the web app using `ng serve`.
 **Note:** _ng serve is a blocking call_
 
-Navigate to `http://localhost:4200/` to use the frontend.
+Navigate to `http://localhost:4200/` to use the frontend app.
