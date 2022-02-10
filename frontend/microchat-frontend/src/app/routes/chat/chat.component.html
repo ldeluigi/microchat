@@ -7,7 +7,8 @@
     <div class="msg_cotainer {{editingClass(message.id)}}" (click)="clickedMessage($event, message)">
       {{message.text}}
       <span class="msg_time">{{message.sendTime | date:'HH:mm, d/M '}}
-        <i *ngIf="message.edited" class="fas fa-edit"></i>
+        <i *ngIf="isEdited(message)" class="fas fa-edit"></i>
+        <i *ngIf="isViewed(message)" class="fas fa-check"></i>
       </span>
     </div>
     <ng-container *ngIf="!imgFirst(message)"

@@ -23,6 +23,7 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
 
   deletedMessageId!: Subscription;
   editedMessageId!: Subscription;
+  viewedMessageId!: Subscription;
   _editingId: string | undefined;
   @Input()
   set editingId(val: string | undefined) {
@@ -50,24 +51,38 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
   }
 
   ngOnInit(): void {
-    this.deletedMessageId = this.signalrService.deletedMessage().subscribe({next: deletedMessage => {
-      this.messages = this.messages.filter(message => message.id !== deletedMessage.id)
-    }, error: err => this.logService.errorSnackBar(err)
-  });
-    this.editedMessageId = this.signalrService.editedMessage().subscribe({next: editedMessage => {
-      const index = this.messages.findIndex(message => message.id == editedMessage.id);
-      if (index >= 0) {
-        this.messages[index] = editedMessage;
-      } else {
-        this.addToMessages(editedMessage, true);
-        this.resortMessages();
-      }
-    }, error: err => this.logService.errorSnackBar(err)});
+    this.deletedMessageId = this.signalrService.deletedMessage().subscribe(
+      {next: deletedMessage => {
+        this.messages = this.messages.filter(message => message.id !== deletedMessage.id)
+      }, error: err => this.logService.errorSnackBar(err)
+    });
+    this.editedMessageId = this.signalrService.editedMessage().subscribe(
+      {
+        next: editedMessage => this.updateMessage(editedMessage),
+        error: err => this.logService.errorSnackBar(err)
+    });
+    this.viewedMessageId = this.signalrService.viewedMessage().subscribe(
+      {next: viewedMessage => {
+            console.log("view " + viewedMessage.id);
+            this.updateMessage(viewedMessage)},
+        error: err => this.logService.errorSnackBar(err)
+    });
+  }
+
+  private updateMessage(msg: Message) {
+    const index = this.messages.findIndex(message => message.id == msg.id);
+    if (index >= 0) {
+      this.messages[index] = msg;
+    } else {
+      this.addToMessages(msg, true);
+      this.resortMessages();
+    }
   }
 
   ngOnDestroy(): void {
     this.deletedMessageId.unsubscribe();
     this.editedMessageId.unsubscribe();
+    this.viewedMessageId.unsubscribe();
   }
 
   ngAfterViewInit(): void {
@@ -86,27 +101,19 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
       this.messages = [];
       this.messagePage = 0;
       if (changes['chat'].currentValue) {
-        console.log(changes['chat'].currentValue.id);
-        console.log("TODO: changed Chat");
         this.getOldMessages(true);
-        this.messages.filter(m => m.viewed && m.sender !== this.accountService.userValue?.userId).forEach(m => {
-          this.signalrService.viewedMessage(m.id);
-        });
-        this.chat!.hasNewMessages = 0;
-        this.haveToScroll = true;
       }
     }
     if (changes['message'] && changes['message'].currentValue) {
       this.addToMessages(changes['message'].currentValue, true);
-      if (changes['message'].currentValue.sender !== this.accountService.userValue?.userId) {
-        this.signalrService.viewedMessage(changes['message'].currentValue.id);
+      if (changes['message'].currentValue.sender != this.accountService.userValue?.userId) {
+        this.signalrService.viewMessage(changes['message'].currentValue.id);
       }
       this.haveToScroll = true;
     }
     if (changes['scrollPerc'] && changes['scrollPerc'].currentValue < this.scrollPercToGetOldMessages && this.chat) {
       console.log("TODO: carica altri messaggi");
       this.getOldMessages(false);
-      changes['scrollPerc'].currentValue;
     }
   }
 
@@ -143,6 +150,10 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
         if (this.scrollPerc < this.scrollPercToGetOldMessages && messages.meta.pageIndex < messages.meta.pageCount - 1) {
           this.getOldMessages(scroll);
         }
+        this.messages.filter(m => !m.viewed && (m.sender !== this.accountService.userValue?.userId)).forEach(m => {
+          this.signalrService.viewMessage(m.id);
+        });
+        this.chat!.hasNewMessages = 0;
       }, error: err => this.logService.errorSnackBar(err)});
     }
   }
@@ -182,4 +193,13 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
   editingClass(id: string): string {
     return this.editingId === id ? "editing" : ""
   }
+
+  isEdited(message: Message): boolean {
+    return message.edited;
+  }
+
+  isViewed(message: Message): boolean {
+    return message.viewed && message.sender == this.accountService.userValue?.userId
+  }
+
 }

@@ -15,6 +15,7 @@ import { UserService } from './user.service';
   private newMessage$: Subject<Message>;
   private editMessage$: Subject<Message>;
   private messageDeleted$: Subject<Message>;
+  private messageViewed$: Subject<Message>;
   private chatDeleted$: Subject<string>;
   private chatCreated$: Subject<Chat>;
   private connection: signalR.HubConnection | undefined;
@@ -28,6 +29,7 @@ import { UserService } from './user.service';
     this.newMessage$ = new Subject<Message>();
     this.editMessage$ = new Subject<Message>();
     this.messageDeleted$ = new Subject<Message>();
+    this.messageViewed$ = new Subject<Message>();
     this.chatDeleted$ = new Subject<string>();
     this.chatCreated$ = new Subject<Chat>();
   }
@@ -69,7 +71,9 @@ import { UserService } from './user.service';
     this.connection!.on('message.deleted', (message: MessageDto) => {
       this.messageDeleted$.next(toMessage(message));
     });
-    this.connection!.on('message.viewed', _ => {}); // ignore viewed message
+    this.connection!.on('message.viewed', (message: MessageDto) => {
+      this.messageViewed$.next(toMessage(message));
+    });
     this.connection!.on('chat.deleted', (chat: ChatDto) => {
       this.chatDeleted$.next(chat.id);
     });
@@ -96,6 +100,10 @@ import { UserService } from './user.service';
 
   public deletedMessage(): Observable<Message> {
     return this.messageDeleted$.asObservable();
+  }
+
+  public viewedMessage(): Observable<Message> {
+    return this.messageViewed$.asObservable();
   }
 
   public deletedChat(): Observable<string> {
@@ -127,7 +135,8 @@ import { UserService } from './user.service';
         Promise.reject("An error has occured while sending message: Unable to establish connection"));
   }
 
-  public viewedMessage(messageId: string): Promise<void> {
+  public viewMessage(messageId: string): Promise<void> {
+    console.log("view " + messageId);
     return this.useConnection(_ => 
       this.connection ? 
         this.connection.invoke("message.view", messageId) :
