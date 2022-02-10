@@ -56,6 +56,7 @@ export class ApiURLService {
     if (environment.production) {
       const baseUrl = window.location.origin;
       this.apiURL = baseUrl;
+      // this.apiURL = environment.apiUrl;
     } else {
       this.apiURL = environment.apiUrl;
     }
