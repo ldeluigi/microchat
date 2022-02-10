@@ -7,6 +7,7 @@ on:
 
 jobs:
   gitlab:
+    name: Push repository to GitLab
     runs-on: ubuntu-latest
     environment: gitlab-mirror
     steps:
