@@ -104,7 +104,11 @@ export class UserInfoComponent implements OnInit {
     if (this.oldPass && this.newPass) {
       this.accountService.updatePassword(this.oldPass, this.newPass);
     }
-    this.dialogRef.close();
+    if ((this.oldPass && !this.newPass) || (!this.oldPass&& this.newPass)) {
+      this.logService.errorSnackBar("you have to insert both or none password");
+    } else {
+      this.dialogRef.close();
+    }
   }
 
   emailInitValue(): string | undefined {
