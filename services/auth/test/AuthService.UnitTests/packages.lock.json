@@ -10,12 +10,12 @@
       },
       "EasyDesk.CleanArchitecture.Testing": {
         "type": "Direct",
-        "requested": "[0.36.0, )",
-        "resolved": "0.36.0",
-        "contentHash": "ZUmqkoJcW+8qUJ+syv/jlwO6YQe4KkI4xaWPx/Jdd1s0wUkhdeq3MNB7aL0ugRLTweYMzX10fOIahCqsCQfbsg==",
+        "requested": "[0.36.1, )",
+        "resolved": "0.36.1",
+        "contentHash": "ZDtHF8xYCooa4CqX5nU1IFu/fgoUPduEB7naXGU3+681HUBTRVLtZdF/7aC3cBAj191DID74CIUiRxZ8Og8WxQ==",
         "dependencies": {
-          "EasyDesk.CleanArchitecture.Application": "0.36.0",
-          "EasyDesk.CleanArchitecture.Infrastructure": "0.36.0",
+          "EasyDesk.CleanArchitecture.Application": "0.36.1",
+          "EasyDesk.CleanArchitecture.Infrastructure": "0.36.1",
           "EasyDesk.Testing": "0.4.0",
           "EasyDesk.Tools": "5.1.0",
           "NSubstitute": "4.3.0",
