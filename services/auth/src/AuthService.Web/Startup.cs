@@ -63,7 +63,6 @@ public class Startup : BaseStartup
             .AddRebusMessaging(configure =>
                 configure
                     .UseOutbox()
-                    .AddKnownMessageTypesFromAssembliesOf(typeof(ApplicationMarker))
                     .ConfigureTransport(t =>
                         t.UseRabbitMqAsOneWayClient(Configuration.GetConnectionString("RabbitMq"))));
     }

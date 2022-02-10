@@ -4,13 +4,13 @@
     "net6.0": {
       "EasyDesk.CleanArchitecture.Application": {
         "type": "Direct",
-        "requested": "[0.35.0, )",
-        "resolved": "0.35.0",
-        "contentHash": "wXNQKlCLypDzXA+88qtj8xrJK6h11rvlfIJEh8HmpcQ4C8PsYdCqZfuWEZd4jJXXy1hdHS0rjC+r+joUAAQ2zg==",
+        "requested": "[0.36.0, )",
+        "resolved": "0.36.0",
+        "contentHash": "T/mHFafAJk87zB4+m7nqGsA/MB/pY8jlqsyJwO9Hs166mfuT14XH89QGdGIly5pDmcW0us3z8Lma1JxibEfT3w==",
         "dependencies": {
           "AutoMapper": "11.0.1",
           "AutoMapper.Extensions.Microsoft.DependencyInjection": "11.0.0",
-          "EasyDesk.CleanArchitecture.Domain": "0.35.0",
+          "EasyDesk.CleanArchitecture.Domain": "0.36.0",
           "EasyDesk.Tools": "5.1.0",
           "FluentValidation": "10.3.6",
           "FluentValidation.DependencyInjectionExtensions": "10.3.6",
@@ -21,7 +21,6 @@
           "Rebus": "6.6.2",
           "Rebus.Microsoft.Extensions.Logging": "2.0.0",
           "Rebus.ServiceProvider": "7.0.0",
-          "Rebus.UnitOfWork": "6.0.0",
           "Scrutor": "4.0.0"
         }
       },
@@ -53,8 +52,8 @@
       },
       "EasyDesk.CleanArchitecture.Domain": {
         "type": "Transitive",
-        "resolved": "0.35.0",
-        "contentHash": "gLnI6ivSaCN6PCf6fZ33Lh5PNCC+KP74cKsFiEP49QWupxcC5iVXdbLZbxXKWd2WGid7Fdr6il5d1L9fMeFEzg==",
+        "resolved": "0.36.0",
+        "contentHash": "x4yescGCVz7zqBb0rpOFYGtFaARP0VlJqQnQVlrWYU2kraE7QIOWopKN9XMaU0JdhZRbc2PSp9UT5EMk14nt+g==",
         "dependencies": {
           "EasyDesk.Tools": "5.1.0"
         }
@@ -247,14 +246,6 @@
         "contentHash": "gGbp4p8D3ativ1oAonbo4r1blLNp1x7JekPiSoRpBSrw9OnJ8Ef+hbwCso74oBh+c4RUZ92XqBQi5R9r4GI8GQ==",
         "dependencies": {
           "Microsoft.Extensions.Hosting.Abstractions": "[3.0.0, 7.0.0)",
-          "Rebus": "6.0.0"
-        }
-      },
-      "Rebus.UnitOfWork": {
-        "type": "Transitive",
-        "resolved": "6.0.0",
-        "contentHash": "SwQIEo2jdtE0W4p/lZekvOcl35UOUCBQDIV6otgBNlcoMt2g/x9HIfIakMQhHFAchRQ92nXDGhFSF71FVdo0jQ==",
-        "dependencies": {
           "Rebus": "6.0.0"
         }
       },
@@ -553,7 +544,7 @@
       "chatservice.domain": {
         "type": "Project",
         "dependencies": {
-          "EasyDesk.CleanArchitecture.Domain": "0.35.0"
+          "EasyDesk.CleanArchitecture.Domain": "0.36.0"
         }
       }
     }

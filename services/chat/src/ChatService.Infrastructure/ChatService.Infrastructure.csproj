@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EasyDesk.CleanArchitecture.Dal.EfCore" Version="0.35.0" />
-    <PackageReference Include="EasyDesk.CleanArchitecture.Infrastructure" Version="0.35.0" />
+    <PackageReference Include="EasyDesk.CleanArchitecture.Dal.EfCore" Version="0.36.0" />
+    <PackageReference Include="EasyDesk.CleanArchitecture.Infrastructure" Version="0.36.0" />
     <PackageReference Include="Z.EntityFramework.Plus.EFCore" Version="6.13.9" />
   </ItemGroup>
 

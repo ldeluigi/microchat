@@ -4,6 +4,7 @@ using ChatService.Web.Controllers.V_1_0.SignalRChatDtos;
 using ChatService.Web.SignalR;
 using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.Tools.Options;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Linq;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace ChatService.Web.Controllers.V_1_0;
 
+[Authorize]
 public class ChatSignalRController : AbstractMediatrHub
 {
     public override Task OnConnectedAsync()

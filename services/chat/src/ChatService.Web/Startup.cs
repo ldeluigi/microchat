@@ -82,10 +82,10 @@ public class Startup : BaseStartup
                     });
                 }))
             .AddAuthorization()
+            .AddAspNetCoreAuthorization()
             .AddModule<ChatDomainModule>()
             .AddRebusMessaging(configure =>
                 configure
-                    .AddKnownMessageTypesFromAssembliesOf(typeof(ApplicationMarker))
                     .ConfigureTransport(t =>
                         t.UseRabbitMq(Configuration.GetConnectionString("RabbitMq"), ServiceName)))
             .AddModule<TopicSubscriberModule>()

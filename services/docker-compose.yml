@@ -9,6 +9,12 @@ x-mssql-config: &mssql
     SA_PASSWORD: ${DB_PASSWORD:?password not set}
     
 services:
+  dbs:
+    <<: *mssql
+    ports:
+      - 8005:1433
+    volumes:
+      - "db_volume:/var/opt/mssql"
   auth:
     depends_on:
       - rabbitmq
@@ -33,12 +39,6 @@ services:
       MICROCHAT_Migrations__RunOnStartup: 'true'
       MICROCHAT_ConnectionStrings__MainDb: Server=dbs,1433;Database=AuthDb;User Id=SA;Password=${DB_PASSWORD}
       MICROCHAT_ConnectionStrings__RabbitMq: amqp://${RABBITMQ_USER}:${RABBITMQ_PASSWORD}@rabbitmq:5672/
-  dbs:
-    <<: *mssql
-    ports:
-      - 8005:1433
-    volumes:
-      - "db_volume:/var/opt/mssql"
   user:
     depends_on:
       - rabbitmq
