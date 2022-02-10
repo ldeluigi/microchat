@@ -4,11 +4,11 @@
     "net6.0": {
       "EasyDesk.CleanArchitecture.Web": {
         "type": "Direct",
-        "requested": "[0.36.0, )",
-        "resolved": "0.36.0",
-        "contentHash": "ZIQVRI76IZiWU32YNez5xChI/Y5KijkhCDYdgW2vZ/qIxpz5NYm/kDN4McIAfSuNBLbha1cSJM+E/XvdiVsDGw==",
+        "requested": "[0.36.1, )",
+        "resolved": "0.36.1",
+        "contentHash": "9J4y+N3+IJHr11TV3MqDozlhii1WXRxA6Jp1ahiCckPg3HZ5jF+qzEv8cvk5tbQqDKoBYcPrycbjR83YyE1iBQ==",
         "dependencies": {
-          "EasyDesk.CleanArchitecture.Infrastructure": "0.36.0",
+          "EasyDesk.CleanArchitecture.Infrastructure": "0.36.1",
           "EasyDesk.Tools": "5.1.0",
           "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "6.0.2",
           "Microsoft.AspNetCore.Mvc.Versioning": "5.0.0",
@@ -74,12 +74,12 @@
       },
       "EasyDesk.CleanArchitecture.Application": {
         "type": "Transitive",
-        "resolved": "0.36.0",
-        "contentHash": "T/mHFafAJk87zB4+m7nqGsA/MB/pY8jlqsyJwO9Hs166mfuT14XH89QGdGIly5pDmcW0us3z8Lma1JxibEfT3w==",
+        "resolved": "0.36.1",
+        "contentHash": "GTU9ehNgIelV6HVitz0wUzMyxC6FFa0LkswNtdRMlMfNYxzr1EOEsaZ/HW6a62VJTf0UbIiXvTGIxQ/he3ND5A==",
         "dependencies": {
           "AutoMapper": "11.0.1",
           "AutoMapper.Extensions.Microsoft.DependencyInjection": "11.0.0",
-          "EasyDesk.CleanArchitecture.Domain": "0.36.0",
+          "EasyDesk.CleanArchitecture.Domain": "0.36.1",
           "EasyDesk.Tools": "5.1.0",
           "FluentValidation": "10.3.6",
           "FluentValidation.DependencyInjectionExtensions": "10.3.6",
@@ -95,11 +95,11 @@
       },
       "EasyDesk.CleanArchitecture.Dal.EfCore": {
         "type": "Transitive",
-        "resolved": "0.36.0",
-        "contentHash": "qigUUktHG3UH4PqUnaiuYpUSWWJTZlAae2j9g8wKnVo1UDvtcEL9YdxXVV2HpLdvlKhUumeZQMbuRWVNgflbYg==",
+        "resolved": "0.36.1",
+        "contentHash": "oma8NJrRNJ3DHvWvCYKFXFl+iPNCyVPeR21rN0Y/hhyHvn5EthlzoMTw2vEy21enkzZ8vQv+DGf6v8XElIhfcA==",
         "dependencies": {
-          "EasyDesk.CleanArchitecture.Application": "0.36.0",
-          "EasyDesk.CleanArchitecture.Infrastructure": "0.36.0",
+          "EasyDesk.CleanArchitecture.Application": "0.36.1",
+          "EasyDesk.CleanArchitecture.Infrastructure": "0.36.1",
           "EasyDesk.Tools": "5.1.0",
           "Microsoft.EntityFrameworkCore.Relational": "6.0.2",
           "Microsoft.EntityFrameworkCore.SqlServer": "6.0.2",
@@ -108,18 +108,18 @@
       },
       "EasyDesk.CleanArchitecture.Domain": {
         "type": "Transitive",
-        "resolved": "0.36.0",
-        "contentHash": "x4yescGCVz7zqBb0rpOFYGtFaARP0VlJqQnQVlrWYU2kraE7QIOWopKN9XMaU0JdhZRbc2PSp9UT5EMk14nt+g==",
+        "resolved": "0.36.1",
+        "contentHash": "ttZL+sbgHXwCIjuUi0MRmopOniZHTRIxFPp9v9MeYjgqRAJMLv/YQTioZGCHHABrOT+aQW4axKOf1mj7Y0ssog==",
         "dependencies": {
           "EasyDesk.Tools": "5.1.0"
         }
       },
       "EasyDesk.CleanArchitecture.Infrastructure": {
         "type": "Transitive",
-        "resolved": "0.36.0",
-        "contentHash": "EBih/fABW22LXXLdpe8f95jcJZnyoVU/t4sY+62Kg4QeLF/XDIHBE4WHSje8Dha6RB6SYtxB9sprxpf3xkdN1w==",
+        "resolved": "0.36.1",
+        "contentHash": "FUzmyLW1tg12GQfOJO7687m5NZdRbTzHJ0ja/qu69FIwfXQLMDQhby8q2HgCYnvyb6cZVPypcxPkRUk+mnqwuQ==",
         "dependencies": {
-          "EasyDesk.CleanArchitecture.Application": "0.36.0",
+          "EasyDesk.CleanArchitecture.Application": "0.36.1",
           "EasyDesk.Tools": "5.1.0",
           "Microsoft.AspNet.WebApi.Client": "5.2.7",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.2",
@@ -1058,21 +1058,21 @@
       "userservice.application": {
         "type": "Project",
         "dependencies": {
-          "EasyDesk.CleanArchitecture.Application": "0.36.0",
+          "EasyDesk.CleanArchitecture.Application": "0.36.1",
           "UserService.Domain": "1.0.0"
         }
       },
       "userservice.domain": {
         "type": "Project",
         "dependencies": {
-          "EasyDesk.CleanArchitecture.Domain": "0.36.0"
+          "EasyDesk.CleanArchitecture.Domain": "0.36.1"
         }
       },
       "userservice.infrastructure": {
         "type": "Project",
         "dependencies": {
-          "EasyDesk.CleanArchitecture.Dal.EfCore": "0.36.0",
-          "EasyDesk.CleanArchitecture.Infrastructure": "0.36.0",
+          "EasyDesk.CleanArchitecture.Dal.EfCore": "0.36.1",
+          "EasyDesk.CleanArchitecture.Infrastructure": "0.36.1",
           "UserService.Application": "1.0.0",
           "UserService.Domain": "1.0.0"
         }
