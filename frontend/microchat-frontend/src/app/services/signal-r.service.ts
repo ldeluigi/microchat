@@ -74,7 +74,7 @@ import { infoToUser } from 'src/model/UserInfo';
         userId = chatDto.partecipant;
       }
       this.userService.userInfo(userId).subscribe(info => {
-        var newChat: Chat = {id: chatDto.id, hasNewMessages: 0, lastMessageTime: new Date, user: infoToUser(info)}
+        var newChat: Chat = {id: chatDto.id, hasNewMessages: 0, lastMessageTime: new Date, user: info}
         this.chatCreated$.next(newChat);
       })
     });

@@ -1,3 +1,5 @@
+import { UserInfo } from "./UserInfo";
+
 export interface User {
   id: string,
   name: string
@@ -7,7 +9,7 @@ export interface Chat {
   id: string,
   hasNewMessages: number,
   lastMessageTime: Date,
-  user?: User
+  user?: UserInfo
 }
 
 export interface ChatDto {

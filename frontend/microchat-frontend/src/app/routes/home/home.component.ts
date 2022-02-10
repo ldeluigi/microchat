@@ -89,11 +89,11 @@ export class HomeComponent implements OnInit, OnDestroy {
           const addingChat : Chat = {
             id: chat.id,
             hasNewMessages: chat.numberOfUnreadMessages || 0,
-            lastMessageTime: new Date(Date.parse(chat.lastMessageTime)),
+            lastMessageTime: new Date(Date.parse(chat.lastMessageTime))
           }
           if (otherUser) {
             this.userService.userInfo(otherUser).subscribe(info => {
-              addingChat.user = infoToUser(info);
+              addingChat.user = info;
               this.addInChatList(addingChat);
             });
           } else {
@@ -188,8 +188,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       let foundChatList: Chat[] = []
       this.userService.usersSearched(this.search).subscribe(users => {
         users.forEach(user => {
-          if (foundChatList.findIndex(chat => chat.user?.id == user.id) >= 0) {
-            foundChatList.push({id: "", hasNewMessages: 0, lastMessageTime: new Date, user: infoToUser(user)});
+          if (foundChatList.findIndex(chat => chat.user?.id == user.id) < 0) {
+            foundChatList.push({id: "", hasNewMessages: 0, lastMessageTime: new Date, user: user});
           }
         });
       });
