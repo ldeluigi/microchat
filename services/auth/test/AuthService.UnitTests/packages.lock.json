@@ -159,10 +159,10 @@
       },
       "EasyDesk.CleanArchitecture.Web": {
         "type": "Transitive",
-        "resolved": "0.36.0",
-        "contentHash": "ZIQVRI76IZiWU32YNez5xChI/Y5KijkhCDYdgW2vZ/qIxpz5NYm/kDN4McIAfSuNBLbha1cSJM+E/XvdiVsDGw==",
+        "resolved": "0.36.1",
+        "contentHash": "9J4y+N3+IJHr11TV3MqDozlhii1WXRxA6Jp1ahiCckPg3HZ5jF+qzEv8cvk5tbQqDKoBYcPrycbjR83YyE1iBQ==",
         "dependencies": {
-          "EasyDesk.CleanArchitecture.Infrastructure": "0.36.0",
+          "EasyDesk.CleanArchitecture.Infrastructure": "0.36.1",
           "EasyDesk.Tools": "5.1.0",
           "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "6.0.2",
           "Microsoft.AspNetCore.Mvc.Versioning": "5.0.0",
@@ -2314,7 +2314,7 @@
         "dependencies": {
           "AuthService.Application": "1.0.0",
           "AuthService.Infrastructure": "1.0.0",
-          "EasyDesk.CleanArchitecture.Web": "0.36.0",
+          "EasyDesk.CleanArchitecture.Web": "0.36.1",
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.14.0",
           "Rebus.RabbitMq": "7.3.4"
         }

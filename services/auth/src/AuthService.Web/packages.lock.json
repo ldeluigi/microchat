@@ -95,11 +95,11 @@
       },
       "EasyDesk.CleanArchitecture.Dal.EfCore": {
         "type": "Transitive",
-        "resolved": "0.36.0",
-        "contentHash": "qigUUktHG3UH4PqUnaiuYpUSWWJTZlAae2j9g8wKnVo1UDvtcEL9YdxXVV2HpLdvlKhUumeZQMbuRWVNgflbYg==",
+        "resolved": "0.36.1",
+        "contentHash": "oma8NJrRNJ3DHvWvCYKFXFl+iPNCyVPeR21rN0Y/hhyHvn5EthlzoMTw2vEy21enkzZ8vQv+DGf6v8XElIhfcA==",
         "dependencies": {
-          "EasyDesk.CleanArchitecture.Application": "0.36.0",
-          "EasyDesk.CleanArchitecture.Infrastructure": "0.36.0",
+          "EasyDesk.CleanArchitecture.Application": "0.36.1",
+          "EasyDesk.CleanArchitecture.Infrastructure": "0.36.1",
           "EasyDesk.Tools": "5.1.0",
           "Microsoft.EntityFrameworkCore.Relational": "6.0.2",
           "Microsoft.EntityFrameworkCore.SqlServer": "6.0.2",
@@ -1073,7 +1073,7 @@
         "dependencies": {
           "AuthService.Application": "1.0.0",
           "AuthService.Domain": "1.0.0",
-          "EasyDesk.CleanArchitecture.Dal.EfCore": "0.36.0",
+          "EasyDesk.CleanArchitecture.Dal.EfCore": "0.36.1",
           "EasyDesk.CleanArchitecture.Infrastructure": "0.36.1"
         }
       }
