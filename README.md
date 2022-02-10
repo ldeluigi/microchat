@@ -24,7 +24,7 @@ To deploy backend it's necessary go in its folder `cd .\services\` and start the
 ### Stopping containers
 
 To properly stop running containers use `docker compose down`.
-To stop and **clean volumes** use `docker compose [-f ...] down -v`.  
+To stop and **clean volumes** use `docker compose down -v`.  
 **Note:** _Volumes left inside docker storage could fill up the space on the host machine!_
 
 ## Frontend Development
