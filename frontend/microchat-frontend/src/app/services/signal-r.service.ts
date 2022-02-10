@@ -47,7 +47,7 @@ import { UserService } from './user.service';
               this.accountService.refreshToken().pipe(first()).subscribe({
                 next: _ => this.connect(),
                 error: err => {
-                  this.accountService.logout();
+                  //this.accountService.logout();
                   this.logService.errorSnackBar(err);
                 }
               });
