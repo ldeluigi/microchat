@@ -1,4 +1,4 @@
-# User Domain Model
+# User Subdomain Model
 
 ## User context
 ```plantuml
@@ -8,16 +8,15 @@
 $aggregate(User) {
     $aggregate_root(User) {
         + id: Guid
+        + username: Username
+        + name: Name
+        + surname: Name
         + updateName(Name)
         + updateSurname(Name)
-        + updateUsername(Name)
+        + updateUsername(Username)
     }
 
     $value(Name) {
-        + value: String
-    }
-
-    $value(Surname) {
         + value: String
     }
 
@@ -27,7 +26,6 @@ $aggregate(User) {
 
     
     Name --o User
-    Surname -o User
     Username --o User
 }
 
@@ -39,15 +37,15 @@ $aggregate(User) {
 
 **constraints**:
 
-- $value must have almost 4 letters.
-- $value can't have more than 100 letters.
+- $value$ must have almost 4 letters.
+- $value$ can't have more than 100 letters.
 
 #### Username
 
 **constraints**:
 
-- $value must have almost 4 letters.
-- value matches `^[A-Za-z][A-Za-z0-9]*(_[A-Za-z0-9]{2,}){0,3}$`
+- $value$ must have almost 4 letters.
+- $value$ matches `^[A-Za-z][A-Za-z0-9]*(_[A-Za-z0-9]{2,}){0,3}$`
 
 ## Auth context
 ```plantuml
@@ -58,6 +56,10 @@ $aggregate(Account) {
     $aggregate_root(Account) {
         + id: Guid
         + creation: Timestamp
+        + username: Username
+        + email: Email
+        + passwordHash: passwordHash
+        + sessions: AccountSessions
     }
 
     $value(Username) {
@@ -98,23 +100,23 @@ $aggregate(Account) {
 
 **constraints**:
 
-- $value must have almost 4 letters.
-- $value matches `^[A-Za-z][A-Za-z0-9]*(_[A-Za-z0-9]{2,}){0,3}$`
+- $value$ must have almost 4 letters.
+- $value$ matches `^[A-Za-z][A-Za-z0-9]*(_[A-Za-z0-9]{2,}){0,3}$`
 
 #### Email
 
 **constraints**:
 
-- $value must respect regex for email.
+- $value$ must respect regex for email.
 
 #### Password Hash
 
 **constraints**:
 
-- $password must not be empty.
-- $password must have almost 8 characters.
+- $password$ must not be empty.
+- $password$ must have almost 8 characters.
 
 ### Domain Events
 
-* **Account created**: emitted when an account is registered to the system.
+* **Account Registered**: emitted when an account is registered to the system.
 * **Account Unregistered**: emitted when an account is removed from the system.
