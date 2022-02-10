@@ -171,7 +171,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   sendMessage() {
-    if (this.newMessage) {
+    if (this.newMessage && this.newMessage.trim()) {
       if (this.active && UserLeftChat(this.active)) {
         this.logService.errorSnackBar("unable to send messages to disabled chat");
       } else if (this.active) {
