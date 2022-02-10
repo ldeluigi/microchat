@@ -1,4 +1,4 @@
-# User Data Domain Model
+# User Domain Model
 
 ## User context
 ```plantuml
