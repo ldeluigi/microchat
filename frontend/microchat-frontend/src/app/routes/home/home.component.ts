@@ -103,14 +103,13 @@ export class HomeComponent implements OnInit, OnDestroy {
       },
       error: () => this.logService.errorSnackBar("chats are not loaded correctly"),
       complete: () => {
-        console.log("chat loaded correctly");
         this.initActiveList();
       }
     });
   }
 
   private addInChatList(chat: Chat) {
-    const index = this.chatList.findIndex(c => c.lastMessageTime.getTime < chat.lastMessageTime.getTime)
+    const index = this.chatList.findIndex(c => c.lastMessageTime.getTime() < chat.lastMessageTime.getTime())
     if (index >= 0) {
       this.chatList.splice(index, 0, chat);
     } else {
