@@ -171,13 +171,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   sendMessage() {
-    if (this.active && UserLeftChat(this.active)) {
-      this.logService.errorSnackBar("unable to send messages to disabled chat");
-    } else if (this.active) {
-      if (this.editingId) {
-        this.signalrService.editMessage(this.editingId, this.newMessage).then(_ => this.newMessage = "");
-      } else {
-        this.signalrService.sendMessage(this.active?.id, this.newMessage).then(_ => this.newMessage = "");
+    if (this.newMessage) {
+      if (this.active && UserLeftChat(this.active)) {
+        this.logService.errorSnackBar("unable to send messages to disabled chat");
+      } else if (this.active) {
+        if (this.editingId) {
+          this.signalrService.editMessage(this.editingId, this.newMessage).then(_ => this.newMessage = "");
+        } else {
+          this.signalrService.sendMessage(this.active?.id, this.newMessage).then(_ => this.newMessage = "");
+        }
       }
     }
   }
