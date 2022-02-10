@@ -187,9 +187,12 @@ export class HomeComponent implements OnInit, OnDestroy {
       console.log("TODO: richiesta chats", this.search);
       let foundChatList: Chat[] = []
       this.userService.usersSearched(this.search).subscribe(users => {
-        users.forEach(user => 
-          foundChatList.push({id: "", hasNewMessages: 0, lastMessageTime: new Date, user: infoToUser(user)}))
-      })
+        users.forEach(user => {
+          if (foundChatList.findIndex(chat => chat.user?.id == user.id) >= 0) {
+            foundChatList.push({id: "", hasNewMessages: 0, lastMessageTime: new Date, user: infoToUser(user)});
+          }
+        });
+      });
       this.setActiveListToChatList(() => this.activeList = foundChatList);
     } else {
       this.initActiveList();
