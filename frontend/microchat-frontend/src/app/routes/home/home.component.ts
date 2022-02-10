@@ -59,7 +59,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           }
         }
         this.chatList.unshift(this.chatList.splice(index, 1)[0]);
-        this.setActiveListToChatList(() => {})
+        this.setActiveListToChatList(() => {});
     });
     this.deletedChatSubscription = this.signalrService.deletedChat().subscribe(chatId => {
       this.active = this.active?.id === chatId ? undefined : this.active;
@@ -85,7 +85,7 @@ export class HomeComponent implements OnInit, OnDestroy {
               chat.creator :
               chat.partecipant && chat.partecipant != this.accountService.userValue?.userId ?
                 chat.partecipant :
-                undefined
+                undefined;
           const addingChat : Chat = {
             id: chat.id,
             hasNewMessages: chat.numberOfUnreadMessages || 0,
@@ -145,7 +145,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   setActive(chat: Chat) {
-    if (this.chatList.find(c => chat.id == c.id)) {
+    if (this.chatList.find(c => chat.id == c.id || chat.user?.id == c.user?.id)) {
       this.active = chat;
     } else if (this.search) { //searched but not already existing
       console.log("TODO: create with " + chat.user?.id);
