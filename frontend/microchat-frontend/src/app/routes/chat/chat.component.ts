@@ -111,7 +111,7 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
       this.haveToScroll = true;
     }
     if (changes['scrollPerc'] && changes['scrollPerc'].currentValue < this.scrollPercToGetOldMessages && this.chat) {
-      console.log("TODO: carica altri messaggi");
+      //console.log("TODO: carica altri messaggi");
       this.getOldMessages(false);
     }
   }
