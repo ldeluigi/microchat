@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, firstValueFrom, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { AuthUserInfo, LoggedUser } from 'src/model/LoggedUser';
 import { LogLevel } from 'src/model/logLevel';

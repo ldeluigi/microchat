@@ -1,4 +1,4 @@
-name: Microservices Continuous Integration
+name: Microservices CI
 
 on:
   push:
