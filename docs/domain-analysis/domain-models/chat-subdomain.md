@@ -1,32 +1,4 @@
-# Chat Data Domain Model
-
-## Chat subdomain class diagram
-```plantuml
-@startuml Chat SubDomain
-!include meta/domain-analysis.metamodel.iuml
-
-$entity(Chat) {
-    + id: Guid
-    + creationTime: DateTime
-    + creatorId: Guid
-}
-
-$aggregate(User) {
-    $aggregate_root(User) {
-        + id: Guid
-        + lastSeenTimestamp: Timestamp
-    }
-}
-
-User "1" <.. "0..*" Chat: creator
-
-@enduml
-```
-
-### Domain Events
-
-* **Chat created**: emitted when a chat is registered to the system.
-* **Chat Deleted**: emitted when a chat is removed from the system.
+# Chat Domain Model
 
 ## Private Chat context class diagram
 ```plantuml
@@ -86,7 +58,7 @@ User "1" <... "0..*" PrivateChat: partecipant
 
 **constraints**:
 
-- $text < 4000.
+- $text.length < 4000$.
 
 ## Chat constraints
 
@@ -95,3 +67,8 @@ User "1" <... "0..*" PrivateChat: partecipant
 - A *User* can interact with a *Chat* only if it is a participant.
 - A *User* can send messages within a *Chat* only if it is a participant.
 - A *User* can only delete messages in a *Chat* if it's the original sender.
+
+## Domain Events
+
+* **Chat created**: emitted when a chat is registered to the system.
+* **Chat Deleted**: emitted when a chat is removed from the system.
