@@ -64,6 +64,10 @@ export class RegistrationComponent implements OnInit {
     return this.form.controls;
   }
 
+  login(): void {
+    this.router.navigate(['/login'], { queryParams: { returnUrl: `${this.returnUrl}`, username: `${this.f['username'].value}` }});
+  }
+
   onSubmit(): void {
     this.logService.log('Call submit', LogLevel.Info);
     this.usernameError = '';
@@ -121,7 +125,7 @@ export class RegistrationComponent implements OnInit {
       .subscribe(
         {
           next: (_) => {
-            this.logService.messageSnackBar(user.username + ' registered: it\'s time to login and play.');
+            this.logService.messageSnackBar(user.username + ' registered: it\'s time to login and chat.');
             this.router.navigate([this.returnUrl]);
           },
           error:(error) => {
