@@ -53,9 +53,13 @@ export class LogService {
     this.snackBar.open(message, action, config);
   }
 
-  errorSnackBar(error: string, duration: number = 10000): void {
+  errorSnackBar(error: string | Error, duration: number = 10000): void {
     try {
-      this.formatStringAndOpen(error, undefined, { duration, panelClass: 'snackBarError' });
+      if (typeof error === "string") {
+        this.formatStringAndOpen(error, undefined, { duration, panelClass: 'snackBarError' });
+      } else {
+        this.formatStringAndOpen(error.message, undefined, { duration, panelClass: 'snackBarError' });
+      }
     } catch(ex) {
       this.formatStringAndOpen("unknown error", undefined, { duration, panelClass: 'snackBarError' });
     }
