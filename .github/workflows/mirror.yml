@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "**"
+  delete:
 
 jobs:
   gitlab:
@@ -12,9 +13,7 @@ jobs:
     environment: gitlab-mirror
     steps:
       - uses: EasyDesk/action-semver-checkout@v1
-      - uses: yesolutions/mirror-action@master
+      - uses: pixta-dev/repository-mirroring-action@v1
         with:
-          REMOTE: git@gitlab.com:${{ secrets.GITLAB_REPOSITORY }}
-          GIT_SSH_PRIVATE_KEY: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
-          GIT_SSH_KNOWN_HOSTS: ${{ secrets.GIT_SSH_KNOWN_HOSTS }}
-          PUSH_ALL_REFS: true
+          target_repo_url: git@gitlab.com:${{ secrets.GITLAB_REPOSITORY }}
+          ssh_private_key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
