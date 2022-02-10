@@ -88,7 +88,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           const addingChat : Chat = {
             id: chat.id,
             hasNewMessages: chat.numberOfUnreadMessages || 0,
-            lastMessageTime: new Date(Date.parse(chat.lastMessageTime))
+            lastMessageTime: new Date(Date.parse(chat.lastMessageTime) || 0)
           }
           if (otherUser) {
             return firstValueFrom(this.userService.userInfo(otherUser)).then(info => {
@@ -108,7 +108,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private addInChatList(chat: Chat) {
-    const index = this.chatList.findIndex(c => c.lastMessageTime.getTime() < chat.lastMessageTime.getTime())
+    const index = this.chatList.findIndex(c => c.lastMessageTime?.getTime() < chat.lastMessageTime?.getTime())
     if (index >= 0) {
       this.chatList.splice(index, 0, chat);
     } else {
