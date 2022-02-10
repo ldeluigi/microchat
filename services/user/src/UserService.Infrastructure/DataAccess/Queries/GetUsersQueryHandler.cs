@@ -40,6 +40,7 @@ public class GetUsersQueryHandler : IQueryWithPaginationHandler<GetUsers.Query, 
         return await first
             .Concat(second)
             .Concat(third)
+            .Distinct()
             .ProjectTo<UserOutput>(_mapper.ConfigurationProvider)
             .GetPageAsync(request.Pagination);
     }
