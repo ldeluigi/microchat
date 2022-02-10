@@ -43,22 +43,23 @@ export class UserInfoComponent implements OnInit {
   constructor(
     private userService: UserService,
     private accountService: AccountService,
+    private logService: LogService,
     public dialogRef: MatDialogRef<UserInfoComponent>,
     @Inject(MAT_DIALOG_DATA) public data: {id: string}) { }
 
   ngOnInit(): void {
-    this.userService.userInfo(this.data.id).subscribe(info => {
+    this.userService.userInfo(this.data.id).subscribe({next: info => {
       this.userInfo = info;
       this.name = this.nameInitValue();
       this.surname = this.surnameInitValue();
       this.username = this.usernameInitValue();
-    });
+    }, error: err => this.logService.errorSnackBar(err)});
     if (this.myInfo()) {
-      this.accountService.getInfo(this.data.id).subscribe(authInfo => {
+      this.accountService.getInfo(this.data.id).subscribe({next: authInfo => {
         this.user = authInfo;
         this.username = this.usernameInitValue();
         this.email = this.emailInitValue();
-      });
+      }, error: err => this.logService.errorSnackBar(err)});
     }
   }
 

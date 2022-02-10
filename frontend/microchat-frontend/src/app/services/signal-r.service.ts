@@ -44,7 +44,13 @@ import { UserService } from './user.service';
         started = this.connection.start().then(_ => this.initOnMethods()).catch(err => {
           if (this.accountService.userValue) {
             if (Date.parse(this.accountService.userValue?.expirationDate) - new Date().getTimezoneOffset() * 60 * 1000 > Date.now()) {
-              this.accountService.refreshToken().pipe(first()).subscribe(_ => this.connect());
+              this.accountService.refreshToken().pipe(first()).subscribe({
+                next: _ => this.connect(),
+                error: err => {
+                  this.accountService.logout();
+                  this.logService.errorSnackBar(err);
+                }
+              });
             }
             console.log(err);
           }
@@ -72,10 +78,10 @@ import { UserService } from './user.service';
       if (this.accountService.userValue?.userId === chatDto.creator) {
         userId = chatDto.partecipant;
       }
-      this.userService.userInfo(userId).subscribe(info => {
+      this.userService.userInfo(userId).subscribe({next: info => {
         var newChat: Chat = {id: chatDto.id, hasNewMessages: 0, lastMessageTime: new Date, user: info}
         this.chatCreated$.next(newChat);
-      })
+      }, error: err => this.logService.errorSnackBar(err)});
     });
     this.connection!.on('error', _ => this.logService.errorSnackBar("an error has occured"));
   }

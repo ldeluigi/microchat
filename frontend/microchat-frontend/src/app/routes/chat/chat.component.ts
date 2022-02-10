@@ -2,6 +2,7 @@ import { AfterViewChecked, AfterViewInit, Component, ElementRef, EventEmitter, I
 import { Subscription } from 'rxjs';
 import { AccountService } from 'src/app/services/account.service';
 import { ChatService } from 'src/app/services/chat.service';
+import { LogService } from 'src/app/services/log.service';
 import { SignalRService } from 'src/app/services/signal-r.service';
 import { UserService } from 'src/app/services/user.service';
 import { Chat } from 'src/model/Chat';
@@ -40,6 +41,7 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
     private accountService: AccountService,
     private userService: UserService,
     private chatService: ChatService,
+    private logService: LogService,
     private signalrService: SignalRService
   ) {}
 
@@ -48,10 +50,11 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
   }
 
   ngOnInit(): void {
-    this.deletedMessageId = this.signalrService.deletedMessage().subscribe(deletedMessage => {
+    this.deletedMessageId = this.signalrService.deletedMessage().subscribe({next: deletedMessage => {
       this.messages = this.messages.filter(message => message.id !== deletedMessage.id)
-    });
-    this.editedMessageId = this.signalrService.editedMessage().subscribe(editedMessage => {
+    }, error: err => this.logService.errorSnackBar(err)
+  });
+    this.editedMessageId = this.signalrService.editedMessage().subscribe({next: editedMessage => {
       const index = this.messages.findIndex(message => message.id == editedMessage.id);
       if (index >= 0) {
         this.messages[index] = editedMessage;
@@ -59,7 +62,7 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
         this.addToMessages(editedMessage, true);
         this.resortMessages();
       }
-    });
+    }, error: err => this.logService.errorSnackBar(err)});
   }
 
   ngOnDestroy(): void {
@@ -130,7 +133,7 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
   getOldMessages(scroll: boolean) {
     if (this.chat) {
       const pageSize = 5;
-      this.chatService.getOldMessages(this.chat.id, this.messagePage, pageSize).subscribe(messages => {
+      this.chatService.getOldMessages(this.chat.id, this.messagePage, pageSize).subscribe({next: messages => {
         if (messages.data[0] && this.chat?.id == messages.data[0].chat) {
           this.messagePage++;
         }
@@ -140,7 +143,7 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
         if (this.scrollPerc < this.scrollPercToGetOldMessages && messages.meta.pageIndex < messages.meta.pageCount - 1) {
           this.getOldMessages(scroll);
         }
-      });
+      }, error: err => this.logService.errorSnackBar(err)});
     }
   }
 

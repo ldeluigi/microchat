@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { firstValueFrom, map, Observable, Observer, Subscriber } from 'rxjs';
+import { firstValueFrom, map, Observable, Subscriber } from 'rxjs';
 import { ChatOfUser, DetailedChat } from 'src/model/Chat';
 import { Response, ResponsePaginate } from 'src/model/serverResponse';
 import { ApiURLService } from './api-url.service';
