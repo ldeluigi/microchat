@@ -62,9 +62,8 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
         error: err => this.logService.errorSnackBar(err)
     });
     this.viewedMessageId = this.signalrService.viewedMessage().subscribe(
-      {next: viewedMessage => {
-            console.log("view " + viewedMessage.id);
-            this.updateMessage(viewedMessage)},
+      {
+        next: viewedMessage => this.updateMessage(viewedMessage),
         error: err => this.logService.errorSnackBar(err)
     });
   }
@@ -177,11 +176,9 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, OnDestro
   clickedMessage(event: MouseEvent, message: Message) {
     if (message.sender === this.accountService.userValue?.userId && event.ctrlKey) {
       if (event.altKey) {
-        console.log("DELETE MESSAGE " + message.text);
         this.signalrService.deleteMessage(message.id);
         return;
       }
-      console.log("update message " + message.text);
       if (this.editingId === message.id) {
         this.editingId = undefined;
       } else {

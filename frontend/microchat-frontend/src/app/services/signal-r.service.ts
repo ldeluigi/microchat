@@ -54,7 +54,6 @@ import { UserService } from './user.service';
                 }
               });
             }
-            console.log(err);
           }
         });
       }
@@ -136,7 +135,6 @@ import { UserService } from './user.service';
   }
 
   public viewMessage(messageId: string): Promise<void> {
-    console.log("view " + messageId);
     return this.useConnection(_ => 
       this.connection ? 
         this.connection.invoke("message.view", messageId) :

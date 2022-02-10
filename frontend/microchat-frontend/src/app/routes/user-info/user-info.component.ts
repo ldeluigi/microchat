@@ -72,9 +72,7 @@ export class UserInfoComponent implements OnInit {
   }
 
   changeVisibility(elem: keyof Visibility) {
-    console.log(elem, this.visibility[elem])
     this.visibility[elem] = !this.visibility[elem];
-    console.log(elem, this.visibility[elem])
   }
 
   showElem(elem: keyof Visibility, modifier: boolean) {

@@ -146,7 +146,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.chatList.find(c => chat.id == c.id || chat.user?.id == c.user?.id)) {
       this.active = chat;
     } else if (this.search) { //searched but not already existing
-      console.log("TODO: create with " + chat.user?.id);
       if (chat.user) {
         this.signalrService.createChat(chat.user?.id).then(_ => {
           this.createdWith = chat.user?.id;
@@ -183,7 +182,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   
   findChat() {
     if (this.search) {
-      console.log("TODO: richiesta chats", this.search);
+      //console.log("TODO: richiesta chats", this.search);
       let foundChatList: Chat[] = []
       this.userService.usersSearched(this.search).subscribe({next: users => {
         users.forEach(user => {
@@ -249,7 +248,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   deleteChat() {
     if (this.active) {
-      console.log("TODO: delete chat");
+      //console.log("TODO: delete chat");
       this.signalrService.deleteChat(this.active.id)
         .then(_ => this.initActiveList())
         .catch(_ => window.location.reload());
