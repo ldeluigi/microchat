@@ -67,7 +67,7 @@ public class EditPrivateMessage
                                                                     }))
                 .ThenIfSuccess(message => message.EditText(MessageText.From(request.Text), _timestampProvider.Now))
                 .ThenIfSuccess(message => _privateMessageRepository.Save(message))
-                .ThenMap(m => PrivateChatMessageOutput.From(m, chatResult.ReadValue(), _userInfoProvider.RequireUserId()));
+                .ThenMap(m => PrivateChatMessageOutput.From(m, chatResult.ReadValue()));
         }
     }
 }

@@ -52,7 +52,7 @@ public class ViewPrivateMessage
                                                                     }))
                 .ThenIfSuccess(message => message.SetViewed())
                 .ThenIfSuccess(message => _privateMessageRepository.Save(message))
-                .ThenMap(m => PrivateChatMessageOutput.From(m, chatResult.ReadValue(), _userInfoProvider.RequireUserId()));
+                .ThenMap(m => PrivateChatMessageOutput.From(m, chatResult.ReadValue()));
         }
     }
 }

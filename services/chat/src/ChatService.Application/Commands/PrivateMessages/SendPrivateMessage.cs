@@ -72,7 +72,7 @@ public class SendPrivateMessage
                     return Success(chat);
                 })
                 .ThenIfSuccess(_ => _privateMessageRepository.Save(message))
-                .ThenMap(c => PrivateChatMessageOutput.From(message, c, userId));
+                .ThenMap(c => PrivateChatMessageOutput.From(message, c));
         }
     }
 }

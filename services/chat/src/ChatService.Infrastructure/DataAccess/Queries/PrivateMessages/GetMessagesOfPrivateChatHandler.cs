@@ -11,7 +11,6 @@ using EasyDesk.CleanArchitecture.Application.Responses;
 using EasyDesk.CleanArchitecture.Dal.EfCore.Utils;
 using EasyDesk.Tools.Options;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,13 +30,13 @@ public class GetMessagesOfPrivateChatHandler : IQueryWithPaginationHandler<GetMe
         _mapper = mapper;
     }
 
-    private static PrivateChatMessageOutput ConvertModelToOutput(PrivateMessageModel privateMessage, PrivateChatModel chatModel, Guid asSeenBy) => new(
+    private static PrivateChatMessageOutput ConvertModelToOutput(PrivateMessageModel privateMessage, PrivateChatModel chatModel) => new(
         Id: privateMessage.Id,
         ChatId: privateMessage.ChatId,
         SendTime: privateMessage.SendTime,
         LastEditTime: privateMessage.LastEditTime.AsOption(),
         SenderId: privateMessage.SenderId.AsOption(),
-        Viewed: privateMessage.SenderId.AsOption().Contains(asSeenBy) ? true : privateMessage.Viewed,
+        Viewed: privateMessage.Viewed,
         Text: privateMessage.Text,
         Chat: new(
             Id: chatModel.Id,
@@ -59,7 +58,7 @@ public class GetMessagesOfPrivateChatHandler : IQueryWithPaginationHandler<GetMe
                 (message, chat) => new { Message = message, Chat = chat })
             .OrderByDescending(m => m.Message.SendTime)
             .Select(x =>
-                ConvertModelToOutput(x.Message, x.Chat, userId))
+                ConvertModelToOutput(x.Message, x.Chat))
             .GetPageAsync(request.Pagination);
     }
 }

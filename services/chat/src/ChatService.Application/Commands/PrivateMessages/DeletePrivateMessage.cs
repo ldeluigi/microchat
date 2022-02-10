@@ -52,7 +52,7 @@ public class DeletePrivateMessage
                                                                         return Success(chat);
                                                                     }))
                 .ThenIfSuccess(request => _privateMessageRepository.Remove(request))
-                .ThenMap(m => PrivateChatMessageOutput.From(m, chatResult.ReadValue(), userId));
+                .ThenMap(m => PrivateChatMessageOutput.From(m, chatResult.ReadValue()));
         }
     }
 }
