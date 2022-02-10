@@ -6,7 +6,7 @@
     </ng-container>
     <div class="msg_cotainer {{editingClass(message.id)}}" (click)="clickedMessage($event, message)">
       {{message.text}}
-      <span class="msg_time">8:40 AM, Today
+      <span class="msg_time">{{message.sendTime | date:'HH:mm, d/M '}}
         <i *ngIf="message.edited" class="fas fa-edit"></i>
       </span>
     </div>

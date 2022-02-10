@@ -12,8 +12,9 @@ export interface MessageDto {
   id: string,
   chat: string,
   text: string,
+  timestamp: string,
   sendTime: string,
-  lastEditTime: string,
+  lastEdit: string,
   viewed: boolean,
   sender: string
 }
@@ -23,8 +24,8 @@ export function toMessage(dto: MessageDto): Message {
     id: dto.id,
     chatId: dto.chat,
     text: dto.text,
-    sendTime: new Date(Date.parse(dto.sendTime)),
-    edited: dto.lastEditTime? true : false,
+    sendTime: new Date(Date.parse(dto.timestamp || dto.sendTime)),
+    edited: dto.lastEdit? true : false,
     viewed: dto.viewed,
     sender: dto.sender,
   }

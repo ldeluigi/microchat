@@ -7,7 +7,6 @@ import { ApiURLService } from './api-url.service';
 import { LogService } from './log.service';
 import { Chat, ChatDto } from 'src/model/Chat';
 import { UserService } from './user.service';
-import { infoToUser } from 'src/model/UserInfo';
 
 @Injectable({
   providedIn: 'root'
