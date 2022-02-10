@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { AccountService } from 'src/app/services/account.service';
 import { ChatService } from 'src/app/services/chat.service';
 import { LogService } from 'src/app/services/log.service';
@@ -9,7 +9,6 @@ import { UserService } from 'src/app/services/user.service';
 import { Chat, UserLeftChat } from 'src/model/Chat';
 import { Message } from 'src/model/Message';
 import { Stats } from 'src/model/Stats';
-import { infoToUser } from 'src/model/UserInfo';
 import { StatsComponent } from '../stats/stats.component';
 import { UserInfoComponent } from '../user-info/user-info.component';
 
@@ -79,7 +78,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     this.chatService.getChats(this.accountService.userValue?.userId || "").subscribe({ // bug in test otherwise
       next: (chats) => {
-        chats.forEach(chat => {
+        Promise.all(chats.map(chat => {
           const otherUser = 
             chat.creator && chat.creator != this.accountService.userValue?.userId ?
               chat.creator :
@@ -92,14 +91,14 @@ export class HomeComponent implements OnInit, OnDestroy {
             lastMessageTime: new Date(Date.parse(chat.lastMessageTime))
           }
           if (otherUser) {
-            this.userService.userInfo(otherUser).subscribe(info => {
+            return firstValueFrom(this.userService.userInfo(otherUser)).then(info => {
               addingChat.user = info;
               this.addInChatList(addingChat);
             });
           } else {
-            this.addInChatList(addingChat);
+            return Promise.resolve(this.addInChatList(addingChat));
           }
-        })
+        })).then(_ => this.chatList.sort((c,chat) => chat.lastMessageTime.getTime() - c.lastMessageTime.getTime()))
       },
       error: () => this.logService.errorSnackBar("chats are not loaded correctly"),
       complete: () => {
