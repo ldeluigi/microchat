@@ -69,10 +69,8 @@ Chat -> ChatDB : SaveMessage()
 activate ChatDB
 ChatDB --> Chat : ok
 deactivate ChatDB
-Chat -> Receiver : NewMessage()
-Chat -> Sender : NewMessage()
-Receiver --> Chat : ack
-Sender --> Chat : ack
+Chat --> Receiver : NewMessage()
+Chat --> Sender : NewMessage()
 deactivate Chat
 @enduml
 ```
@@ -135,11 +133,9 @@ Redis -> Chat2 : NewMessage()
 activate Chat2
 Chat2 --> Redis : ack
 deactivate Redis
-Chat2 -> Receiver : NewMessage()
-Receiver --> Chat2 : ack
+Chat2 --> Receiver : NewMessage()
 deactivate Chat2
-Chat -> Sender : NewMessage()
-Sender --> Chat : ack
+Chat --> Sender : NewMessage()
 deactivate Chat
 @enduml
 ```
