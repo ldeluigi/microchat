@@ -142,24 +142,22 @@ deactivate Chat
 ```plantuml
 @startuml SendMessageMultipleReplicas
 actor Sender
-entity "SignalR Replica 1" as Chat
+entity "SignalR Chat Replica 1" as Chat
 entity Redis
-entity "SignalR Replica 2" as Chat2
+entity "SignalR Chat Replica 2" as Chat2
 actor Receiver
 Sender --> Chat : Connect()
 activate Chat
 Receiver --> Chat2 : Connect()
 activate Chat2
-Sender -->  Chat : SendMessage()
-Chat -->  Sender : ack
-Chat -> Chat : ValidateMessage()
+Sender -->  Chat : WS/SendMessage()
 Chat -> Redis : NewMessage()
 activate Redis
 Redis --> Chat : ack
 Redis -> Chat2 : NewMessage()
 Chat2 --> Redis : ack
 deactivate Redis
-Chat2 --> Receiver : NewMessage()
-Chat --> Sender : NewMessage()
+Chat2 --> Receiver : WS/NewMessage()
+Chat --> Sender : WS/NewMessage()
 @enduml
 ```
