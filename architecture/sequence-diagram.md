@@ -103,20 +103,36 @@ actor Sender
 entity Auth
 entity "Chat (SignalR)" as Chat
 database ChatDB
-actor Receiver
+actor "Receiver (Connected)" as Receiver
 Sender -> Auth : HTTP/Login()
 activate Auth
 Auth -->  Sender : 200/ValidToken
 deactivate Auth
-Sender ->  Chat : SendMessage()
+Sender ->  Chat : HTTP/SignalRHandshake()
 activate Chat
-Chat -->  Sender : ok
+Chat -->  Sender : 200/OK
+deactivate Chat
+Sender ->  Chat : WS/Upgrade()
+activate Chat
+Chat -->  Sender : 101/Switching Protocols
+Sender -->  Chat : WS/SendMessage()
 Chat -> ChatDB : SaveMessage()
 activate ChatDB
 ChatDB --> Chat : ok
 deactivate ChatDB
-Chat --> Receiver : NewMessage()
-Chat --> Sender : NewMessage()
+Chat --> Receiver : WS/NewMessage()
+Chat --> Sender : WS/NewMessage()
+Receiver --> Chat : ViewMessage()
+Chat -> ChatDB : LoadMessage()
+activate ChatDB
+ChatDB --> Chat : Message
+Chat -> Chat : ViewMessageHandling()
+Chat -> ChatDB : SaveMessage()
+ChatDB --> Chat : ok
+deactivate ChatDB
+Chat --> Sender : WS/ViewedMessage()
+Chat --> Receiver : WS/ViewedMessage()
+Sender --> Chat : WS/Disconnect()
 deactivate Chat
 @enduml
 ```
@@ -131,21 +147,19 @@ entity Redis
 entity "SignalR Replica 2" as Chat2
 actor Receiver
 Sender --> Chat : Connect()
-Receiver --> Chat2 : Connect()
-Sender -->  Chat : SendMessage()
 activate Chat
+Receiver --> Chat2 : Connect()
+activate Chat2
+Sender -->  Chat : SendMessage()
 Chat -->  Sender : ack
 Chat -> Chat : ValidateMessage()
 Chat -> Redis : NewMessage()
 activate Redis
 Redis --> Chat : ack
 Redis -> Chat2 : NewMessage()
-activate Chat2
 Chat2 --> Redis : ack
 deactivate Redis
 Chat2 --> Receiver : NewMessage()
-deactivate Chat2
 Chat --> Sender : NewMessage()
-deactivate Chat
 @enduml
 ```
