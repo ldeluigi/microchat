@@ -3,12 +3,12 @@
 ## Command
 ```plantuml
 @startuml Command
-actor Customer
+actor Client
 entity Service
 database ServiceDB
 entity RabbitMQ
 entity "Listener Service" as Service2
-Customer -> Service : HttpRequest()
+Client -> Service : HttpRequest()
 activate Service
 Service -> ServiceDB : BeginTransaction()
 activate ServiceDB
@@ -23,44 +23,90 @@ ServiceDB --> Service : ok
 Service -> ServiceDB : CommitTransaction()
 ServiceDB --> Service : ok
 deactivate ServiceDB
+Service --> Client : 200 OK
+deactivate Service
+Service -->> Service : FlushOutboxAsync()
+activate Service
+Service -> ServiceDB : BeginTransaction()
+activate ServiceDB
+ServiceDB --> Service : ok
+Service -> ServiceDB : LoadOutboxEvents()
+ServiceDB --> Service : Events
 Service -> RabbitMQ : SendOutboxEvent()
 activate RabbitMQ
 RabbitMQ --> Service : ack
+deactivate RabbitMQ
 Service -> ServiceDB: RemoveOutboxEvent()
-activate ServiceDB
+ServiceDB --> Service : ok
+Service -> ServiceDB : CommitTransaction()
 ServiceDB --> Service : ok
 deactivate ServiceDB
-Service --> Customer : confirm
 deactivate Service
-RabbitMQ --> Service2 : SendOutboxEvent()
+RabbitMQ --> RabbitMQ
+activate RabbitMQ
+RabbitMQ --> Service2 : SendEvent()
 activate Service2
 Service2 -> Service2 : StartTransaction()
-Service2 -> Service2 : DiscardDuplicates()
+Service2 -> Service2 : DiscardDuplicatesUsingInbox()
 Service2 -> Service2 : ExternalEventHandling()
 Service2 -> Service2 : AddEventToInbox()
-Service2 -> RabbitMQ : EventHandled()
-RabbitMQ --> Service2 : ok
 Service2 -> Service2 : CommitTransaction()
+Service2 -> RabbitMQ : ack
+RabbitMQ --> Service2 : ok
 deactivate Service2
 RabbitMQ -> RabbitMQ : DeleteEvent()
 deactivate RabbitMQ
 @enduml
 ```
 
+## New user
+
+```plantuml
+@startuml NewUser
+actor Customer
+entity Auth
+database AuthDB
+entity RabbitMQ
+entity User
+database UserDB
+Customer -> Auth : HTTP POST/register()
+activate Auth
+Auth -> AuthDB : SaveAccount()
+activate AuthDB
+AuthDB --> Auth : ok
+deactivate AuthDB
+Auth --> RabbitMQ : AccountRegistered
+activate RabbitMQ
+RabbitMQ --> Auth : ack
+deactivate RabbitMQ
+Auth --> Customer : 201 CREATED
+deactivate Auth
+activate RabbitMQ
+RabbitMQ -> User : AccountRegistered
+activate User
+User -> UserDB : SaveUser()
+activate UserDB
+UserDB --> User : ok
+deactivate UserDB
+User -> RabbitMQ : ack
+RabbitMQ --> User : ack
+deactivate User
+deactivate RabbitMQ
+@enduml
+```
+
 ## Send message
+
 ```plantuml
 @startuml SendMessage
 actor Sender
 entity Auth
-database AuthDB
 entity "Chat (SignalR)" as Chat
 database ChatDB
 actor Receiver
-Sender -> Auth : Login()
+Sender -> Auth : HTTP/Login()
 activate Auth
-Auth -> AuthDB : ValidateAccount()
-AuthDB --> Auth : ok
-Auth -->  Sender : ValidToken
+Auth -->  Sender : 200/ValidToken
 deactivate Auth
 Sender ->  Chat : SendMessage()
 activate Chat
@@ -75,43 +121,7 @@ deactivate Chat
 @enduml
 ```
 
-## New user
-
-```plantuml
-@startuml NewUser
-actor Customer
-entity Auth
-database AuthDB
-entity RabbitMQ
-entity User
-database UserDB
-Customer -> Auth : register()
-activate Auth
-Auth -> AuthDB : SaveAccount()
-activate AuthDB
-AuthDB --> Auth : ok
-deactivate AuthDB
-Auth --> RabbitMQ : AccountRegistered
-activate RabbitMQ
-RabbitMQ --> Auth : ack
-Auth --> Customer : confirm
-deactivate Auth
-RabbitMQ -> User : AccountRegistered
-activate User
-User -> UserDB : VerifyNewUser()
-activate UserDB
-UserDB --> User : ok
-User -> UserDB : SaveUser()
-UserDB --> User : ok
-deactivate UserDB
-User -> RabbitMQ : EventHandled()
-RabbitMQ --> User : ack
-deactivate User
-deactivate RabbitMQ
-@enduml
-```
-
-## Send message with multiple chat replicas
+### Send message with multiple chat replicas
 
 ```plantuml
 @startuml SendMessageMultipleReplicas
