@@ -148,10 +148,12 @@ queue Redis
 entity "SignalR Chat Replica 2" as Chat2
 actor Receiver
 activate Redis
-Sender --> Chat : Connect()
+Sender -> Chat : Connect()
 activate Chat
-Receiver --> Chat2 : Connect()
+Chat --> Sender : ok
+Receiver -> Chat2 : Connect()
 activate Chat2
+Chat2 --> Receiver : ok
 Sender -->  Chat : WS/SendMessage()
 Chat --> Redis : NewMessage()
 Redis --> Chat2 : NewMessage()
