@@ -6,7 +6,7 @@
 actor Client
 entity Service
 database ServiceDB
-entity RabbitMQ
+queue RabbitMQ
 entity "Listener Service" as Service2
 Client -> Service : HttpRequest()
 activate Service
@@ -66,7 +66,7 @@ deactivate RabbitMQ
 actor Customer
 entity Auth
 database AuthDB
-entity RabbitMQ
+queue RabbitMQ
 entity User
 database UserDB
 Customer -> Auth : HTTP POST/register()
@@ -143,7 +143,7 @@ deactivate Chat
 @startuml SendMessageMultipleReplicas
 actor Sender
 entity "SignalR Chat Replica 1" as Chat
-entity Redis
+queue Redis
 entity "SignalR Chat Replica 2" as Chat2
 actor Receiver
 Sender --> Chat : Connect()
