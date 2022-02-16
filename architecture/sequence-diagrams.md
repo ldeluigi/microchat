@@ -1,6 +1,7 @@
 # Sequence Diagrams
 
 ## Command
+
 ```plantuml
 @startuml Command
 actor Client
