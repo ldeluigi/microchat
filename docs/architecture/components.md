@@ -19,9 +19,9 @@ auth ..> mq : Account Lifecycle
 mq ..> user : Account Lifecycle
 mq ...> chat : Account Lifecycle
 
-auth <--> authdb
-user <--> userdb
-chat <--> chatdb
+auth --> authdb
+user --> userdb
+chat --> chatdb
 
 chat <.> redis : SignalR events
 
