@@ -1,2 +1,2 @@
 * [Components](components.md)
-* [Sequence Diagram](sequence-diagram.md)
+* [Sequence Diagram](sequence-diagrams.md)
